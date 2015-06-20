@@ -1,0 +1,21 @@
+/***********************************************/
+/** STYLE **/
+/** run the following to see changes live **/
+/** nodemon --watch / -e je,scss server.js **/
+@font-face {
+  font-family: ionicons;
+  src: url(/views/fonts/ionicons.woff); }
+
+html {
+  height: 100%; }
+  html body {
+    margin: 20;
+    font-family: inst_reg;
+    padding: 0;
+    background: #424242;
+    height: 100%;
+    color: white;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none; }

@@ -1,0 +1,55 @@
+/***********************************************/
+/** STYLE **/
+/** run the following to see changes live **/
+/** nodemon --watch / -e je,scss server.js **/
+
+$darkblue: #26404d;
+$background_boder: #4d4d4d;
+$background_grey: #424242;
+$background_main_stats: #808080;
+
+@font-face {
+  font-family: ionicons;
+  src: url(/views/fonts/ionicons.woff);
+}
+
+html {
+  height: 100%;
+
+  body {
+    margin: 20;
+    font-family: inst_reg;
+    padding: 0;
+    background: $background_grey;
+    height: 100%;
+    color: white;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    .centerFloat {
+      position: absolute;
+      top: calc(50% - 100px);
+      left: calc(50% - 100px);
+      width: 200px;
+      height: 200px;
+      color: hsla(0,0%,100%,0.4);
+      font-size: 14px;
+      line-height: 200px;
+      font-family: 'Alvar Thin';
+      text-align: center;
+
+      span {
+        font-size: 24px;
+        color: purple;
+        font-family: 'Alvar Bold';
+      }
+    }
+
+    input {
+      margin-bottom: 10px;
+    }
+  }
+}
