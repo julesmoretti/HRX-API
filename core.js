@@ -17,7 +17,7 @@ var crypto                                = require('crypto'),
                                               multipleStatements: true
                                             });
 
-
+  // var sampleToken = 3500d2dc866843fe3b6daa4a96354c9e88a5d14051;
   // var options = { };
 
   // var apnConnection = new apn.Connection(options);
@@ -149,7 +149,6 @@ var crypto                                = require('crypto'),
       var metrics = {};
 
       res.render('./partials/main.ejs',  metrics );
-
     };
 
 //  -----------------------------------------------------------------------------
@@ -164,7 +163,6 @@ var crypto                                = require('crypto'),
       var metrics = {};
 
       res.render('./partials/resetpassword.ejs',  metrics );
-
     };
 
 //  -----------------------------------------------------------------------------
@@ -205,7 +203,6 @@ var crypto                                = require('crypto'),
       } else {
         res.send( { responseCode: 400, message: 'no header detected' } );
       }
-
     };
 
 //  -----------------------------------------------------------------------------
@@ -260,7 +257,6 @@ var crypto                                = require('crypto'),
       } else {
         res.send( { responseCode: 400, message: 'no header detected' } );
       }
-
     };
 
 //  -----------------------------------------------------------------------------
@@ -314,7 +310,6 @@ var crypto                                = require('crypto'),
       } else {
         res.send( { responseCode: 400, message: 'no header detected' } );
       }
-
     };
 
 //  -----------------------------------------------------------------------------
@@ -356,7 +351,6 @@ var crypto                                = require('crypto'),
       } else {
         res.send( { responseCode: 401, message: 'missing a valid id and a password' } );
       }
-
     };
 
 //  -----------------------------------------------------------------------------
@@ -424,6 +418,4 @@ var crypto                                = require('crypto'),
 
       var metrics = {jules: "says hello"};
       res.send( metrics );
-
     };
-

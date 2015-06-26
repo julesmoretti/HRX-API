@@ -1,7 +1,7 @@
 //  server.js
 
 //  set up ======================================================================
-var port            = process.env.Q_API_PORT || 5000,
+var port            = process.env.HRX_API_PORT || 5000,
 // var port            = 5000,
     express         = require('express'),
     app             = express();
