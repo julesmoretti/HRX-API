@@ -202,7 +202,6 @@ var crypto                                = require('crypto'),
       console.log( "===============================" );
       console.log( '++++++++++ apn token ++++++++++' );
       console.log( "===============================" );
-      console.log(req.headers);
 
       // check to see if credentials were passed into the headers
       if ( req.headers[ 'x-hrx-user-token' ] && req.headers[ 'x-hrx-user-apn-token' ] ) {
