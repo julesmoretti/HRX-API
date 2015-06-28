@@ -17,10 +17,48 @@ var crypto                                = require('crypto'),
                                               multipleStatements: true
                                             });
 
-  // var sampleToken = 3500d2dc866843fe3b6daa4a96354c9e88a5d14051;
-  // var options = { };
 
-  // var apnConnection = new apn.Connection(options);
+  var message                             = new apn.Notification();
+      message.expiry                      = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
+      message.badge                       = 3;
+      message.sound                       = "ping.aiff";
+      message.alert                       = "You have a new message";
+      message.payload                     = {'state': 'home.map.menu.alumni'}; // custom key's that can be read on the app
+
+  var options = { production: false,
+                  "cert": "_certs/apnagent-dev-cert.pem",
+                  "key": "_certs/apnagent-dev-key.pem"
+   };
+
+  var service = new apn.Connection( options );
+      // console.log( service );
+      service.on('connected', function() {
+            console.log("Connected");
+        });
+
+      service.on('timeout', function () {
+          console.log("Connection Timeout");
+      });
+
+      service.on('disconnected', function() {
+          console.log("Disconnected from APNS");
+      });
+
+      service.on("transmitted", function(notification, device) {
+          console.log("Notification transmitted to:" + device.token.toString("hex"));
+      });
+
+      service.on("transmissionError", function(errCode, notification, device) {
+          console.error("Notification caused error: " + errCode + " for device ", device, 'AND notification', notification);
+          if (errCode === 8) {
+              console.log("A error code of 8 indicates that the device token is invalid. This could be for a number of reasons - are you using the correct environment? i.e. Production vs. Sandbox");
+          }
+      });
+
+  var sampleToken = '<'+ process.env.TEMP_APN_TOKEN +'>';
+  // var myDevice = new apn.Device( sampleToken );
+
+      // service.pushNotification(message, myDevice);
 
 
 //  =============================================================================
@@ -53,69 +91,57 @@ var crypto                                = require('crypto'),
 
       var errorLimitDelay = 20; // minutes
 
-      // connection.query('SELECT mNoti from settings', function(err, rows, fields) {
-        // if (err) throw err;
+      // setup e-mail data with unicode symbols
+      var mailOptions = {
+          from: 'HRX - Info <'+process.env.HRX_API_NOTI_EMAIL+'>', // sender address
+          to: email , // list of receivers
+          subject: subject, // Subject line
+          text: body, // plaintext body
+          html: body // html body
+          // html: '<b>Hello world</b></br><div class="width:100px; height: 200px; background-color: red;">YOLLO</div>' // html body
+      };
 
-        // if ( rows[0].mNoti ) {
-          // connection.query('SELECT fancrawl_username, email, eNoti from access_right where fancrawl_instagram_id = "'+fancrawl_instagram_id+'"', function(err, rows, fields) {
-            // if (err) throw err;
-            // if ( rows && rows[0] && ( rows[0].eNoti !== 0 ) && ( rows[0].email !== null ) ) {
+      // send mail with defined transport object
+      transporter.sendMail( mailOptions, function( body, info ) {
+        if ( body ) {
+          if ( body.responseCode === 454) {
+            // { [Error: Invalid login]
+              //    code: 'EAUTH',
+              //    response: '454 4.7.0 Too many login attempts, please try again later. ca2sm424696pbc.68 - gsmtp',
+              //    responseCode: 454 }
+            console.log( "eMail error 454 - Too many login attempts - waiting "+errorLimitDelay+" min and trying again.");
+            setTimeouts[ email ].sendEmail = setTimeout(
+              function(){
+                  callTimer( arguments[0], arguments[1] );
+                  console.log( "eMail error 454 - Too many login attempts - waited "+ arguments[3] +" min and attempted again.");
+                  sendMail( arguments[0], arguments[1], arguments[2] );
+            }, 1000 * 60 * errorLimitDelay, email, subject, body, errorLimitDelay ); // 1 min wait
 
-              // setup e-mail data with unicode symbols
-              var mailOptions = {
-                  from: 'Q - Info <'+process.env.HRX_API_NOTI_EMAIL+'>', // sender address
-                  to: email , // list of receivers
-                  subject: subject, // Subject line
-                  text: body, // plaintext body
-                  html: body // html body
-                  // html: '<b>Hello world</b></br><div class="width:100px; height: 200px; background-color: red;">YOLLO</div>' // html body
-              };
+          } else if ( body.responseCode === 421) {
+            // { [Error: Data command failed]
+              //    code: 'EENVELOPE',
+              //    response: '421 4.7.0 Temporary System Problem.  Try again later (WS). i4sm571837pdl.11 - gsmtp',
+              //    responseCode: 421 }
+            console.log( "eMail error 421 - Temporary System Problem - waiting "+errorLimitDelay+" min and trying again.");
+            setTimeouts[ email ].sendEmail = setTimeout(
+              function(){
+                  callTimer( arguments[0], arguments[1] );
+                  console.log( "eMail error 421 - Temporary System Problem - waited "+ arguments[3] +" min and attempted again.");
+                  sendMail( arguments[0], arguments[1], arguments[2] );
+            }, 1000 * 60 * errorLimitDelay, email, subject, body, errorLimitDelay ); // 1 min wait
 
-              // send mail with defined transport object
-              transporter.sendMail( mailOptions, function( body, info ) {
-                if ( body ) {
-                  if ( body.responseCode === 454) {
-                    // { [Error: Invalid login]
-                      //    code: 'EAUTH',
-                      //    response: '454 4.7.0 Too many login attempts, please try again later. ca2sm424696pbc.68 - gsmtp',
-                      //    responseCode: 454 }
-                    console.log( "eMail error 454 - Too many login attempts - waiting "+errorLimitDelay+" min and trying again.");
-                    setTimeouts[ email ].sendEmail = setTimeout(
-                      function(){
-                          callTimer( arguments[0], arguments[1] );
-                          console.log( "eMail error 454 - Too many login attempts - waited "+ arguments[3] +" min and attempted again.");
-                          sendMail( arguments[0], arguments[1], arguments[2] );
-                    }, 1000 * 60 * errorLimitDelay, email, subject, body, errorLimitDelay ); // 1 min wait
+          } else {
+            console.log( "email error -", body );
+            sendMail( 'adminID', 'mail error', 'The function sendMail got the following error: ' + body );
+          }
 
-                  } else if ( body.responseCode === 421) {
-                    // { [Error: Data command failed]
-                      //    code: 'EENVELOPE',
-                      //    response: '421 4.7.0 Temporary System Problem.  Try again later (WS). i4sm571837pdl.11 - gsmtp',
-                      //    responseCode: 421 }
-                    console.log( "eMail error 421 - Temporary System Problem - waiting "+errorLimitDelay+" min and trying again.");
-                    setTimeouts[ email ].sendEmail = setTimeout(
-                      function(){
-                          callTimer( arguments[0], arguments[1] );
-                          console.log( "eMail error 421 - Temporary System Problem - waited "+ arguments[3] +" min and attempted again.");
-                          sendMail( arguments[0], arguments[1], arguments[2] );
-                    }, 1000 * 60 * errorLimitDelay, email, subject, body, errorLimitDelay ); // 1 min wait
-
-                  } else {
-                    console.log( "email error -", body );
-                    sendMail( 'adminID', 'mail error', 'The function sendMail got the following error: ' + body );
-                  }
-
-                } else {
-                  console.log( 'Message sent: ' + info.response );
-                };
-              });
-            // }
-          // });
-        // }
-      // });
+        } else {
+          console.log( 'Message sent: ' + info.response );
+        };
+      });
     };
 
-// sendMail( 'julesmoretti@me.com', 'From Q', 'Hi Jules' );
+// sendMail( 'julesmoretti@me.com', 'From HRX', 'Hi Jules' );
 
 //  -----------------------------------------------------------------------------
 //  Test MYSQL
@@ -419,3 +445,319 @@ var crypto                                = require('crypto'),
       var metrics = {jules: "says hello"};
       res.send( metrics );
     };
+
+
+//  -----------------------------------------------------------------------------
+//  /login = serve the login page
+//  -----------------------------------------------------------------------------
+    // FROM |
+    //      -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
+    //  TO  |
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  exports.GH_login                        = function ( req, res ) {
+      console.log('++++++++ GH_login ++++++++');
+      // console.log("authorizing", process.env.GH_REDIRECT_URL);
+      var url = 'https://github.com/login/oauth/authorize/?client_id='+process.env.GH_CLIENT_ID+'&redirect_uri='+process.env.GH_REDIRECT_URL+'&scope=user,read:repo_hook,read:org&state='+process.env.GH_STATE;
+      res.redirect(url);
+    };
+
+  exports.GH_oauth                        = function ( req, res ) {
+      console.log('++++++++ GH_oauth ++++++++');
+      // console.log( "HEADER: ", req.headers );
+      // console.log( "QUERY: ", req.query );
+      // console.log( "BODY: ", req.body );
+
+      var data = { 'client_id' : process.env.GH_CLIENT_ID,
+                   'client_secret' : process.env.GH_CLIENT_SECRET,
+                   'redirect_uri' : process.env.GH_REDIRECT_URL,
+                   'code' : req.query.code
+                  };
+
+      var options = {
+          uri: 'https://github.com/login/oauth/access_token',
+          method: 'POST',
+          headers: { Accept: 'application/json' },
+          form: data
+      }
+
+      request( options, function (error, response, body) {
+        //{"access_token":"b414b344jhk42636349833827832","token_type":"bearer","scope":"user"}
+        var GH_access_token = JSON.parse( body ).access_token;
+        // console.log( "BODY OF OAUTH", GH_access_token, body );
+
+        checkOrganization( GH_access_token, function( member ){
+          if ( member ) {
+            // console.log( 'XXXXXXXX checkOrganization success!', member );
+
+            // save GitHub token
+            // create new HRX token save that and send it back
+
+            userData( GH_access_token, function( result ) {
+
+              var token = crypto.randomBytes(16).toString('base64'); // create a token
+
+              console.log( result );
+
+              // 'https://api.github.com/user'
+                // { "login":"julesmoretti",
+                //   "id":744300,
+                //   "avatar_url":"https://avatars.githubusercontent.com/u/744300?v=3",
+                //   "gravatar_id":"",
+                //   "url":"https://api.github.com/users/julesmoretti",
+                //   "html_url":"https://github.com/julesmoretti",
+                //   "followers_url":"https://api.github.com/users/julesmoretti/followers",
+                //   "following_url":"https://api.github.com/users/julesmoretti/following{/other_user}",
+                //   "gists_url":"https://api.github.com/users/julesmoretti/gists{/gist_id}",
+                //   "starred_url":"https://api.github.com/users/julesmoretti/starred{/owner}{/repo}",
+                //   "subscriptions_url":"https://api.github.com/users/julesmoretti/subscriptions",
+                //   "organizations_url":"https://api.github.com/users/julesmoretti/orgs",
+                //   "repos_url":"https://api.github.com/users/julesmoretti/repos",
+                //   "events_url":"https://api.github.com/users/julesmoretti/events{/privacy}",
+                //   "received_events_url":"https://api.github.com/users/julesmoretti/received_events",
+                //   "type":"User",
+                //   "site_admin":false,
+                //   "name":"Jules Moretti",
+                //   "company":"",
+                //   "blog":"behance.net/julesmoretti",
+                //   "location":"San Francisco",
+                //   "email":"julesmoretti@me.com",
+                //   "hireable":false,
+                //   "bio":null,
+                //   "public_repos":26,
+                //   "public_gists":0,
+                //   "followers":4,
+                //   "following":0,
+                //   "created_at":"2011-04-21T17:33:29Z",
+                //   "updated_at":"2015-06-22T21:27:28Z",
+                //   "private_gists":0,
+                //   "total_private_repos":19,
+                //   "owned_private_repos":9,
+                //   "disk_usage":148443,
+                //   "collaborators":1,
+                //   "plan":{"name":"small","space":976562499,"collaborators":0,"private_repos":10}
+                // }
+
+              checkUsersExistance( result.id, function( inDatabase ) {
+                if ( !inDatabase ) {
+
+                  connection.query( 'INSERT INTO access_right SET full_name = "'+result.name+'", username = "'+result.login+'", email = "'+result.email+'", blog = "'+result.blog+'", location = "'+result.location+'", token = "'+token+'", GH_id = "'+result.id+'", GH_url = "'+result.html_url+'", GH_access_token = "'+result.GH_access_token+'", profile_picture = "'+result.avatar_url+'"', function( err, rows, fields ) {
+                  // connection.query'INSERT INTO access_right SET full_name = '+result.avatar_url, function( err, rows, fields ) {
+                    if (err) throw err;
+
+                    // var url = 'http://localhost:9000/#!/home/map';
+                    var url = 'http://localhost:5000/hello';
+                    var params = {'access_token' : '12345'};
+                    res.redirect( url + "?access_token=" + token);
+                  });
+                } else {
+                  connection.query( 'SELECT token from access_right WHERE GH_id = '+result.id, function( err, rows, fields ) {
+                    if (err) throw err;
+
+                    if ( rows && rows.length ) {
+                      // var url = 'http://localhost:9000/#!/home/map';
+                      var url = 'http://localhost:5000/hello';
+                      var params = {'access_token' : '12345'};
+                      res.redirect( url + "?access_token=" + rows[0].token);
+                    }
+                  });
+                }
+              });
+
+            });
+
+
+          } else {
+            console.log( 'XXXXXXXX checkOrganization FAILURE!', member );
+            var url = 'http://localhost:5000/login';
+            var params = {'error_message' : 'notamember'};
+            res.redirect( url + "?access_token=" + params.error_message );
+
+          }
+        });
+      });
+    };
+
+  // CHECK TO SEE IF USER HAS ALREADY BEEN ADDED TO THE DATABSE
+  var checkUsersExistance          = function ( GH_id, callback ) {
+    connection.query('SELECT * FROM access_right WHERE GH_id = '+GH_id, function( err, rows, fields ) {
+      if (err) throw err;
+      if ( rows && rows.length ) {
+        callback( true );
+      } else {
+        callback( false );
+      }
+    });
+  }
+
+  // GIT HUB DATA
+  var userData                     = function ( token, callback ) {
+      console.log('++++++++ userData ++++++++');
+
+      var options = {
+          uri: 'https://api.github.com/user',
+          // uri: 'https://api.github.com/user/orgs',
+          method: 'GET',
+          headers:  { Accept: 'application/json',
+                      'User-Agent' : process.env.GH_CLIENT_NAME,
+                      'Authorization' : 'token '+ token }
+      }
+
+      request( options, function (error, response, body) {
+        // console.log( "BODY OF githubdata", body);
+        // RESPONSE
+        // 'https://api.github.com/user'
+          // { "login":"julesmoretti",
+          //   "id":744300,
+          //   "avatar_url":"https://avatars.githubusercontent.com/u/744300?v=3",
+          //   "gravatar_id":"",
+          //   "url":"https://api.github.com/users/julesmoretti",
+          //   "html_url":"https://github.com/julesmoretti",
+          //   "followers_url":"https://api.github.com/users/julesmoretti/followers",
+          //   "following_url":"https://api.github.com/users/julesmoretti/following{/other_user}",
+          //   "gists_url":"https://api.github.com/users/julesmoretti/gists{/gist_id}",
+          //   "starred_url":"https://api.github.com/users/julesmoretti/starred{/owner}{/repo}",
+          //   "subscriptions_url":"https://api.github.com/users/julesmoretti/subscriptions",
+          //   "organizations_url":"https://api.github.com/users/julesmoretti/orgs",
+          //   "repos_url":"https://api.github.com/users/julesmoretti/repos",
+          //   "events_url":"https://api.github.com/users/julesmoretti/events{/privacy}",
+          //   "received_events_url":"https://api.github.com/users/julesmoretti/received_events",
+          //   "type":"User",
+          //   "site_admin":false,
+          //   "name":"Jules Moretti",
+          //   "company":"",
+          //   "blog":"behance.net/julesmoretti",
+          //   "location":"San Francisco",
+          //   "email":"julesmoretti@me.com",
+          //   "hireable":false,
+          //   "bio":null,
+          //   "public_repos":26,
+          //   "public_gists":0,
+          //   "followers":4,
+          //   "following":0,
+          //   "created_at":"2011-04-21T17:33:29Z",
+          //   "updated_at":"2015-06-22T21:27:28Z",
+          //   "private_gists":0,
+          //   "total_private_repos":19,
+          //   "owned_private_repos":9,
+          //   "disk_usage":148443,
+          //   "collaborators":1,
+          //   "plan":{"name":"small","space":976562499,"collaborators":0,"private_repos":10}
+          // }
+
+        callback( JSON.parse( body ) );
+      });
+    };
+
+  var checkOrganization            = function ( token, callback ) {
+      console.log('++++++++ checkOrganization ++++++++');
+
+      var options = {
+          // uri: 'https://api.github.com/user',
+          uri: 'https://api.github.com/user/orgs',
+          method: 'GET',
+          headers:  { Accept: 'application/json',
+                      'User-Agent' : process.env.GH_CLIENT_NAME,
+                      'Authorization' : 'token '+token }
+      }
+
+      request( options, function (error, response, body) {
+        // console.log( "BODY OF githubdata", body);
+        // 'https://api.github.com/user/orgs'
+          // [{
+          //    "login":"hackreactor",
+          //    "id":2824164,
+          //    "url":"https://api.github.com/orgs/hackreactor",
+          //    "repos_url":"https://api.github.com/orgs/hackreactor/repos",
+          //    "events_url":"https://api.github.com/orgs/hackreactor/events",
+          //    "members_url":"https://api.github.com/orgs/hackreactor/members{/member}",
+          //    "public_members_url":"https://api.github.com/orgs/hackreactor/public_members{/member}",
+          //    "avatar_url":"https://avatars.githubusercontent.com/u/2824164?v=3",
+          //    "description":""
+          //  },
+          //  {
+          //    "login":"PickleApp",
+          //    "id":7663812,
+          //    "url":"https://api.github.com/orgs/PickleApp",
+          //    "repos_url":"https://api.github.com/orgs/PickleApp/repos",
+          //    "events_url":"https://api.github.com/orgs/PickleApp/events",
+          //    "members_url":"https://api.github.com/orgs/PickleApp/members{/member}",
+          //    "public_members_url":"https://api.github.com/orgs/PickleApp/public_members{/member}",
+          //    "avatar_url":"https://avatars.githubusercontent.com/u/7663812?v=3",
+          //    "description":""
+          //  }]
+
+        // res.redirect('/hello');
+        var body = JSON.parse( body );
+        for ( var i = 0; i < body.length; i++ ) {
+          if ( body[ i ].login === 'hackreactor' ) {
+            callback( true );
+            return;
+          }
+        }
+        callback( false );
+      });
+    };
+
+  exports.LI_login                        = function ( req, res ) {
+
+      console.log('++++++++ LI_login ++++++++');
+      var url = 'https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id=75te23423gi7px&redirect_uri=http://localhost:3000/LIoauth&state=DCEeFW25345dfKef424&scope=r_basicprofile%20r_contactinfo';
+      res.redirect(url);
+    };
+
+  exports.LI_oauth                        = function ( req, res ) {
+      console.log('++++++++ LI_oauth ++++++++');
+      console.log( "HEADER: ", req.headers );
+      console.log( "QUERY: ", req.query );
+      console.log( "BODY: ", req.body );
+
+      // res.send( req.query );
+
+      var data = { 'grant_type' : 'authorization_code',
+                   'code' : req.query.code,
+                   'redirect_uri' : 'http://localhost:5000/LIoauth',
+                   'client_id' : '75t5325i7px',
+                   'client_secret' : 'TWAq234523nZxywNR'
+                  };
+
+      var options = {
+          uri: 'https://github.com/login/oauth/access_token',
+          method: 'POST',
+          // headers: { Accept: 'application/json' },
+          form: data
+      }
+
+      request( options, function (error, response, body) {
+        if (error) {
+          console.log( error );
+          res.send( error );
+        } else {
+          console.log( "BODY OF OAUTH", body);
+          res.send( body );
+        }
+      });
+    };
+
+  exports.LI_userData                     = function ( req, res ) {
+      console.log('++++++++ LI_userData ++++++++');
+      console.log( "HEADER: ", req.headers );
+      console.log( "QUERY: ", req.query );
+      console.log( "BODY: ", req.body );
+
+      var options = {
+          uri: 'https://api.github.com/user',
+          method: 'GET',
+          headers:  { Accept: 'application/json',
+                      'User-Agent' : 'HRX',
+                      'Authorization' : 'token b414346235623562345234dfd9833827832' }
+      }
+
+      request( options, function (error, response, body) {
+        console.log( "BODY OF githubdata", body);
+        res.redirect('/');
+      });
+
+      // RESPONSE
+    };
+

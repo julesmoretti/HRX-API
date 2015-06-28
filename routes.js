@@ -35,6 +35,18 @@ var core                                  = require('./core.js');
 
     // landing page to site loads default - login.ejs
     app.get('/', core.main);
+    // app.get('/result', core.result);
+
+    // app.get('/GH', core.GH);
+    // app.get('/GHoauth', core.GHoauth);
+
+    app.get( '/GHlogin', core.GH_login );
+    app.get( '/GHoauth', core.GH_oauth );
+    // app.get( '/GHuserdata', core.GH_userData );
+
+    app.get( '/LIlogin', core.LI_login );
+    app.get( '/LIoauth', core.LI_oauth );
+    app.get( '/LIuserdata', core.LI_userData );
 
     // check for token changes
     app.get('/tokencheck', core.tokencheck);
@@ -50,7 +62,6 @@ var core                                  = require('./core.js');
 
     // send a link to reset
     app.post('/resetpassword', core.resetpassword);
-
 
     // handles signup request and provides a token in response
     app.get('/signup', core.signup);
