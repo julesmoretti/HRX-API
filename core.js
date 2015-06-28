@@ -157,7 +157,7 @@ var crypto                                = require('crypto'),
     });
   };
 
-  // testMysql();
+  testMysql();
 
 //  =============================================================================
 //  REQUEST HANDLERS
