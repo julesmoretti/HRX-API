@@ -205,8 +205,31 @@ var crypto                                = require('crypto'),
       console.log(req.headers);
 
       // check to see if credentials were passed into the headers
-      if ( req.headers[ 'x-hrx-user-token' ] && req.headers[ 'x-hrx-user-APN-token' ] ) {
+      if ( req.headers[ 'x-hrx-user-token' ] && req.headers[ 'x-hrx-user-apn-token' ] ) {
 
+        var token = req.headers[ 'x-hrx-user-token' ];
+        var apn_token = req.headers[ 'x-hrx-user-apn-token' ];
+
+          connection.query('SELECT id FROM access_right WHERE token = "'+token+'"', function( err, rows, fields ) {
+            if (err) throw err;
+
+            var hrx_id = rows[0].id;
+
+            if ( rows && rows.length ) {
+              connection.query('SELECT apn_token FROM devices WHERE id = '+hrx_id, function( err, rows, fields ) {
+                if (err) throw err;
+                if (rows && rows.length ) {
+                  res.send( { responseCode: 403, message: 'Already have it on file' } );
+                } else {
+                connection.query('INSERT INTO devices SET hrx_id = '+hrx_id+', apn_token = "'+ apn_token +'"', function( err, rows, fields ) {
+                  if (err) throw err;
+                  res.send( { responseCode: 200, message: 'Added device to Database' } );
+                }
+              });
+            } else {
+              res.send( { responseCode: 403, message: 'No valid token found...' } );
+            }
+          });
 
         // // var userData = decodeURIComponent( req.headers[ 'x-hrx-user-token' ] );
         // var userData = req.headers[ 'x-hrx-user-token' ];

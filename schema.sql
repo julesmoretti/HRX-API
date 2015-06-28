@@ -36,6 +36,16 @@ CREATE TABLE `access_right` (
 ) COMMENT 'Original access_right list';
 
 
+DROP TABLE IF EXISTS `devices`;
+
+CREATE TABLE `devices` (
+  `id` INT(20) AUTO_INCREMENT,
+  `hrx_id` INT(20),
+  `apn_token` VARCHAR(255),
+  `state` INT DEFAULT 1,
+  PRIMARY KEY (`id`)
+) COMMENT 'Apple iOS device list and notification status';
+
 -- INSERT INTO
 --   access_right
 -- SET
