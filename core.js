@@ -559,7 +559,6 @@ var crypto                                = require('crypto'),
                       var url = 'http://localhost:5000/success/';
                       var params = { access_token : rows[0].token, message: 'Welcome back!' };
                       res.redirect( url + "?" + encodeURIComponent( JSON.stringify( params ) ) );
-                      // res.redirect( url + "?access_token=" + encodeURIComponent( rows[0].token ) );
                     }
                   });
                 }
