@@ -210,51 +210,31 @@ var crypto                                = require('crypto'),
         var token = req.headers[ 'x-hrx-user-token' ];
         var apn_token = req.headers[ 'x-hrx-user-apn-token' ];
 
-          connection.query('SELECT id FROM access_right WHERE token = "'+token+'"', function( err, rows, fields ) {
-            if (err) throw err;
+        connection.query('SELECT id FROM access_right WHERE token = "'+token+'"', function( err, rows, fields ) {
+          if (err) throw err;
 
-            var hrx_id = rows[0].id;
+          var hrx_id = rows[0].id;
 
-            if ( rows && rows.length ) {
-              connection.query('SELECT apn_token FROM devices WHERE id = '+hrx_id, function( err, rows, fields ) {
-                if (err) throw err;
-                if (rows && rows.length ) {
-                  res.send( { responseCode: 403, message: 'Already have it on file' } );
-                } else {
-                  connection.query('INSERT INTO devices SET hrx_id = '+hrx_id+', apn_token = "'+ apn_token +'"', function( err, rows, fields ) {
-                    if (err) throw err;
-                    res.send( { responseCode: 200, message: 'Added device to Database' } );
-                  });
-                }
-              });
-            } else {
-              res.send( { responseCode: 403, message: 'No valid token found...' } );
-            }
-          });
-
-        // // var userData = decodeURIComponent( req.headers[ 'x-hrx-user-token' ] );
-        // var userData = req.headers[ 'x-hrx-user-token' ];
-
-        // // check to see if both username and password crentials were part of the headers objects
-        // if ( userData.username && userData.token ) {
-
-        //   // check that username exist in the database and that password is a match otherwise return error
-        //   connection.query('SELECT token FROM access_right WHERE username = "'+userData.username+'"', function( err, rows, fields ) {
-        //     if (err) throw err;
-        //     if ( rows.length && rows[0].token && rows[0].token === userData.token ) {
-        //       res.send( { responseCode: 200, message: 'Still got it!' } );
-        //     } else {
-        //       res.send( { responseCode: 403, message: 'You lost it bro...' } );
-        //     }
-        //   });
-
-        // } else {
-        //   res.send( { responseCode: 401, message: 'no username or token inputed' } );
-        // }
+          if ( rows && rows.length ) {
+            connection.query('SELECT apn_token FROM devices WHERE id = '+hrx_id, function( err, rows, fields ) {
+              if (err) throw err;
+              if (rows && rows.length ) {
+                res.send( { responseCode: 300, message: 'Already have it on file' } );
+              } else {
+                connection.query('INSERT INTO devices SET hrx_id = '+hrx_id+', apn_token = "'+ apn_token +'"', function( err, rows, fields ) {
+                  if (err) throw err;
+                  res.send( { responseCode: 200, message: 'Added device to Database' } );
+                });
+              }
+            });
+          } else {
+            res.send( { responseCode: 401, message: 'APN token - No valid token found... please report this error' } );
+          }
+        });
 
       // no headers detected so nothing to respond
       } else {
-        res.send( { responseCode: 400, message: 'no header detected' } );
+        res.send( { responseCode: 400, message: 'APN token - No header detected... please report this error' } );
       }
     };
 
