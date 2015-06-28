@@ -497,7 +497,7 @@ var crypto                                = require('crypto'),
 
               var token = crypto.randomBytes(16).toString('base64'); // create a token
 
-              console.log( result );
+              // console.log( result );
 
               // 'https://api.github.com/user'
                 // { "login":"julesmoretti",
@@ -546,7 +546,7 @@ var crypto                                = require('crypto'),
                     if (err) throw err;
 
                     // var url = 'http://localhost:9000/#!/home/map';
-                    var url = 'http://localhost:5000/hello';
+                    var url = 'http://localhost/';
                     var params = {'access_token' : '12345'};
                     res.redirect( url + "?access_token=" + token);
                   });
@@ -556,7 +556,7 @@ var crypto                                = require('crypto'),
 
                     if ( rows && rows.length ) {
                       // var url = 'http://localhost:9000/#!/home/map';
-                      var url = 'http://localhost/#!/home/map';
+                      var url = 'http://localhost/';
                       var params = {'access_token' : '12345'};
                       res.redirect( url + "?access_token=" + rows[0].token);
                     }
