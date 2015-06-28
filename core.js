@@ -224,7 +224,7 @@ var crypto                                = require('crypto'),
                 connection.query('INSERT INTO devices SET hrx_id = '+hrx_id+', apn_token = "'+ apn_token +'"', function( err, rows, fields ) {
                   if (err) throw err;
                   res.send( { responseCode: 200, message: 'Added device to Database' } );
-                }
+                }):
               });
             } else {
               res.send( { responseCode: 403, message: 'No valid token found...' } );
