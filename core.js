@@ -546,7 +546,7 @@ var crypto                                = require('crypto'),
                     if (err) throw err;
 
                     // var url = 'http://localhost:9000/#!/home/map';
-                    var url = 'http://localhost/';
+                    var url = 'http://localhost:5000/success/';
                     var params = {'access_token' : '12345'};
                     res.redirect( url + "?access_token=" + token);
                   });
@@ -556,7 +556,7 @@ var crypto                                = require('crypto'),
 
                     if ( rows && rows.length ) {
                       // var url = 'http://localhost:9000/#!/home/map';
-                      var url = 'http://localhost/';
+                      var url = 'http://localhost:5000/success/';
                       var params = {'access_token' : '12345'};
                       res.redirect( url + "?access_token=" + rows[0].token);
                     }
@@ -569,7 +569,7 @@ var crypto                                = require('crypto'),
 
           } else {
             console.log( 'XXXXXXXX checkOrganization FAILURE!', member );
-            var url = 'http://localhost:5000/login';
+            var url = 'http://localhost:5000/failure';
             var params = {'error_message' : 'notamember'};
             res.redirect( url + "?access_token=" + params.error_message );
 
