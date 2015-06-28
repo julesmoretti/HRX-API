@@ -547,8 +547,8 @@ var crypto                                = require('crypto'),
 
                     // var url = 'http://localhost:9000/#!/home/map';
                     var url = 'http://localhost:5000/success/';
-                    var params = {'access_token' : '12345'};
-                    res.redirect( url + "?access_token=" + token);
+                    var params = { access_token : token, message: 'Welcome to HRX!' };
+                    res.redirect( url + "?" + encodeURIComponent( JSON.stringify( params ) ) );
                   });
                 } else {
                   connection.query( 'SELECT token from access_right WHERE GH_id = '+result.id, function( err, rows, fields ) {
@@ -557,8 +557,9 @@ var crypto                                = require('crypto'),
                     if ( rows && rows.length ) {
                       // var url = 'http://localhost:9000/#!/home/map';
                       var url = 'http://localhost:5000/success/';
-                      var params = {'access_token' : '12345'};
-                      res.redirect( url + "?access_token=" + rows[0].token);
+                      var params = { access_token : rows[0].token, message: 'Welcome back!' };
+                      res.redirect( url + "?" + encodeURIComponent( JSON.stringify( params ) ) );
+                      // res.redirect( url + "?access_token=" + encodeURIComponent( rows[0].token ) );
                     }
                   });
                 }
@@ -570,8 +571,8 @@ var crypto                                = require('crypto'),
           } else {
             console.log( 'XXXXXXXX checkOrganization FAILURE!', member );
             var url = 'http://localhost:5000/failure';
-            var params = {'error_message' : 'notamember'};
-            res.redirect( url + "?access_token=" + params.error_message );
+            var params = { message : 'Sorry you do not seem to be a member'};
+            res.redirect( url + "?" + encodeURIComponent( JSON.stringify( params ) ) );
 
           }
         });
