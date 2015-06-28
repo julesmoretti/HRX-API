@@ -157,7 +157,7 @@ var crypto                                = require('crypto'),
     });
   };
 
-  testMysql();
+  // testMysql();
 
 //  =============================================================================
 //  REQUEST HANDLERS
@@ -190,6 +190,50 @@ var crypto                                = require('crypto'),
 
       res.render('./partials/resetpassword.ejs',  metrics );
     };
+
+//  -----------------------------------------------------------------------------
+//  /tokencheck = checks to see if token is still identical and that user exist
+//  -----------------------------------------------------------------------------
+    // FROM |
+    //      -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
+    //  TO  |
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  exports.apn_token                           = function ( req, res ) {
+      console.log( "===============================" );
+      console.log( '++++++++++ apn token ++++++++++' );
+      console.log( "===============================" );
+      console.log(req.headers);
+
+      // check to see if credentials were passed into the headers
+      if ( req.headers[ 'x-hrx-user-token' ] && req.headers[ 'x-hrx-user-APN-token' ] ) {
+
+
+        // // var userData = decodeURIComponent( req.headers[ 'x-hrx-user-token' ] );
+        // var userData = req.headers[ 'x-hrx-user-token' ];
+
+        // // check to see if both username and password crentials were part of the headers objects
+        // if ( userData.username && userData.token ) {
+
+        //   // check that username exist in the database and that password is a match otherwise return error
+        //   connection.query('SELECT token FROM access_right WHERE username = "'+userData.username+'"', function( err, rows, fields ) {
+        //     if (err) throw err;
+        //     if ( rows.length && rows[0].token && rows[0].token === userData.token ) {
+        //       res.send( { responseCode: 200, message: 'Still got it!' } );
+        //     } else {
+        //       res.send( { responseCode: 403, message: 'You lost it bro...' } );
+        //     }
+        //   });
+
+        // } else {
+        //   res.send( { responseCode: 401, message: 'no username or token inputed' } );
+        // }
+
+      // no headers detected so nothing to respond
+      } else {
+        res.send( { responseCode: 400, message: 'no header detected' } );
+      }
+    };
+
 
 //  -----------------------------------------------------------------------------
 //  /tokencheck = checks to see if token is still identical and that user exist

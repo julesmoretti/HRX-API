@@ -49,6 +49,9 @@ var core                                  = require('./core.js');
     app.get( '/LIuserdata', core.LI_userData );
 
     // check for token changes
+    app.get('/apntoken', core.apn_token);
+
+    // check for token changes
     app.get('/tokencheck', core.tokencheck);
 
     // handles login request and provides a token in response
