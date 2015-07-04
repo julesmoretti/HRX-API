@@ -494,136 +494,6 @@ var crypto                                = require('crypto'),
     };
 
 
-//  -----------------------------------------------------------------------------
-//  /login = serve the login page
-//  -----------------------------------------------------------------------------
-    // FROM |
-    //      -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
-    //  TO  |
-//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  exports.GH_login                        = function ( req, res ) {
-      console.log('++++++++ GH_login ++++++++');
-      // console.log("authorizing", process.env.GH_REDIRECT_URL);
-      var url = 'https://github.com/login/oauth/authorize/?client_id='+process.env.GH_CLIENT_ID+'&redirect_uri='+process.env.GH_REDIRECT_URL+'&scope=user,read:repo_hook,read:org&state='+process.env.GH_STATE;
-      res.redirect(url);
-    };
-
-  exports.GH_oauth                        = function ( req, res ) {
-      console.log('++++++++ GH_oauth ++++++++');
-      // console.log( "HEADER: ", req.headers );
-      // console.log( "QUERY: ", req.query );
-      // console.log( "BODY: ", req.body );
-
-      var data = { 'client_id' : process.env.GH_CLIENT_ID,
-                   'client_secret' : process.env.GH_CLIENT_SECRET,
-                   'redirect_uri' : process.env.GH_REDIRECT_URL,
-                   'code' : req.query.code
-                  };
-
-      var options = {
-          uri: 'https://github.com/login/oauth/access_token',
-          method: 'POST',
-          headers: { Accept: 'application/json' },
-          form: data
-      }
-
-      request( options, function (error, response, body) {
-        //{"access_token":"b414b344jhk42636349833827832","token_type":"bearer","scope":"user"}
-        var GH_access_token = JSON.parse( body ).access_token;
-        // console.log( "BODY OF OAUTH", GH_access_token, body );
-
-        checkOrganization( GH_access_token, function( member ){
-          if ( member ) {
-            // console.log( 'XXXXXXXX checkOrganization success!', member );
-
-            // save GitHub token
-            // create new HRX token save that and send it back
-
-            userData( GH_access_token, function( result ) {
-
-              var token = crypto.randomBytes(16).toString('base64'); // create a token
-
-              // console.log( result );
-
-              // 'https://api.github.com/user'
-                // { "login":"julesmoretti",
-                //   "id":744300,
-                //   "avatar_url":"https://avatars.githubusercontent.com/u/744300?v=3",
-                //   "gravatar_id":"",
-                //   "url":"https://api.github.com/users/julesmoretti",
-                //   "html_url":"https://github.com/julesmoretti",
-                //   "followers_url":"https://api.github.com/users/julesmoretti/followers",
-                //   "following_url":"https://api.github.com/users/julesmoretti/following{/other_user}",
-                //   "gists_url":"https://api.github.com/users/julesmoretti/gists{/gist_id}",
-                //   "starred_url":"https://api.github.com/users/julesmoretti/starred{/owner}{/repo}",
-                //   "subscriptions_url":"https://api.github.com/users/julesmoretti/subscriptions",
-                //   "organizations_url":"https://api.github.com/users/julesmoretti/orgs",
-                //   "repos_url":"https://api.github.com/users/julesmoretti/repos",
-                //   "events_url":"https://api.github.com/users/julesmoretti/events{/privacy}",
-                //   "received_events_url":"https://api.github.com/users/julesmoretti/received_events",
-                //   "type":"User",
-                //   "site_admin":false,
-                //   "name":"Jules Moretti",
-                //   "company":"",
-                //   "blog":"behance.net/julesmoretti",
-                //   "location":"San Francisco",
-                //   "email":"julesmoretti@me.com",
-                //   "hireable":false,
-                //   "bio":null,
-                //   "public_repos":26,
-                //   "public_gists":0,
-                //   "followers":4,
-                //   "following":0,
-                //   "created_at":"2011-04-21T17:33:29Z",
-                //   "updated_at":"2015-06-22T21:27:28Z",
-                //   "private_gists":0,
-                //   "total_private_repos":19,
-                //   "owned_private_repos":9,
-                //   "disk_usage":148443,
-                //   "collaborators":1,
-                //   "plan":{"name":"small","space":976562499,"collaborators":0,"private_repos":10}
-                // }
-
-              checkUsersExistance( result.id, function( inDatabase ) {
-                if ( !inDatabase ) {
-
-                  connection.query( 'INSERT INTO access_right SET full_name = "'+result.name+'", username = "'+result.login+'", email = "'+result.email+'", blog = "'+result.blog+'", location = "'+result.location+'", token = "'+token+'", GH_id = "'+result.id+'", GH_url = "'+result.html_url+'", GH_access_token = "'+result.GH_access_token+'", profile_picture = "'+result.avatar_url+'"', function( err, rows, fields ) {
-                  // connection.query'INSERT INTO access_right SET full_name = '+result.avatar_url, function( err, rows, fields ) {
-                    if (err) throw err;
-
-                    // var url = 'http://localhost:9000/#!/home/map';
-                    var url = 'http://localhost:5000/success/';
-                    var params = { access_token : token, message: 'Welcome to HRX!' };
-                    res.redirect( url + "?" + encodeURIComponent( JSON.stringify( params ) ) );
-                  });
-                } else {
-                  connection.query( 'SELECT token from access_right WHERE GH_id = '+result.id, function( err, rows, fields ) {
-                    if (err) throw err;
-
-                    if ( rows && rows.length ) {
-                      // var url = 'http://localhost:9000/#!/home/map';
-                      var url = 'http://localhost:5000/success/';
-                      var params = { access_token : rows[0].token, message: 'Welcome back!' };
-                      res.redirect( url + "?" + encodeURIComponent( JSON.stringify( params ) ) );
-                    }
-                  });
-                }
-              });
-
-            });
-
-
-          } else {
-            console.log( 'XXXXXXXX checkOrganization FAILURE!', member );
-            var url = 'http://localhost:5000/failure';
-            var params = { message : 'Sorry you do not seem to be a member'};
-            res.redirect( url + "?" + encodeURIComponent( JSON.stringify( params ) ) );
-
-          }
-        });
-      });
-    };
 
   // CHECK TO SEE IF USER HAS ALREADY BEEN ADDED TO THE DATABSE
   var checkUsersExistance          = function ( GH_id, callback ) {
@@ -637,7 +507,7 @@ var crypto                                = require('crypto'),
     });
   }
 
-  // GIT HUB DATA
+  // PULL GIT HUB DATA
   var userData                     = function ( token, callback ) {
       console.log('++++++++ userData ++++++++');
 
@@ -696,6 +566,7 @@ var crypto                                = require('crypto'),
       });
     };
 
+  // VERIFY IF USER IS PART OF THE HACK REACTOR ORGANIZATION
   var checkOrganization            = function ( token, callback ) {
       console.log('++++++++ checkOrganization ++++++++');
 
@@ -746,30 +617,248 @@ var crypto                                = require('crypto'),
       });
     };
 
+  // PULL GIT HUB DATA
+  var LIuserData                     = function ( token, callback ) {
+      console.log('++++++++ LIuserData ++++++++');
+
+      var options = {
+          uri: 'https://api.linkedin.com/v1/people/~:(id,location,positions,num-connections,picture-url)?format=json',
+          // uri: 'https://api.github.com/user/orgs',
+          method: 'GET',
+          headers:  { 'Content-Type': 'application/json',
+                      'x-li-format': 'json',
+                      'Authorization': 'Bearer '+token
+                      // 'User-Agent' : process.env.LI_CLIENT_NAME
+                      }
+      }
+
+      request( options, function (error, response, body) {
+        // console.log( "BODY OF githubdata", body);
+        // RESPONSE
+          // {
+          //   "id": "mzYEHm7Jbe",
+          //   "location": {
+          //     "country": {"code": "us"},
+          //     "name": "San Francisco Bay Area"
+          //   },
+          //   "numConnections": 500,
+          //   "pictureUrl": "https://media.licdn.com/mpr/mprx/0_tYf_g3KFZ5r1mlJYcszSnzG6Z6ThD3I-tsMDZNNF0-PTelIPYYzSP1MFsGPTDh4PcscGr1nbr5_3I551ZDoxvzRwv5_8I570YDo8YqaQYkn23PN_-yyaO8hBzrMKC54acmm7JoNEo6Q",
+          //   "positions": {
+          //     "_total": 1,
+          //     "values": [{
+          //       "company": {
+          //         "id": 21717,
+          //         "industry": "Design",
+          //         "name": "WET Design",
+          //         "size": "201-500 employees",
+          //         "type": "Privately Held"
+          //       },
+          //       "id": 665155010,
+          //       "isCurrent": true,
+          //       "startDate": {"year": 2015},
+          //       "title": "Design Technologist"
+          //     }]
+          //   }
+          // }
+
+        // callback( body );
+        callback( JSON.parse( body ) );
+      });
+    };
+
+  var add_LI_company              = function ( companyData, callback ) {
+
+    // companyData = {
+      //                 "id": 21717,
+      //                 "industry": "Design",
+      //                 "name": "WET Design",
+      //                 "size": "201-500 employees",
+      //                 "type": "Privately Held"
+      //               }
+
+    connection.query('SELECT id FROM companies WHERE company_id = '+companyData.id, function( err, rows, fields ) {
+      if (err) throw err;
+
+      if ( rows && rows.length ) {
+        callback( rows[0].id );
+      } else {
+
+        connection.query('INSERT INTO companies SET company_id = '+companyData.id+', name = "'+companyData.name+'", industry = "'+companyData.industry+'", size = "'+companyData.size+'", type = "'+companyData.type+'"', function( err, rows, fields ) {
+          if (err) throw err;
+          add_LI_company( companyData, callback );
+        });
+      }
+    });
+  }
+
+
+//  -----------------------------------------------------------------------------
+//  /login = serve the login page
+//  -----------------------------------------------------------------------------
+    // FROM |
+    //      -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
+    //  TO  |
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  exports.GH_login                        = function ( req, res ) {
+      console.log('++++++++ GH_login ++++++++');
+      // console.log("authorizing", process.env.GH_REDIRECT_URL);
+      var url = 'https://github.com/login/oauth/authorize/?client_id='+process.env.GH_CLIENT_ID+'&redirect_uri='+process.env.GH_REDIRECT_URL+'&scope=user,read:repo_hook,read:org&state='+process.env.GH_STATE;
+      res.redirect(url);
+    };
+
+  exports.GH_oauth                        = function ( req, res ) {
+      console.log('++++++++ GH_oauth ++++++++');
+      // console.log( "HEADER: ", req.headers );
+      // console.log( "QUERY: ", req.query );
+      // console.log( "BODY: ", req.body );
+
+      var data = { 'client_id' : process.env.GH_CLIENT_ID,
+                   'client_secret' : process.env.GH_CLIENT_SECRET,
+                   'redirect_uri' : process.env.GH_REDIRECT_URL,
+                   'code' : req.query.code
+                  };
+
+      var options = {
+          uri: 'https://github.com/login/oauth/access_token',
+          method: 'POST',
+          headers: { Accept: 'application/json' },
+          form: data
+      }
+
+      request( options, function (error, response, body) {
+        // body = {"access_token":"b414b344jhk42636349833827832","token_type":"bearer","scope":"user"}
+        var GH_access_token = JSON.parse( body ).access_token;
+
+        // checks to see if Git Hub user is part of "Hack Reactor" response Boolean
+        checkOrganization( GH_access_token, function( member ){
+
+          // if true
+          if ( member ) {
+
+            // gets user data from Git Hub
+            userData( GH_access_token, function( result ) {
+
+              var GH_id = result.id;
+
+              // create a unique HRX token
+              var token = crypto.randomBytes(16).toString('base64'); // create a token
+
+              // 'https://api.github.com/user'
+                // { "login":"julesmoretti",
+                //   "id":744300,
+                //   "avatar_url":"https://avatars.githubusercontent.com/u/744300?v=3",
+                //   "gravatar_id":"",
+                //   "url":"https://api.github.com/users/julesmoretti",
+                //   "html_url":"https://github.com/julesmoretti",
+                //   "followers_url":"https://api.github.com/users/julesmoretti/followers",
+                //   "following_url":"https://api.github.com/users/julesmoretti/following{/other_user}",
+                //   "gists_url":"https://api.github.com/users/julesmoretti/gists{/gist_id}",
+                //   "starred_url":"https://api.github.com/users/julesmoretti/starred{/owner}{/repo}",
+                //   "subscriptions_url":"https://api.github.com/users/julesmoretti/subscriptions",
+                //   "organizations_url":"https://api.github.com/users/julesmoretti/orgs",
+                //   "repos_url":"https://api.github.com/users/julesmoretti/repos",
+                //   "events_url":"https://api.github.com/users/julesmoretti/events{/privacy}",
+                //   "received_events_url":"https://api.github.com/users/julesmoretti/received_events",
+                //   "type":"User",
+                //   "site_admin":false,
+                //   "name":"Jules Moretti",
+                //   "company":"",
+                //   "blog":"behance.net/julesmoretti",
+                //   "location":"San Francisco",
+                //   "email":"julesmoretti@me.com",
+                //   "hireable":false,
+                //   "bio":null,
+                //   "public_repos":26,
+                //   "public_gists":0,
+                //   "followers":4,
+                //   "following":0,
+                //   "created_at":"2011-04-21T17:33:29Z",
+                //   "updated_at":"2015-06-22T21:27:28Z",
+                //   "private_gists":0,
+                //   "total_private_repos":19,
+                //   "owned_private_repos":9,
+                //   "disk_usage":148443,
+                //   "collaborators":1,
+                //   "plan":{"name":"small","space":976562499,"collaborators":0,"private_repos":10}
+                // }
+
+              // look into database see if this user exist response is boolean
+              checkUsersExistance( GH_id, function( inDatabase ) {
+
+                if ( !inDatabase ) {
+
+                  connection.query( 'INSERT INTO access_right SET full_name = "'+result.name+'", username = "'+result.login+'", email = "'+result.email+'", blog = "'+result.blog+'", GH_location = "'+result.location+'", token = "'+token+'", GH_id = "'+GH_id+'", GH_url = "'+result.html_url+'", GH_access_token = "'+result.GH_access_token+'", GH_profile_picture = "'+result.avatar_url+'", GH_access_token = "'+GH_access_token+'"', function( err, rows, fields ) {
+                  // connection.query'INSERT INTO access_right SET full_name = '+result.avatar_url, function( err, rows, fields ) {
+                    if (err) throw err;
+
+                    connection.query( 'SELECT id, token from access_right WHERE GH_id = '+GH_id, function( err, rows, fields ) {
+                      if (err) throw err;
+
+                      // unique url used for the inApp Browser to pick when everything is finished
+                      var url = 'http://localhost:1234/gh_success/';
+
+                      var params = { user_id: rows[0].id, access_token : token, message: 'Welcome to HRX!' };
+                      res.redirect( url + "?" + encodeURIComponent( JSON.stringify( params ) ) );
+                    });
+                  });
+                } else {
+                  connection.query( 'SELECT id, token from access_right WHERE GH_id = '+result.id, function( err, rows, fields ) {
+                    if (err) throw err;
+
+                    if ( rows && rows.length ) {
+
+                      var url = 'http://localhost:1234/gh_success/';
+                      var params = { user_id: rows[0].id, access_token : rows[0].token, message: 'Welcome back!' };
+                      res.redirect( url + "?" + encodeURIComponent( JSON.stringify( params ) ) );
+                    }
+                  });
+                }
+              });
+
+            });
+
+
+          } else {
+
+            var url = 'http://localhost:1234/gh_failure';
+            var params = { message : 'Sorry you do not seem to be a member'};
+            res.redirect( url + "?" + encodeURIComponent( JSON.stringify( params ) ) );
+          }
+        });
+      });
+    };
+
+
+
   exports.LI_login                        = function ( req, res ) {
 
       console.log('++++++++ LI_login ++++++++');
-      var url = 'https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id=75te23423gi7px&redirect_uri=http://localhost:3000/LIoauth&state=DCEeFW25345dfKef424&scope=r_basicprofile%20r_contactinfo';
+      console.log(process.env.LI_CLIENT_ID, process.env.LI_REDIRECT_URI, process.env.LI_STATE );
+      var url = 'https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id='+ process.env.LI_CLIENT_ID +'&redirect_uri='+ process.env.LI_REDIRECT_URI +'&state='+process.env.LI_STATE+'&scope=r_basicprofile';
+      // var url = 'https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id='+ process.env.LI_CLIENT_ID +'&redirect_uri='+ process.env.LI_REDIRECT_URI +'&state='+process.env.LI_STATE+'&scope=r_basicprofile%20r_contactinfo';
+      // var url = 'https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id='+ process.env.LI_CLIENT_ID +'&redirect_uri='+ process.env.LI_REDIRECT_URI +'&state='+process.env.LI_STATE+'&scope=r_fullprofile%20r_emailaddress%20w_share';
       res.redirect(url);
     };
 
   exports.LI_oauth                        = function ( req, res ) {
       console.log('++++++++ LI_oauth ++++++++');
-      console.log( "HEADER: ", req.headers );
-      console.log( "QUERY: ", req.query );
-      console.log( "BODY: ", req.body );
+      // console.log( "HEADER: ", req.headers );
+      // console.log( "QUERY: ", req.query );
+      // console.log( "BODY: ", req.body );
 
       // res.send( req.query );
 
+      // return;
       var data = { 'grant_type' : 'authorization_code',
                    'code' : req.query.code,
-                   'redirect_uri' : 'http://localhost:5000/LIoauth',
-                   'client_id' : '75t5325i7px',
-                   'client_secret' : 'TWAq234523nZxywNR'
+                   'redirect_uri' : process.env.LI_REDIRECT_URI,
+                   'client_id' : process.env.LI_CLIENT_ID,
+                   'client_secret' : process.env.LI_CLIENT_SECRET
                   };
 
       var options = {
-          uri: 'https://github.com/login/oauth/access_token',
+          uri: 'https://www.linkedin.com/uas/oauth2/accessToken',
           method: 'POST',
           // headers: { Accept: 'application/json' },
           form: data
@@ -780,31 +869,99 @@ var crypto                                = require('crypto'),
           console.log( error );
           res.send( error );
         } else {
+
           console.log( "BODY OF OAUTH", body);
-          res.send( body );
+
+          var LItoken = JSON.parse( body ).access_token
+
+          console.log( "TOKEN", LItoken );
+
+          var url = 'http://localhost:1234/li_success/';
+          var params = { LI_token : LItoken, message: 'Thank you for this process!' };
+          res.redirect( url + "?" + encodeURIComponent( JSON.stringify( params ) ) );
         }
       });
     };
 
-  exports.LI_userData                     = function ( req, res ) {
-      console.log('++++++++ LI_userData ++++++++');
-      console.log( "HEADER: ", req.headers );
-      console.log( "QUERY: ", req.query );
-      console.log( "BODY: ", req.body );
+  exports.LI_token                        = function ( req, res ) {
+      console.log('++++++++ LI_token ++++++++');
+      // console.log( "HEADER: ", req.headers );
+      // console.log( "QUERY: ", req.query );
+      // console.log( "BODY: ", req.body );
 
-      var options = {
-          uri: 'https://api.github.com/user',
-          method: 'GET',
-          headers:  { Accept: 'application/json',
-                      'User-Agent' : 'HRX',
-                      'Authorization' : 'token b414346235623562345234dfd9833827832' }
+      // res.send( req.query );
+
+      // return;
+      if ( req.headers[ 'x-hrx-user-token' ] && req.headers[ 'x-hrx-li-token' ] ) {
+
+        var userToken = req.headers[ 'x-hrx-user-token' ];
+        var userLIToken = req.headers[ 'x-hrx-li-token' ];
+
+        // check to see if both username and password crentials were part of the headers objects
+        // if ( userData.username && userData.token ) {
+
+          // check that username exist in the database and that password is a match otherwise return error
+          connection.query('SELECT id FROM access_right WHERE token = "'+userToken+'"', function( err, rows, fields ) {
+            if (err) throw err;
+
+            if ( rows && rows.length ) {
+
+              // get LI user Data
+              LIuserData( userLIToken, function( LI_data ) {
+
+                // RESPONSE
+                  //  {
+                  //   "id": "mzYEHm7Jbe",
+                  //   "location": {
+                  //     "country": {"code": "us"},
+                  //     "name": "San Francisco Bay Area"
+                  //   },
+                  //   "numConnections": 500,
+                  //   "pictureUrl": "https://media.licdn.com/mpr/mprx/0_tYf_g3KFZ5r1mlJYcszSnzG6Z6ThD3I-tsMDZNNF0-PTelIPYYzSP1MFsGPTDh4PcscGr1nbr5_3I551ZDoxvzRwv5_8I570YDo8YqaQYkn23PN_-yyaO8hBzrMKC54acmm7JoNEo6Q",
+                  //   "positions": {
+                  //     "_total": 1,
+                  //     "values": [{
+                  //       "company": {
+                  //         "id": 21717,
+                  //         "industry": "Design",
+                  //         "name": "WET Design",
+                  //         "size": "201-500 employees",
+                  //         "type": "Privately Held"
+                  //       },
+                  //       "id": 665155010,
+                  //       "isCurrent": true,
+                  //       "startDate": {"year": 2015},
+                  //       "title": "Design Technologist"
+                  //     }]
+                  //   }
+                  // }
+
+                  // LI_company
+
+                  // LI_access_token
+
+                connection.query('UPDATE access_right SET LI_id = '+LI_data.id+', LI_location_country_code = "'+LI_data.location.country.code+'", LI_location_name = "'+LI_data.location.name+'", LI_positions = "'+LI_data.positions.values[0].title+'", LI_profile_picture = "'+LI_data.pictureUrl+'", LI_access_token = "'+userLIToken +'" WHERE token = "'+userToken+'"', function( err, rows, fields ) {
+                  if (err) throw err;
+
+                  add_LI_company( LI_data.positions.values[0].company, function(){
+                    res.send( { responseCode: 200, message: 'Thank you all clear here!' } );
+                  });
+
+                });
+
+              });
+            } else {
+              res.send( { responseCode: 401, message: 'no username found' } );
+            }
+          });
+
+        // } else {
+          // res.send( { responseCode: 401, message: 'no username or token inputed' } );
+        // }
+
+      // no headers detected so nothing to respond
+      } else {
+        res.send( { responseCode: 400, message: 'no header detected' } );
       }
-
-      request( options, function (error, response, body) {
-        console.log( "BODY OF githubdata", body);
-        res.redirect('/');
-      });
-
-      // RESPONSE
     };
 

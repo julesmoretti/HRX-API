@@ -24,7 +24,7 @@ var core                                  = require('./core.js');
       res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
 
       // Request headers you wish to allow
-      res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, content-type, Authorization, X-HRX-User-New-Credential, X-HRX-User-APN-Token, X-HRX-User-Credential, X-HRX-User-Token, X-HRX-User-Reset-Password-Initializer, X-HRX-User-Reset-Password' );
+      res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, content-type, Authorization, X-HRX-User-New-Credential, X-HRX-User-Token, X-HRX-LI-Token, X-HRX-User-APN-Token, X-HRX-User-Credential, X-HRX-User-Reset-Password-Initializer, X-HRX-User-Reset-Password' );
 
       // Set to true if you need the website to include cookies in the requests sent
       // to the API (e.g. in case you use sessions)
@@ -46,7 +46,10 @@ var core                                  = require('./core.js');
 
     app.get( '/LIlogin', core.LI_login );
     app.get( '/LIoauth', core.LI_oauth );
-    app.get( '/LIuserdata', core.LI_userData );
+
+    app.get( '/LItoken', core.LI_token );
+
+    // app.get( '/LIuserdata', core.LI_userData );
 
     // check for token changes
     app.get('/apntoken', core.apn_token);
