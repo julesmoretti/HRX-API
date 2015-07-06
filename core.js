@@ -788,7 +788,7 @@ var crypto                                = require('crypto'),
 
                 if ( !inDatabase ) {
 
-                  connection.query( 'INSERT INTO access_right SET full_name = "'+result.name+'", username = "'+result.login+'", email = "'+result.email+'", blog = "'+result.blog+'", GH_location = "'+result.location+'", token = "'+token+'", GH_id = "'+GH_id+'", GH_url = "'+result.html_url+'", GH_access_token = "'+result.GH_access_token+'", GH_profile_picture = "'+result.avatar_url+'", GH_access_token = "'+GH_access_token+'"', function( err, rows, fields ) {
+                  connection.query( 'INSERT INTO access_right SET full_name = "'+result.name+'", username = "'+result.login+'", email = "'+result.email+'", blog = "'+result.blog+'", GH_location = "'+result.location+'", token = "'+token+'", GH_id = "'+GH_id+'", GH_url = "'+result.html_url+'", GH_profile_picture = "'+result.avatar_url+'", GH_access_token = "'+GH_access_token+'"', function( err, rows, fields ) {
                   // connection.query'INSERT INTO access_right SET full_name = '+result.avatar_url, function( err, rows, fields ) {
                     if (err) throw err;
 
