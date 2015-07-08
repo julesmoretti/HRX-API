@@ -494,7 +494,6 @@ var crypto                                = require('crypto'),
     };
 
 
-
   // CHECK TO SEE IF USER HAS ALREADY BEEN ADDED TO THE DATABSE
   var checkUsersExistance          = function ( GH_id, callback ) {
     connection.query('SELECT * FROM access_right WHERE GH_id = '+GH_id, function( err, rows, fields ) {
@@ -567,8 +566,8 @@ var crypto                                = require('crypto'),
     };
 
   // VERIFY IF USER IS PART OF THE HACK REACTOR ORGANIZATION
-  var checkOrganization            = function ( token, callback ) {
-      console.log('++++++++ checkOrganization ++++++++');
+  var check_GH_organization            = function ( token, callback ) {
+      console.log('++++++++ check_GH_organization ++++++++');
 
       var options = {
           // uri: 'https://api.github.com/user',
@@ -618,8 +617,8 @@ var crypto                                = require('crypto'),
     };
 
   // PULL GIT HUB DATA
-  var LIuserData                     = function ( token, callback ) {
-      console.log('++++++++ LIuserData ++++++++');
+  var LI_user_data                     = function ( token, callback ) {
+      console.log('++++++++ LI_user_data ++++++++');
 
       var options = {
           uri: 'https://api.linkedin.com/v1/people/~:(id,location,positions,num-connections,picture-url)?format=json',
@@ -665,6 +664,54 @@ var crypto                                = require('crypto'),
         callback( JSON.parse( body ) );
       });
     };
+
+
+  var LI_company_data             = function ( token, company_id, callback ) {
+      console.log('++++++++ LI_company_data ++++++++');
+
+      var options = {
+          // uri: 'https://api.linkedin.com/v1/companies/21717?format=json',
+          uri: 'https://api.linkedin.com/v1/companies/'+company_id+'?format=json',
+          method: 'GET',
+          headers:  { 'Content-Type': 'application/json',
+                      'x-li-format': 'json',
+                      'Authorization': 'Bearer '+token
+                      }
+      }
+
+      request( options, function (error, response, body) {
+        // console.log( "BODY OF githubdata", body);
+        // RESPONSE
+          // {
+          //   "id": "mzYEHm7Jbe",
+          //   "location": {
+          //     "country": {"code": "us"},
+          //     "name": "San Francisco Bay Area"
+          //   },
+          //   "numConnections": 500,
+          //   "pictureUrl": "https://media.licdn.com/mpr/mprx/0_tYf_g3KFZ5r1mlJYcszSnzG6Z6ThD3I-tsMDZNNF0-PTelIPYYzSP1MFsGPTDh4PcscGr1nbr5_3I551ZDoxvzRwv5_8I570YDo8YqaQYkn23PN_-yyaO8hBzrMKC54acmm7JoNEo6Q",
+          //   "positions": {
+          //     "_total": 1,
+          //     "values": [{
+          //       "company": {
+          //         "id": 21717,
+          //         "industry": "Design",
+          //         "name": "WET Design",
+          //         "size": "201-500 employees",
+          //         "type": "Privately Held"
+          //       },
+          //       "id": 665155010,
+          //       "isCurrent": true,
+          //       "startDate": {"year": 2015},
+          //       "title": "Design Technologist"
+          //     }]
+          //   }
+          // }
+
+        // callback( body );
+        callback( JSON.parse( body ) );
+      });
+  }
 
   var add_LI_company              = function ( companyData, callback ) {
 
@@ -731,7 +778,7 @@ var crypto                                = require('crypto'),
         var GH_access_token = JSON.parse( body ).access_token;
 
         // checks to see if Git Hub user is part of "Hack Reactor" response Boolean
-        checkOrganization( GH_access_token, function( member ){
+        check_GH_organization( GH_access_token, function( member ){
 
           // if true
           if ( member ) {
@@ -788,7 +835,7 @@ var crypto                                = require('crypto'),
 
                 if ( !inDatabase ) {
 
-                  connection.query( 'INSERT INTO access_right SET full_name = "'+result.name+'", username = "'+result.login+'", email = "'+result.email+'", blog = "'+result.blog+'", GH_location = "'+result.location+'", token = "'+token+'", GH_id = "'+GH_id+'", GH_url = "'+result.html_url+'", GH_profile_picture = "'+result.avatar_url+'", GH_access_token = "'+GH_access_token+'"', function( err, rows, fields ) {
+                  connection.query( 'INSERT INTO access_right SET full_name = "'+result.name+'", username = "'+result.login+'", email = "'+result.email+'", blog = "'+result.blog+'", GH_location = "'+result.location+'", token = "'+token+'", GH_id = "'+GH_id+'", GH_url = "'+result.html_url+'", GH_profile_picture = "'+result.avatar_url+'", GH_public_repos = '+result.public_repos+', GH_private_repos = '+result.total_private_repos+', GH_access_token = "'+GH_access_token+'"', function( err, rows, fields ) {
                   // connection.query'INSERT INTO access_right SET full_name = '+result.avatar_url, function( err, rows, fields ) {
                     if (err) throw err;
 
@@ -799,6 +846,7 @@ var crypto                                = require('crypto'),
                       var url = 'http://localhost:1234/gh_success/';
 
                       var params = { user_id: rows[0].id, access_token : token, message: 'Welcome to HRX!' };
+
                       res.redirect( url + "?" + encodeURIComponent( JSON.stringify( params ) ) );
                     });
                   });
@@ -849,7 +897,6 @@ var crypto                                = require('crypto'),
 
       // res.send( req.query );
 
-      // return;
       var data = { 'grant_type' : 'authorization_code',
                    'code' : req.query.code,
                    'redirect_uri' : process.env.LI_REDIRECT_URI,
@@ -870,14 +917,15 @@ var crypto                                = require('crypto'),
           res.send( error );
         } else {
 
-          console.log( "BODY OF OAUTH", body);
+          console.log( "BODY OF LI_OAUTH", body);
 
-          var LItoken = JSON.parse( body ).access_token
+          var LI_token = JSON.parse( body ).access_token
 
-          console.log( "TOKEN", LItoken );
+          console.log( "TOKEN", LI_token );
 
           var url = 'http://localhost:1234/li_success/';
-          var params = { LI_token : LItoken, message: 'Thank you for this process!' };
+          var params = { LI_token : LI_token, message: 'Welcome to HRX!' };
+
           res.redirect( url + "?" + encodeURIComponent( JSON.stringify( params ) ) );
         }
       });
@@ -907,7 +955,7 @@ var crypto                                = require('crypto'),
             if ( rows && rows.length ) {
 
               // get LI user Data
-              LIuserData( userLIToken, function( LI_data ) {
+              LI_user_data( userLIToken, function( LI_data ) {
 
                 // RESPONSE
                   //  {
