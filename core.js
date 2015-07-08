@@ -661,7 +661,7 @@ var crypto                                = require('crypto'),
           // }
 
         // callback( body );
-        callback( body );
+        callback( JSON.parse( body ) );
       });
     };
 
@@ -944,8 +944,6 @@ var crypto                                = require('crypto'),
 
         var userToken = req.headers[ 'x-hrx-user-token' ];
         var userLIToken = req.headers[ 'x-hrx-li-token' ];
-        console.log('userToken', userToken);
-        console.log('userLIToken', userLIToken);
         // check to see if both username and password crentials were part of the headers objects
         // if ( userData.username && userData.token ) {
 
@@ -958,8 +956,7 @@ var crypto                                = require('crypto'),
               // get LI user Data
               LI_user_data( userLIToken, function( LI_data ) {
 
-                var LI_data = JSON.parse( LI_data );
-                console.log( typeof LI_data, LI_data );
+                console.log( typeof LI_data, JSON.stringify( LI_data ) );
                 // RESPONSE
                   //  {
                   //   "id": "mzYEHm7Jbe",
