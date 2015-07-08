@@ -621,7 +621,7 @@ var crypto                                = require('crypto'),
       console.log('++++++++ LI_user_data ++++++++');
 
       var options = {
-          uri: 'https://api.linkedin.com/v1/people/~:(id,location,positions,num-connections,summary,public-profile-url,picture-urls::)?format=json',
+          uri: 'https://api.linkedin.com/v1/people/~:(id,location,positions,num-connections,summary,public-profile-url,picture-urls::(original))?format=json',
           // uri: 'https://api.github.com/user/orgs',
           method: 'GET',
           headers:  { 'Content-Type': 'application/json',
