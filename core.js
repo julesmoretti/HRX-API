@@ -958,6 +958,8 @@ var crypto                                = require('crypto'),
               // get LI user Data
               LI_user_data( userLIToken, function( LI_data ) {
 
+                console.log( typeof LI_data, LI_data );
+                var LI_data = LI_data;
                 // RESPONSE
                   //  {
                   //   "id": "mzYEHm7Jbe",
