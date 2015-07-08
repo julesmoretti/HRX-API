@@ -661,7 +661,7 @@ var crypto                                = require('crypto'),
           // }
 
         // callback( body );
-        callback( JSON.parse( body ) );
+        callback( body );
       });
     };
 
@@ -944,7 +944,8 @@ var crypto                                = require('crypto'),
 
         var userToken = req.headers[ 'x-hrx-user-token' ];
         var userLIToken = req.headers[ 'x-hrx-li-token' ];
-
+        console.log('userToken', userToken);
+        console.log('userLIToken', userLIToken);
         // check to see if both username and password crentials were part of the headers objects
         // if ( userData.username && userData.token ) {
 
