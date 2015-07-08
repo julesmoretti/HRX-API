@@ -40,13 +40,15 @@ CREATE TABLE `access_right` (
   `LI_location_country_code` VARCHAR(32),
   `LI_location_name` VARCHAR(255),
   `LI_positions` VARCHAR(255),
+  `LI_description` VARCHAR(2048),
+
   `LI_degrees` VARCHAR(255),
   `LI_address` VARCHAR(255),
   `LI_phone_number` VARCHAR(255),
-  `LI_description` VARCHAR(2048),
+
+  `LI_url` VARCHAR(255),
   `LI_company` INT,
   `LI_profile_picture` VARCHAR(255),
-  `LI_url` VARCHAR(255),
   `LI_access_token` VARCHAR(255),
 
   `creation_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
