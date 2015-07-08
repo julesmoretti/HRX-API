@@ -991,7 +991,7 @@ var crypto                                = require('crypto'),
 
                   // LI_access_token
 
-                connection.query('UPDATE access_right SET LI_id = '+LI_data.id+', LI_location_country_code = "'+LI_data.location.country.code+'", LI_location_name = "'+LI_data.location.name+'", LI_positions = "'+LI_data.positions.values[0].title+'", LI_profile_picture = "'+LI_data.pictureUrl+'", LI_access_token = "'+userLIToken +'" WHERE token = "'+userToken+'"', function( err, rows, fields ) {
+                connection.query('UPDATE access_right SET LI_id = "'+LI_data.id+'", LI_location_country_code = "'+LI_data.location.country.code+'", LI_location_name = "'+LI_data.location.name+'", LI_positions = "'+LI_data.positions.values[0].title+'", LI_profile_picture = "'+LI_data.pictureUrl+'", LI_access_token = "'+userLIToken +'" WHERE token = "'+userToken+'"', function( err, rows, fields ) {
                   if (err) throw err;
 
                   add_LI_company( LI_data.positions.values[0].company, function(){
