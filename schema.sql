@@ -28,7 +28,7 @@ CREATE TABLE `access_right` (
   `skills` VARCHAR(255),
   `token` VARCHAR(32),
 
-  `GH_id` INT,
+  `GH_id` VARCHAR(255),
   `GH_url` VARCHAR(255),
   `GH_location` VARCHAR(255),
   `GH_public_repos` INT,
