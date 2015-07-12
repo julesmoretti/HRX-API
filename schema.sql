@@ -30,6 +30,7 @@ CREATE TABLE `access_right` (
 
   `lat` INT,
   `long` INT,
+  `share_geoposition` INT DEFAULT 1,
 
   `GH_id` VARCHAR(255),
   `GH_url` VARCHAR(255),

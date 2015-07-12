@@ -673,7 +673,6 @@ var crypto                                = require('crypto'),
       });
     };
 
-
   var LI_company_data             = function ( token, company_id, callback ) {
       console.log('++++++++ LI_company_data ++++++++');
 
@@ -745,16 +744,12 @@ var crypto                                = require('crypto'),
 
         connection.query('INSERT INTO companies SET company_id = '+companyData.id+', name = "'+companyData.name+'", industry = "'+companyData.industry+'", size = "'+companyData.size+'", type = "'+companyData.type+'"', function( err, rows, fields ) {
           if (err) throw err;
-          console.log( 'AFTER INSERT INTO companies');
-          console.log( rows );
           if ( rows && rows.insertId ) {
-            console.log('AFTER INSERT INTO companies THERE IS ROWS');
             connection.query('UPDATE access_right SET LI_company = '+rows.insertId+' WHERE token = "'+token+'"', function( err, rows, fields ) {
               if (err) throw err;
               callback();
             });
           } else {
-            console.log('AFTER INSERT INTO companies NO ROWS');
             throw err;
           }
         });
@@ -902,16 +897,12 @@ var crypto                                = require('crypto'),
     };
 
 
-
   exports.LI_login                        = function ( req, res ) {
 
       console.log('++++++++ LI_login ++++++++');
       // console.log(process.env.LI_CLIENT_ID, process.env.LI_REDIRECT_URI, process.env.LI_STATE );
       var url = 'https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id='+ process.env.LI_CLIENT_ID +'&redirect_uri='+ process.env.LI_REDIRECT_URI +'&state='+process.env.LI_STATE+'&scope=r_basicprofile+r_emailaddress';
       // var url = 'https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id='+ process.env.LI_CLIENT_ID +'&redirect_uri='+ process.env.LI_REDIRECT_URI +'&state='+process.env.LI_STATE+'&scope=r_basicprofile+r_emailaddress+rw_company_admin';
-      // var url = 'https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id='+ process.env.LI_CLIENT_ID +'&redirect_uri='+ process.env.LI_REDIRECT_URI +'&state='+process.env.LI_STATE+'&scope=r_basicprofile+r_emailaddress+r_contactinfo+rw_company_admin';
-      // var url = 'https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id='+ process.env.LI_CLIENT_ID +'&redirect_uri='+ process.env.LI_REDIRECT_URI +'&state='+process.env.LI_STATE+'&scope=r_basicprofile%20r_contactinfo';
-      // var url = 'https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id='+ process.env.LI_CLIENT_ID +'&redirect_uri='+ process.env.LI_REDIRECT_URI +'&state='+process.env.LI_STATE+'&scope=r_fullprofile%20r_emailaddress%20w_share';
       res.redirect(url);
     };
 
@@ -943,7 +934,7 @@ var crypto                                = require('crypto'),
           res.send( error );
         } else {
 
-          console.log( "BODY OF LI_OAUTH", body);
+          // console.log( "BODY OF LI_OAUTH", body);
 
           var LI_token = JSON.parse( body ).access_token
 
@@ -982,7 +973,7 @@ var crypto                                = require('crypto'),
               // get LI user Data
               LI_user_data( userLIToken, function( LI_data ) {
 
-                console.log( typeof LI_data, JSON.stringify( LI_data ) );
+                // console.log( typeof LI_data, JSON.stringify( LI_data ) );
                 // RESPONSE
                   // {
                   //   "id": "mzYEHm7Jbe",
@@ -1022,7 +1013,6 @@ var crypto                                = require('crypto'),
                 connection.query('UPDATE access_right SET LI_url = "'+LI_data.publicProfileUrl+'", LI_description = "'+LI_data.summary+'", LI_id = "'+LI_data.id+'", LI_location_country_code = "'+LI_data.location.country.code+'", LI_location_name = "'+LI_data.location.name+'", LI_positions = "'+LI_data.positions.values[0].title+'", LI_profile_picture = "'+LI_data.pictureUrls.values[0]+'", LI_access_token = "'+userLIToken +'" WHERE token = "'+userToken+'"', function( err, rows, fields ) {
                   if (err) throw err;
 
-                  console.log("PRE add_LI_company");
                   add_LI_company( userToken, LI_data.positions.values[0].company, function(){
                     res.send( { responseCode: 200, message: 'Thank you all clear here!' } );
                   });
@@ -1045,3 +1035,81 @@ var crypto                                = require('crypto'),
       }
     };
 
+  exports.geo_position                     = function ( req, res ) {
+      console.log('++++++++ LI_token ++++++++');
+      console.log( "HEADER: ", req.headers );
+      console.log( "QUERY: ", req.query );
+      console.log( "BODY: ", req.body );
+
+      if ( req.headers[ 'x-hrx-user-token' ] ) {
+
+        var userToken = req.headers[ 'x-hrx-user-token' ];
+
+          // check that username exist in the database and that password is a match otherwise return error
+          // connection.query('SELECT id FROM access_right WHERE token = "'+userToken+'"', function( err, rows, fields ) {
+          //   if (err) throw err;
+
+          //   if ( rows && rows.length ) {
+
+          //     // get LI user Data
+          //     LI_user_data( userLIToken, function( LI_data ) {
+
+          //       // console.log( typeof LI_data, JSON.stringify( LI_data ) );
+          //       // RESPONSE
+          //         // {
+          //         //   "id": "mzYEHm7Jbe",
+          //         //   "location": {
+          //         //     "country": {"code": "us"},
+          //         //     "name": "San Francisco Bay Area"
+          //         //   },
+          //         //   "numConnections": 500,
+          //         //   "pictureUrls": {
+          //         //     "_total": 1,
+          //         //     "values": ["https://media.licdn.com/mpr/mprx/0_0Mv5eX6dIr4ESbM8yeWCOyIoelNF7wc8eeWFyVcdUuMbObNhexWC7fBuo8Mb7IJ_JeeiHf9dMvvbpsv5R-Xox0nfavvFps5_D-XboXE7U7XapDqoDnqQ2-qIUg"]
+          //         //   },
+          //         //   "positions": {
+          //         //     "_total": 1,
+          //         //     "values": [{
+          //         //       "company": {
+          //         //         "id": 21717,
+          //         //         "industry": "Design",
+          //         //         "name": "WET Design",
+          //         //         "size": "201-500 employees",
+          //         //         "type": "Privately Held"
+          //         //       },
+          //         //       "id": 665155010,
+          //         //       "isCurrent": true,
+          //         //       "startDate": {"year": 2015},
+          //         //       "title": "Design Technologist"
+          //         //     }]
+          //         //   },
+          //         //   "publicProfileUrl": "https://www.linkedin.com/in/julesmoretti",
+          //         //   "summary": "I am a trained international industrial designer with four years experience building and managing multi-million dollar water features located all around the world.\n\nI have evolved from mechanical engineering, through design to software engineering. French born and having lived from Scotland, to Los Angeles and now San Francisco, I believe I can bring an original point of view to most problems and hopefully an unexpected solution.\n\nI love challenges and look forward to being put to the test.\n\nSPECIALITIES\nCreative & Strategic Bridge · Team Building & Leadership · Project Management · Budgeting · Research & Development · Process Optimization & Cost control · Project & Strategic Planning · User Experience & Multimedia Design · Art Direction · Web Development · Graphic Design"
+          //         // }
+
+          //         // LI_company
+
+          //         // LI_access_token
+
+          //       connection.query('UPDATE access_right SET LI_url = "'+LI_data.publicProfileUrl+'", LI_description = "'+LI_data.summary+'", LI_id = "'+LI_data.id+'", LI_location_country_code = "'+LI_data.location.country.code+'", LI_location_name = "'+LI_data.location.name+'", LI_positions = "'+LI_data.positions.values[0].title+'", LI_profile_picture = "'+LI_data.pictureUrls.values[0]+'", LI_access_token = "'+userLIToken +'" WHERE token = "'+userToken+'"', function( err, rows, fields ) {
+          //         if (err) throw err;
+
+          //         add_LI_company( userToken, LI_data.positions.values[0].company, function(){
+          //           res.send( { responseCode: 200, message: 'Thank you all clear here!' } );
+          //         });
+
+          //       });
+
+          //     });
+          //   } else {
+          //     res.send( { responseCode: 401, message: 'no username found' } );
+          //   }
+          // });
+
+          // res.send( { responseCode: 401, message: 'no username or token inputed' } );
+
+      // no headers detected so nothing to respond
+      } else {
+        res.send( { responseCode: 400, message: 'no header detected' } );
+      }
+    };
