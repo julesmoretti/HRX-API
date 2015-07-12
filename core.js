@@ -198,7 +198,7 @@ var crypto                                = require('crypto'),
     //      -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
     //  TO  |
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  exports.apn_token                           = function ( req, res ) {
+  exports.apn_token                       = function ( req, res ) {
       console.log( "===============================" );
       console.log( '++++++++++ apn token ++++++++++' );
       console.log( "===============================" );
@@ -245,7 +245,7 @@ var crypto                                = require('crypto'),
     //      -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
     //  TO  |
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  exports.tokencheck                           = function ( req, res ) {
+  exports.tokencheck                      = function ( req, res ) {
       console.log( "===============================" );
       console.log( '+++++++++ tokencheck ++++++++++' );
       console.log( "===============================" );
@@ -339,7 +339,7 @@ var crypto                                = require('crypto'),
     //      -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
     //  TO  |
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  exports.resetPasswordInitializer                           = function ( req, res ) {
+  exports.resetPasswordInitializer        = function ( req, res ) {
       console.log( "===============================" );
       console.log( '++ resetPasswordInitializer +++' );
       console.log( "===============================" );
@@ -392,7 +392,7 @@ var crypto                                = require('crypto'),
     //      -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
     //  TO  |
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  exports.resetpassword                           = function ( req, res ) {
+  exports.resetpassword                   = function ( req, res ) {
       console.log( "===============================" );
       console.log( '++++++++ resetpassword ++++++++' );
       console.log( "===============================" );
@@ -433,7 +433,7 @@ var crypto                                = require('crypto'),
     //      -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
     //  TO  |
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  exports.signup                           = function ( req, res ) {
+  exports.signup                          = function ( req, res ) {
 
     console.log( "===============================" );
     console.log( '+++++++++++ signup ++++++++++++');
@@ -480,7 +480,7 @@ var crypto                                = require('crypto'),
     //      -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
     //  TO  |
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  exports.hello                            = function ( req, res ) {
+  exports.hello                           = function ( req, res ) {
       console.log( "===============================" );
       console.log('++++++++ hello ++++++++');
       console.log( "===============================" );
@@ -495,7 +495,7 @@ var crypto                                = require('crypto'),
 
 
   // CHECK TO SEE IF USER HAS ALREADY BEEN ADDED TO THE DATABSE
-  var checkUsersExistance          = function ( GH_id, callback ) {
+  var checkUsersExistance                 = function ( GH_id, callback ) {
     connection.query('SELECT * FROM access_right WHERE GH_id = '+GH_id, function( err, rows, fields ) {
       if (err) throw err;
       if ( rows && rows.length ) {
@@ -507,7 +507,7 @@ var crypto                                = require('crypto'),
   }
 
   // PULL GIT HUB DATA
-  var userData                     = function ( token, callback ) {
+  var userData                            = function ( token, callback ) {
       console.log('++++++++ userData ++++++++');
 
       var options = {
@@ -566,7 +566,7 @@ var crypto                                = require('crypto'),
     };
 
   // VERIFY IF USER IS PART OF THE HACK REACTOR ORGANIZATION
-  var check_GH_organization            = function ( token, callback ) {
+  var check_GH_organization               = function ( token, callback ) {
       console.log('++++++++ check_GH_organization ++++++++');
 
       var options = {
@@ -617,7 +617,7 @@ var crypto                                = require('crypto'),
     };
 
   // PULL GIT HUB DATA
-  var LI_user_data                     = function ( token, callback ) {
+  var LI_user_data                        = function ( token, callback ) {
       console.log('++++++++ LI_user_data ++++++++');
 
       var options = {
@@ -673,7 +673,7 @@ var crypto                                = require('crypto'),
       });
     };
 
-  var LI_company_data             = function ( token, company_id, callback ) {
+  var LI_company_data                     = function ( token, company_id, callback ) {
       console.log('++++++++ LI_company_data ++++++++');
 
       var options = {
@@ -720,7 +720,7 @@ var crypto                                = require('crypto'),
       });
   }
 
-  var add_LI_company              = function ( token, companyData, callback ) {
+  var add_LI_company                      = function ( token, companyData, callback ) {
     console.log('++++++ add_LI_company +++++');
 
     // companyData = {
@@ -896,7 +896,6 @@ var crypto                                = require('crypto'),
       });
     };
 
-
   exports.LI_login                        = function ( req, res ) {
 
       console.log('++++++++ LI_login ++++++++');
@@ -1035,7 +1034,7 @@ var crypto                                = require('crypto'),
       }
     };
 
-  exports.geo_position                     = function ( req, res ) {
+  exports.geo_position                    = function ( req, res ) {
       console.log('++++++++ geo_position ++++++++');
       // console.log( "HEADER: ", req.headers );
       // console.log( "QUERY: ", req.query );
@@ -1058,7 +1057,7 @@ var crypto                                = require('crypto'),
       }
     };
 
-  exports.geo_positioning_setting                     = function ( req, res ) {
+  exports.geo_positioning_setting         = function ( req, res ) {
       console.log('++++++++ geo_positioning_setting ++++++++');
       // console.log( "HEADER: ", req.headers );
       console.log( "QUERY: ", req.query );
@@ -1104,7 +1103,7 @@ var crypto                                = require('crypto'),
       }
     };
 
-  exports.notifications_setting                     = function ( req, res ) {
+  exports.notifications_setting           = function ( req, res ) {
       console.log('++++++++ notifications_setting ++++++++');
       // console.log( "HEADER: ", req.headers );
       // console.log( "QUERY: ", req.query );
@@ -1150,6 +1149,3 @@ var crypto                                = require('crypto'),
         res.send( { responseCode: 400, message: 'no header detected' } );
       }
     };
-
-
-
