@@ -621,7 +621,7 @@ var crypto                                = require('crypto'),
       console.log('++++++++ LI_user_data ++++++++');
 
       var options = {
-          uri: 'https://api.linkedin.com/v1/people/~:(id,location,positions,num-connections,summary,public-profile-url,picture-urls::(original))?format=json',
+          uri: 'https://api.linkedin.com/v1/people/~:(id,location,positions,phone-numbers,main-address,num-connections,summary,public-profile-url,picture-urls::(original))?format=json',
           // uri: 'https://api.github.com/user/orgs',
           method: 'GET',
           headers:  { 'Content-Type': 'application/json',
@@ -632,32 +632,39 @@ var crypto                                = require('crypto'),
       }
 
       request( options, function (error, response, body) {
-        // console.log( "BODY OF githubdata", body);
+        console.log( "BODY OF githubdata", body);
         // RESPONSE
-          // {
-          //   "id": "mzYEHm7Jbe",
-          //   "location": {
-          //     "country": {"code": "us"},
-          //     "name": "San Francisco Bay Area"
+          // { "id":"mzYEHm7Jbe",
+          //   "location":{
+          //     "country":{
+          //       "code":"us"
+          //     },
+          //     "name":"San Francisco Bay Area"
           //   },
-          //   "numConnections": 500,
-          //   "pictureUrl": "https://media.licdn.com/mpr/mprx/0_tYf_g3KFZ5r1mlJYcszSnzG6Z6ThD3I-tsMDZNNF0-PTelIPYYzSP1MFsGPTDh4PcscGr1nbr5_3I551ZDoxvzRwv5_8I570YDo8YqaQYkn23PN_-yyaO8hBzrMKC54acmm7JoNEo6Q",
-          //   "positions": {
-          //     "_total": 1,
-          //     "values": [{
-          //       "company": {
-          //         "id": 21717,
-          //         "industry": "Design",
-          //         "name": "WET Design",
-          //         "size": "201-500 employees",
-          //         "type": "Privately Held"
-          //       },
-          //       "id": 665155010,
-          //       "isCurrent": true,
-          //       "startDate": {"year": 2015},
-          //       "title": "Design Technologist"
-          //     }]
-          //   }
+          //   "numConnections":500,
+          //   "pictureUrls":{
+          //     "_total":1,
+          //     "values":["https://media.licdn.com/mpr/mprx/0_0Mv5eX6dIr4ESbM8yeWCOyIoelNF7wc8eeWFyVcdUuMbObNhexWC7fBuo8Mb7IJ_JeeiHf9dMvvbpsv5R-Xox0nfavvFps5_D-XboXE7U7XapDqoDnqQ2-qIUg"]
+          //   },
+          //   "positions":{
+          //     "_total":1,
+          //     "values":[{"company":{
+          //                 "id":21717,
+          //                 "industry":"Design",
+          //                 "name":"WET Design",
+          //                 "size":"201-500 employees",
+          //                 "type":"Privately Held"
+          //               },
+          //               "id":665155010,
+          //               "isCurrent":true,
+          //               "startDate":{
+          //                 "year":2015
+          //               },
+          //               "title":"Design Technologist"
+          //             }]
+          //   },
+          //   "publicProfileUrl":"https://www.linkedin.com/in/julesmoretti",
+          //   "summary":"I am a trained international industrial designer with four years experience building and managing multi-million dollar water features located all around the world.\n\nI have evolved from mechanical engineering, through design to software engineering. French born and having lived from Scotland, to Los Angeles and now San Francisco, I believe I can bring an original point of view to most problems and hopefully an unexpected solution.\n\nI love challenges and look forward to being put to the test.\n\nSPECIALITIES\nCreative & Strategic Bridge · Team Building & Leadership · Project Management · Budgeting · Research & Development · Process Optimization & Cost control · Project & Strategic Planning · User Experience & Multimedia Design · Art Direction · Web Development · Graphic Design"
           // }
 
         // callback( body );
@@ -958,37 +965,44 @@ var crypto                                = require('crypto'),
 
                 console.log( typeof LI_data, JSON.stringify( LI_data ) );
                 // RESPONSE
-                  //  {
-                  //   "id": "mzYEHm7Jbe",
-                  //   "location": {
-                  //     "country": {"code": "us"},
-                  //     "name": "San Francisco Bay Area"
+                  // { "id":"mzYEHm7Jbe",
+                  //   "location":{
+                  //     "country":{
+                  //       "code":"us"
+                  //     },
+                  //     "name":"San Francisco Bay Area"
                   //   },
-                  //   "numConnections": 500,
-                  //   "pictureUrl": "https://media.licdn.com/mpr/mprx/0_tYf_g3KFZ5r1mlJYcszSnzG6Z6ThD3I-tsMDZNNF0-PTelIPYYzSP1MFsGPTDh4PcscGr1nbr5_3I551ZDoxvzRwv5_8I570YDo8YqaQYkn23PN_-yyaO8hBzrMKC54acmm7JoNEo6Q",
-                  //   "positions": {
-                  //     "_total": 1,
-                  //     "values": [{
-                  //       "company": {
-                  //         "id": 21717,
-                  //         "industry": "Design",
-                  //         "name": "WET Design",
-                  //         "size": "201-500 employees",
-                  //         "type": "Privately Held"
-                  //       },
-                  //       "id": 665155010,
-                  //       "isCurrent": true,
-                  //       "startDate": {"year": 2015},
-                  //       "title": "Design Technologist"
-                  //     }]
-                  //   }
+                  //   "numConnections":500,
+                  //   "pictureUrls":{
+                  //     "_total":1,
+                  //     "values":["https://media.licdn.com/mpr/mprx/0_0Mv5eX6dIr4ESbM8yeWCOyIoelNF7wc8eeWFyVcdUuMbObNhexWC7fBuo8Mb7IJ_JeeiHf9dMvvbpsv5R-Xox0nfavvFps5_D-XboXE7U7XapDqoDnqQ2-qIUg"]
+                  //   },
+                  //   "positions":{
+                  //     "_total":1,
+                  //     "values":[{"company":{
+                  //                 "id":21717,
+                  //                 "industry":"Design",
+                  //                 "name":"WET Design",
+                  //                 "size":"201-500 employees",
+                  //                 "type":"Privately Held"
+                  //               },
+                  //               "id":665155010,
+                  //               "isCurrent":true,
+                  //               "startDate":{
+                  //                 "year":2015
+                  //               },
+                  //               "title":"Design Technologist"
+                  //             }]
+                  //   },
+                  //   "publicProfileUrl":"https://www.linkedin.com/in/julesmoretti",
+                  //   "summary":"I am a trained international industrial designer with four years experience building and managing multi-million dollar water features located all around the world.\n\nI have evolved from mechanical engineering, through design to software engineering. French born and having lived from Scotland, to Los Angeles and now San Francisco, I believe I can bring an original point of view to most problems and hopefully an unexpected solution.\n\nI love challenges and look forward to being put to the test.\n\nSPECIALITIES\nCreative & Strategic Bridge · Team Building & Leadership · Project Management · Budgeting · Research & Development · Process Optimization & Cost control · Project & Strategic Planning · User Experience & Multimedia Design · Art Direction · Web Development · Graphic Design"
                   // }
 
                   // LI_company
 
                   // LI_access_token
 
-                connection.query('UPDATE access_right SET LI_id = "'+LI_data.id+'", LI_location_country_code = "'+LI_data.location.country.code+'", LI_location_name = "'+LI_data.location.name+'", LI_positions = "'+LI_data.positions.values[0].title+'", LI_profile_picture = "'+LI_data.pictureUrl+'", LI_access_token = "'+userLIToken +'" WHERE token = "'+userToken+'"', function( err, rows, fields ) {
+                connection.query('UPDATE access_right SET LI_url = "'+LI_data.publicProfileUrl+'", LI_description = "'+LI_data.summary+'", LI_id = "'+LI_data.id+'", LI_location_country_code = "'+LI_data.location.country.code+'", LI_location_name = "'+LI_data.location.name+'", LI_positions = "'+LI_data.positions.values[0].title+'", LI_profile_picture = "'+LI_data.pictureUrl+'", LI_access_token = "'+userLIToken +'" WHERE token = "'+userToken+'"', function( err, rows, fields ) {
                   if (err) throw err;
 
                   add_LI_company( LI_data.positions.values[0].company, function(){
