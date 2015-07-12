@@ -28,6 +28,9 @@ CREATE TABLE `access_right` (
   `skills` VARCHAR(255),
   `token` VARCHAR(32),
 
+  `lat` INT,
+  `long` INT,
+
   `GH_id` VARCHAR(255),
   `GH_url` VARCHAR(255),
   `GH_location` VARCHAR(255),
@@ -65,6 +68,15 @@ CREATE TABLE `companies` (
   `industry` VARCHAR(255),
   `size` VARCHAR(255),
   `type` VARCHAR(255),
+  `address_no` VARCHAR(255),
+  `address_street` VARCHAR(255),
+  `address_suite` VARCHAR(255),
+  `city` VARCHAR(255),
+  `state` VARCHAR(255),
+  `postcode` VARCHAR(255),
+  `country` VARCHAR(255),
+  `lat` INT,
+  `long` INT
   PRIMARY KEY (`id`)
 ) COMMENT 'Apple iOS device list and notification status';
 
