@@ -1047,7 +1047,7 @@ var crypto                                = require('crypto'),
         var long = req.query.long;
         console.log('THERE IS AN ACCESS TOKEN', lat, long, userToken );
 
-        connection.query('UPDATE access_right SET lat = '+lat+', long = '+long+' WHERE token = "'+userToken+'"', function( err, rows, fields ) {
+        connection.query('UPDATE access_right SET lat = '+lat+', long = '+long+' WHERE token = '+userToken, function( err, rows, fields ) {
           if (err) throw err;
           console.log('THERE IS AN ACCESS TOKEN PASSED THE UPDATE');
           res.send( { responseCode: 200, message: 'Updated Geo Position' } );
