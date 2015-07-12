@@ -890,7 +890,7 @@ var crypto                                = require('crypto'),
   exports.LI_login                        = function ( req, res ) {
 
       console.log('++++++++ LI_login ++++++++');
-      console.log(process.env.LI_CLIENT_ID, process.env.LI_REDIRECT_URI, process.env.LI_STATE );
+      // console.log(process.env.LI_CLIENT_ID, process.env.LI_REDIRECT_URI, process.env.LI_STATE );
       var url = 'https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id='+ process.env.LI_CLIENT_ID +'&redirect_uri='+ process.env.LI_REDIRECT_URI +'&state='+process.env.LI_STATE+'&scope=r_basicprofile+r_emailaddress+rw_company_admin';
       // var url = 'https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id='+ process.env.LI_CLIENT_ID +'&redirect_uri='+ process.env.LI_REDIRECT_URI +'&state='+process.env.LI_STATE+'&scope=r_basicprofile+r_emailaddress+r_contactinfo+rw_company_admin';
       // var url = 'https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id='+ process.env.LI_CLIENT_ID +'&redirect_uri='+ process.env.LI_REDIRECT_URI +'&state='+process.env.LI_STATE+'&scope=r_basicprofile%20r_contactinfo';
@@ -930,7 +930,7 @@ var crypto                                = require('crypto'),
 
           var LI_token = JSON.parse( body ).access_token
 
-          console.log( "TOKEN", LI_token );
+          // console.log( "TOKEN", LI_token );
 
           var url = 'http://localhost:1234/li_success/';
           var params = { LI_token : LI_token, message: 'Welcome to HRX!' };
