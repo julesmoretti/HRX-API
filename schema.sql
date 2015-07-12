@@ -39,7 +39,7 @@ CREATE TABLE `access_right` (
   `GH_profile_picture` VARCHAR(255),
   `GH_access_token` VARCHAR(255),
 
-  `LI_id`INT,
+  `LI_id` VARCHAR(255),
   `LI_location_country_code` VARCHAR(32),
   `LI_location_name` VARCHAR(255),
   `LI_positions` VARCHAR(255),
