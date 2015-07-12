@@ -1058,9 +1058,54 @@ var crypto                                = require('crypto'),
       }
     };
 
+  exports.geo_positioning_setting                     = function ( req, res ) {
+      console.log('++++++++ geo_positioning_setting ++++++++');
+      // console.log( "HEADER: ", req.headers );
+      // console.log( "QUERY: ", req.query );
+      // console.log( "BODY: ", req.body );
 
-  exports.notifications_Setting                     = function ( req, res ) {
-      console.log('++++++++ notifications_Setting ++++++++');
+      if ( req.headers[ 'x-hrx-user-token' ] ) {
+        var userToken = req.headers[ 'x-hrx-user-token' ];
+        var state = req.query.value;
+
+        // console.log( typeof state, state, userToken, apn_token );
+
+        connection.query('SELECT id from access_right WHERE token = "'+userToken+'"', function( err, rows, fields ) {
+          if (err) throw err;
+          if ( rows && rows.length ) {
+
+            if ( state === 'true' ) {
+              connection.query('UPDATE access_right SET share_geoposition = 1 WHERE token = "'+userToken+'"', function( err, rows, fields ) {
+                if (err) throw err;
+                res.send( { responseCode: 200, message: 'Updated geo position settings to ON', value: true } );
+              });
+
+            } else {
+              connection.query('UPDATE access_right SET share_geoposition = 0 WHERE token = "'+userToken+'"', function( err, rows, fields ) {
+                if (err) throw err;
+                res.send( { responseCode: 200, message: 'Updated geo position settings to OFF', value: false } );
+              });
+            }
+
+          } else {
+            res.send( { responseCode: 401, message: 'geo_positioning_setting - No valid token found... please report this error' } );
+          }
+
+        });
+        // var  = req.query.latitude;
+        // var longitude = req.query.longitude;
+        // console.log('THERE IS AN ACCESS TOKEN', latitude, longitude, userToken );
+
+
+
+      // no headers detected so nothing to respond
+      } else {
+        res.send( { responseCode: 400, message: 'no header detected' } );
+      }
+    };
+
+  exports.notifications_setting                     = function ( req, res ) {
+      console.log('++++++++ notifications_setting ++++++++');
       // console.log( "HEADER: ", req.headers );
       // console.log( "QUERY: ", req.query );
       // console.log( "BODY: ", req.body );
@@ -1105,7 +1150,6 @@ var crypto                                = require('crypto'),
         res.send( { responseCode: 400, message: 'no header detected' } );
       }
     };
-
 
 
 
