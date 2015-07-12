@@ -1061,8 +1061,8 @@ var crypto                                = require('crypto'),
 
   exports.notifications_Setting                     = function ( req, res ) {
       console.log('++++++++ notifications_Setting ++++++++');
-      // console.log( "HEADER: ", req.headers );
-      // console.log( "QUERY: ", req.query );
+      console.log( "HEADER: ", req.headers );
+      console.log( "QUERY: ", req.query );
       // console.log( "BODY: ", req.body );
 
       if ( req.headers[ 'x-hrx-user-token' ] && req.headers[ 'x-hrx-user-apn-tokens' ] ) {
