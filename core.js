@@ -1043,11 +1043,11 @@ var crypto                                = require('crypto'),
 
       if ( req.headers[ 'x-hrx-user-token' ] ) {
         var userToken = req.headers[ 'x-hrx-user-token' ];
-        var lat = req.query.lat;
-        var long = req.query.long;
-        console.log('THERE IS AN ACCESS TOKEN', lat, long, userToken );
+        var latitude = req.query.latitude;
+        var longitude = req.query.longitude;
+        console.log('THERE IS AN ACCESS TOKEN', latitude, longitude, userToken );
 
-        connection.query('UPDATE access_right SET lat = '+lat+', long = '+long+' WHERE token = "'+userToken+'"', function( err, rows, fields ) {
+        connection.query('UPDATE access_right SET latitude = '+latitude+', longitude = '+longitude+' WHERE token = "'+userToken+'"', function( err, rows, fields ) {
           if (err) throw err;
           console.log('THERE IS AN ACCESS TOKEN PASSED THE UPDATE');
           res.send( { responseCode: 200, message: 'Updated Geo Position' } );
