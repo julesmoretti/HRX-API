@@ -742,10 +742,21 @@ var crypto                                = require('crypto'),
         });
       } else {
 
-        connection.query('INSERT INTO companies SET company_id = '+companyData.id+', name = "'+companyData.name+'", industry = "'+companyData.industry+'", size = "'+companyData.size+'", type = "'+companyData.type+'"; SELECT id FROM companies ORDER BY id DESC LIMIT 1', function( err, results, fields ) {
+        connection.query('INSERT INTO companies SET company_id = '+companyData.id+', name = "'+companyData.name+'", industry = "'+companyData.industry+'", size = "'+companyData.size+'", type = "'+companyData.type+'"', function( err, rows, fields ) {
           if (err) throw err;
           console.log( 'XXXXXXXXXXXXXXXX' );
-          console.log( 'COMPANIES INSERT', results );
+          console.log( 'COMPANIES INSERT', rows );
+
+          // [ { fieldCount: 0,
+          //     affectedRows: 1,
+          //     insertId: 1,
+          //     serverStatus: 10,
+          //     warningCount: 0,
+          //     message: '',
+          //     protocol41: true,
+          //     changedRows: 0 },
+          //   [ { id: 1 } ] ]
+
           console.log( 'XXXXXXXXXXXXXXXX' );
           add_LI_company( token, companyData, callback );
         });
