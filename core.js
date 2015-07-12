@@ -897,7 +897,7 @@ var crypto                                = require('crypto'),
 
   exports.LI_oauth                        = function ( req, res ) {
       console.log('++++++++ LI_oauth ++++++++');
-      // console.log( "HEADER: ", req.headers );
+      console.log( "HEADER: ", req.headers );
       // console.log( "QUERY: ", req.query );
       // console.log( "BODY: ", req.body );
 
