@@ -621,7 +621,7 @@ var crypto                                = require('crypto'),
       console.log('++++++++ LI_user_data ++++++++');
 
       var options = {
-          uri: 'https://api.linkedin.com/v1/people/~:(id,location,positions,phone-numbers,main-address,num-connections,summary,public-profile-url,picture-urls::(original))?format=json',
+          uri: 'https://api.linkedin.com/v1/people/~:(id,location,positions,phone-numbers,main-address,num-connections,summary,public-profile-url,picture-urls::(original))',
           // uri: 'https://api.github.com/user/orgs',
           method: 'GET',
           headers:  { 'Content-Type': 'application/json',
@@ -891,7 +891,7 @@ var crypto                                = require('crypto'),
 
       console.log('++++++++ LI_login ++++++++');
       console.log(process.env.LI_CLIENT_ID, process.env.LI_REDIRECT_URI, process.env.LI_STATE );
-      var url = 'https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id='+ process.env.LI_CLIENT_ID +'&redirect_uri='+ process.env.LI_REDIRECT_URI +'&state='+process.env.LI_STATE+'&scope=r_basicprofile';
+      var url = 'https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id='+ process.env.LI_CLIENT_ID +'&redirect_uri='+ process.env.LI_REDIRECT_URI +'&state='+process.env.LI_STATE+'&scope=r_basicprofile%20r_contactinfo%20r_emailaddress%20rw_company_admin';
       // var url = 'https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id='+ process.env.LI_CLIENT_ID +'&redirect_uri='+ process.env.LI_REDIRECT_URI +'&state='+process.env.LI_STATE+'&scope=r_basicprofile%20r_contactinfo';
       // var url = 'https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id='+ process.env.LI_CLIENT_ID +'&redirect_uri='+ process.env.LI_REDIRECT_URI +'&state='+process.env.LI_STATE+'&scope=r_fullprofile%20r_emailaddress%20w_share';
       res.redirect(url);
@@ -915,7 +915,7 @@ var crypto                                = require('crypto'),
       var options = {
           uri: 'https://www.linkedin.com/uas/oauth2/accessToken',
           method: 'POST',
-          // headers: { Accept: 'application/json' },
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           form: data
       }
 
