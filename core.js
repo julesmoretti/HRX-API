@@ -749,7 +749,7 @@ var crypto                                = require('crypto'),
           console.log( rows );
           if ( rows && rows.insertId ) {
             console.log('AFTER INSERT INTO companies THERE IS ROWS');
-            connection.query('UPDATE access_right SET LI_company = '+rows.insertId+' WHERE token = '+token, function( err, rows, fields ) {
+            connection.query('UPDATE access_right SET LI_company = '+rows.insertId+' WHERE token = "'+token+'"', function( err, rows, fields ) {
               if (err) throw err;
               callback();
             });
