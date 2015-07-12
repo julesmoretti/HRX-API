@@ -1070,9 +1070,11 @@ var crypto                                = require('crypto'),
         var apn_token = req.headers[ 'x-hrx-user-apn-token' ];
         var state = req.query.value;
 
+        console.log( state, userToken, apn_token );
+
         connection.query('SELECT id from access_right WHERE token = "'+userToken+'"', function( err, rows, fields ) {
           if (err) throw err;
-
+          console.log('selected ID is: ', rows );
           if ( rows && rows.length ) {
 
             if ( state ) {
