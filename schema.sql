@@ -76,9 +76,9 @@ CREATE TABLE `companies` (
   `postcode` VARCHAR(255),
   `country` VARCHAR(255),
   `lat` INT,
-  `long` INT
+  `long` INT,
   PRIMARY KEY (`id`)
-) COMMENT 'Apple iOS device list and notification status';
+) COMMENT 'List of companies for the HRX Alumn';
 
 
 DROP TABLE IF EXISTS `devices`;
