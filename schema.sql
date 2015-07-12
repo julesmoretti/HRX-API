@@ -28,8 +28,8 @@ CREATE TABLE `access_right` (
   `skills` VARCHAR(255),
   `token` VARCHAR(32),
 
-  `latitude` DECIMAL(20,16),
-  `longitude` DECIMAL(20,16),
+  `latitude` INT,
+  `longitude` INT,
   `share_geoposition` INT DEFAULT 1,
 
   `GH_id` VARCHAR(255),
