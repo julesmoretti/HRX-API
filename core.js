@@ -1057,3 +1057,54 @@ var crypto                                = require('crypto'),
         res.send( { responseCode: 400, message: 'no header detected' } );
       }
     };
+
+
+  exports.notifications_Setting                     = function ( req, res ) {
+      console.log('++++++++ notifications_Setting ++++++++');
+      // console.log( "HEADER: ", req.headers );
+      // console.log( "QUERY: ", req.query );
+      // console.log( "BODY: ", req.body );
+
+      if ( req.headers[ 'x-hrx-user-token' ] &&  ) {
+        var userToken = req.headers[ 'x-hrx-user-token' ];
+        var apn_token = req.headers[ 'x-hrx-user-apn-token' ];
+        var state = req.query.value;
+
+        connection.query('SELECT id from access_right WHERE token = "'+userToken+'"', function( err, rows, fields ) {
+          if (err) throw err;
+
+          if ( rows && rows.length ) {
+
+            if ( state ) {
+              connection.query('UPDATE devices SET state = 1 WHERE hrx_id = '+rows[0].id+' AND apn_token= "'+apn_token+'"', function( err, rows, fields ) {
+                if (err) throw err;
+                res.send( { responseCode: 200, message: 'Updated notifications to ON', value: true } );
+              });
+
+            } else {
+              connection.query('UPDATE devices SET state = 0 WHERE hrx_id = '+rows[0].id+' AND apn_token= "'+apn_token+'"', function( err, rows, fields ) {
+                if (err) throw err;
+                res.send( { responseCode: 200, message: 'Updated notifications to OFF', value: false } );
+              });
+            }
+
+          } else {
+            res.send( { responseCode: 401, message: 'Notifications_Setting - No valid token found... please report this error' } );
+          }
+
+        });
+        // var  = req.query.latitude;
+        // var longitude = req.query.longitude;
+        // console.log('THERE IS AN ACCESS TOKEN', latitude, longitude, userToken );
+
+
+
+      // no headers detected so nothing to respond
+      } else {
+        res.send( { responseCode: 400, message: 'no header detected' } );
+      }
+    };
+
+
+
+
