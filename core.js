@@ -744,8 +744,18 @@ var crypto                                = require('crypto'),
 
         connection.query('INSERT INTO companies SET company_id = '+companyData.id+', name = "'+companyData.name+'", industry = "'+companyData.industry+'", size = "'+companyData.size+'", type = "'+companyData.type+'"', function( err, rows, fields ) {
           if (err) throw err;
-          console.log( 'XXXXXXXXXXXXXXXX' );
-          console.log( 'COMPANIES INSERT', rows );
+          // console.log( 'XXXXXXXXXXXXXXXX' );
+          // console.log( 'COMPANIES INSERT', rows );
+          // console.log( 'XXXXXXXXXXXXXXXX' );
+
+          if ( rows && rows.length ) {
+            connection.query('UPDATE access_right SET LI_company = '+rows[0].insertId+' WHERE token = '+token, function( err, rows, fields ) {
+              if (err) throw err;
+              callback();
+            });
+          } else {
+            throw err;
+          }
 
           // [ { fieldCount: 0,
           //     affectedRows: 1,
@@ -757,8 +767,7 @@ var crypto                                = require('crypto'),
           //     changedRows: 0 },
           //   [ { id: 1 } ] ]
 
-          console.log( 'XXXXXXXXXXXXXXXX' );
-          add_LI_company( token, companyData, callback );
+          // add_LI_company( token, companyData, callback );
         });
       }
     });
