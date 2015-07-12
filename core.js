@@ -626,7 +626,8 @@ var crypto                                = require('crypto'),
           method: 'GET',
           headers:  { 'Content-Type': 'application/json',
                       'x-li-format': 'json',
-                      'Authorization': 'Bearer '+token
+                      'Authorization': 'Bearer '+token,
+                      'Connection': 'Keep-Alive'
                       // 'User-Agent' : process.env.LI_CLIENT_NAME
                       }
       }
