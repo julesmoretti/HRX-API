@@ -722,6 +722,7 @@ var crypto                                = require('crypto'),
   }
 
   var add_LI_company              = function ( token, companyData, callback ) {
+    console.log('++++++ add_LI_company +++++');
 
     // companyData = {
       //                 "id": 21717,
@@ -744,12 +745,16 @@ var crypto                                = require('crypto'),
 
         connection.query('INSERT INTO companies SET company_id = '+companyData.id+', name = "'+companyData.name+'", industry = "'+companyData.industry+'", size = "'+companyData.size+'", type = "'+companyData.type+'"', function( err, rows, fields ) {
           if (err) throw err;
+          console.log( 'AFTER INSERT INTO companies');
+          console.log( rows );
           if ( rows && rows.length ) {
+            console.log('AFTER INSERT INTO companies THERE IS ROWS');
             connection.query('UPDATE access_right SET LI_company = '+rows[0].insertId+' WHERE token = '+token, function( err, rows, fields ) {
               if (err) throw err;
               callback();
             });
           } else {
+            console.log('AFTER INSERT INTO companies NO ROWS');
             throw err;
           }
         });
@@ -1017,6 +1022,7 @@ var crypto                                = require('crypto'),
                 connection.query('UPDATE access_right SET LI_url = "'+LI_data.publicProfileUrl+'", LI_description = "'+LI_data.summary+'", LI_id = "'+LI_data.id+'", LI_location_country_code = "'+LI_data.location.country.code+'", LI_location_name = "'+LI_data.location.name+'", LI_positions = "'+LI_data.positions.values[0].title+'", LI_profile_picture = "'+LI_data.pictureUrls.values[0]+'", LI_access_token = "'+userLIToken +'" WHERE token = "'+userToken+'"', function( err, rows, fields ) {
                   if (err) throw err;
 
+                  console.log("PRE add_LI_company");
                   add_LI_company( userToken, LI_data.positions.values[0].company, function(){
                     res.send( { responseCode: 200, message: 'Thank you all clear here!' } );
                   });
