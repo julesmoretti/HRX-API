@@ -61,7 +61,7 @@ var core                                  = require('./core.js');
     app.get('/geoposition', core.geo_position);
 
     // handles login request and provides a token in response
-    app.get('/notificationsSetting', core.notifications_Setting);
+    app.get('/notificationssetting', core.notifications_Setting);
 
 
     // handles login request and provides a token in response
