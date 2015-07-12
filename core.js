@@ -1077,7 +1077,7 @@ var crypto                                = require('crypto'),
           console.log('selected ID is: ', rows );
           if ( rows && rows.length ) {
 
-            if ( state ) {
+            if ( state === 'true' ) {
               connection.query('UPDATE devices SET state = 1 WHERE hrx_id = '+rows[0].id+' AND apn_token= "'+apn_token+'"', function( err, rows, fields ) {
                 if (err) throw err;
                 res.send( { responseCode: 200, message: 'Updated notifications to ON', value: true } );
