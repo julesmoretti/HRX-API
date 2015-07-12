@@ -736,7 +736,7 @@ var crypto                                = require('crypto'),
 
       // already exist returns HRX company id
       if ( rows && rows.length ) {
-        connection.query('UPDATE access_right SET LI_company = '+rows[0].id+' WHERE token = '+token, function( err, rows, fields ) {
+        connection.query('UPDATE access_right SET LI_company = '+rows[0].id+' WHERE token = "'+token+'"', function( err, rows, fields ) {
           if (err) throw err;
           callback();
         });
