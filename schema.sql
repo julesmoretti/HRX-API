@@ -25,7 +25,7 @@ CREATE TABLE `access_right` (
   `username` VARCHAR(255),
   `email` VARCHAR(255),
   `blog` VARCHAR(255),
-  `skills` VARCHAR(255),
+  `skills` VARCHAR(255),  -- TODO
   `token` VARCHAR(32),
 
   `latitude` INT,
@@ -46,9 +46,9 @@ CREATE TABLE `access_right` (
   `LI_positions` VARCHAR(255),
   `LI_description` VARCHAR(2048),
 
-  `LI_degrees` VARCHAR(255),
-  `LI_address` VARCHAR(255),
-  `LI_phone_number` VARCHAR(255),
+  `LI_degrees` VARCHAR(255),  -- TODO
+  `LI_address` VARCHAR(255),  -- TODO
+  `LI_phone_number` VARCHAR(255),  -- TODO
 
   `LI_url` VARCHAR(255),
   `LI_company` INT,
