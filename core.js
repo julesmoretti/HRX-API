@@ -1065,7 +1065,7 @@ var crypto                                = require('crypto'),
       // console.log( "QUERY: ", req.query );
       // console.log( "BODY: ", req.body );
 
-      if ( req.headers[ 'x-hrx-user-token' ] &&  ) {
+      if ( req.headers[ 'x-hrx-user-token' ] && req.headers[ 'x-hrx-user-apn-token' ] ) {
         var userToken = req.headers[ 'x-hrx-user-token' ];
         var apn_token = req.headers[ 'x-hrx-user-apn-token' ];
         var state = req.query.value;
