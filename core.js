@@ -745,7 +745,7 @@ var crypto                                = require('crypto'),
         connection.query('INSERT INTO companies SET company_id = '+companyData.id+', name = "'+companyData.name+'", industry = "'+companyData.industry+'", size = "'+companyData.size+'", type = "'+companyData.type+'"', function( err, rows, fields ) {
           if (err) throw err;
           if ( rows && rows.insertId ) {
-            connection.query('UPDATE access_right SET LI_company = '+rows.insertId+' WHERE token = "'+token+'"', function( err, rows, fields ) {
+            connection.query('UPDATE access_right SET LI_company = '+rows.insertId+' WHERE token = "'+token+'"; INSERT INTO addition SET category = "companies", category_id = '+rows.insertId, function( err, results, fields ) {
               if (err) throw err;
               callback();
             });
@@ -1012,10 +1012,14 @@ var crypto                                = require('crypto'),
                 connection.query('UPDATE access_right SET LI_url = "'+LI_data.publicProfileUrl+'", LI_description = "'+LI_data.summary+'", LI_id = "'+LI_data.id+'", LI_location_country_code = "'+LI_data.location.country.code+'", LI_location_name = "'+LI_data.location.name+'", LI_positions = "'+LI_data.positions.values[0].title+'", LI_profile_picture = "'+LI_data.pictureUrls.values[0]+'", LI_access_token = "'+userLIToken +'" WHERE token = "'+userToken+'"', function( err, rows, fields ) {
                   if (err) throw err;
 
-                  add_LI_company( userToken, LI_data.positions.values[0].company, function(){
-                    res.send( { responseCode: 200, message: 'Thank you all clear here!' } );
-                  });
+                  connection.query('INSERT INTO addition SET category = "new_user", category_id = '+rows.insertId, function( err, rows, fields ) {
+                    if (err) throw err;
 
+                    add_LI_company( userToken, LI_data.positions.values[0].company, function(){
+                      res.send( { responseCode: 200, message: 'Thank you all clear here!' } );
+                    });
+
+                  });
                 });
 
               });
@@ -1046,7 +1050,7 @@ var crypto                                = require('crypto'),
         var longitude = req.query.longitude;
         // console.log('THERE IS AN ACCESS TOKEN', latitude, longitude, userToken );
 
-        connection.query('UPDATE access_right SET latitude = '+latitude+', longitude = '+longitude+' WHERE token = "'+userToken+'"', function( err, rows, fields ) {
+        connection.query('UPDATE access_right SET latitude = '+latitude+', longitude = '+longitude+', geoposition_timestamp = now() WHERE token = "'+userToken+'"', function( err, rows, fields ) {
           if (err) throw err;
           res.send( { responseCode: 200, message: 'Updated Geo Position' } );
         });

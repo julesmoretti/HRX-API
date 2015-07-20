@@ -30,6 +30,7 @@ CREATE TABLE `access_right` (
 
   `latitude` INT,
   `longitude` INT,
+  `geoposition_timestamp` TIMESTAMP,
   `share_geoposition` INT DEFAULT 1,
 
   `GH_id` VARCHAR(255),
@@ -80,6 +81,16 @@ CREATE TABLE `companies` (
   `long` INT,
   PRIMARY KEY (`id`)
 ) COMMENT 'List of companies for the HRX Alumn';
+
+
+DROP TABLE IF EXISTS `addition`;
+
+CREATE TABLE `addition` (
+  `id` INT(20) AUTO_INCREMENT,
+  `category` VARCHAR(255),
+  `category_id` INT(20),
+  PRIMARY KEY (`id`)
+) COMMENT 'List all new addition, companies or alum';
 
 
 DROP TABLE IF EXISTS `devices`;
