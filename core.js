@@ -633,8 +633,8 @@ var crypto                                = require('crypto'),
       }
 
       request( options, function (error, response, body) {
-        console.log( 'HEADERS OF REQUEST', response.headers );
-        console.log( "BODY OF githubdata", body);
+        // console.log( 'HEADERS OF REQUEST', response.headers );
+        // console.log( "BODY OF githubdata", body);
         // RESPONSE
           // {
           //   "id": "mzYEHm7Jbe",
@@ -1011,6 +1011,9 @@ var crypto                                = require('crypto'),
 
                 connection.query('UPDATE access_right SET LI_url = "'+LI_data.publicProfileUrl+'", LI_description = "'+LI_data.summary+'", LI_id = "'+LI_data.id+'", LI_location_country_code = "'+LI_data.location.country.code+'", LI_location_name = "'+LI_data.location.name+'", LI_positions = "'+LI_data.positions.values[0].title+'", LI_profile_picture = "'+LI_data.pictureUrls.values[0]+'", LI_access_token = "'+userLIToken +'" WHERE token = "'+userToken+'"', function( err, rows, fields ) {
                   if (err) throw err;
+                  console.log('THIIIIIIIISSSSS IIIII SSSSS IIIITTTTTTT');
+                  console.log(rows);
+                  console.log('THIIIIIIIISSSSS IIIII SSSSS IIIITTTTTTT');
 
                   connection.query('INSERT INTO addition SET category = "new_user", category_id = '+rows.insertId, function( err, rows, fields ) {
                     if (err) throw err;
