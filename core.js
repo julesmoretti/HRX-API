@@ -968,7 +968,7 @@ var crypto                                = require('crypto'),
             if (err) throw err;
 
             if ( rows && rows.length ) {
-
+              var user_id = rows.id;
               // get LI user Data
               LI_user_data( userLIToken, function( LI_data ) {
 
@@ -1011,11 +1011,11 @@ var crypto                                = require('crypto'),
 
                 connection.query('UPDATE access_right SET LI_url = "'+LI_data.publicProfileUrl+'", LI_description = "'+LI_data.summary+'", LI_id = "'+LI_data.id+'", LI_location_country_code = "'+LI_data.location.country.code+'", LI_location_name = "'+LI_data.location.name+'", LI_positions = "'+LI_data.positions.values[0].title+'", LI_profile_picture = "'+LI_data.pictureUrls.values[0]+'", LI_access_token = "'+userLIToken +'" WHERE token = "'+userToken+'"', function( err, rows, fields ) {
                   if (err) throw err;
-                  console.log('THIIIIIIIISSSSS IIIII SSSSS IIIITTTTTTT');
-                  console.log(rows);
-                  console.log('THIIIIIIIISSSSS IIIII SSSSS IIIITTTTTTT');
+                  // console.log('THIIIIIIIISSSSS IIIII SSSSS IIIITTTTTTT');
+                  // console.log(rows);
+                  // console.log('THIIIIIIIISSSSS IIIII SSSSS IIIITTTTTTT');
 
-                  connection.query('INSERT INTO addition SET category = "new_user", category_id = '+rows.insertId, function( err, rows, fields ) {
+                  connection.query('INSERT INTO addition SET category = "new_user", category_id = '+user_id, function( err, rows, fields ) {
                     if (err) throw err;
 
                     add_LI_company( userToken, LI_data.positions.values[0].company, function(){
