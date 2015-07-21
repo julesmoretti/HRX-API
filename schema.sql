@@ -30,7 +30,7 @@ CREATE TABLE `access_right` (
 
   `latitude` INT,
   `longitude` INT,
-  `geoposition_timestamp` TIMESTAMP,
+  `geoposition_timestamp` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `share_geoposition` INT DEFAULT 1,
 
   `GH_id` VARCHAR(255),
@@ -56,7 +56,8 @@ CREATE TABLE `access_right` (
   `LI_profile_picture` VARCHAR(255),
   `LI_access_token` VARCHAR(255),
 
-  `creation_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `creation_date` TIMESTAMP DEFAULT 0,
+
   PRIMARY KEY (`id`)
 ) COMMENT 'Original access_right list';
 
