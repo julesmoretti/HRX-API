@@ -968,7 +968,12 @@ var crypto                                = require('crypto'),
             if (err) throw err;
 
             if ( rows && rows.length ) {
-              var user_id = rows.id;
+
+              console.log('THIIIIIIIISSSSS IIIII SSSSS IIIITTTTTTT');
+              console.log( rows[0].id, rows );
+              console.log('THIIIIIIIISSSSS IIIII SSSSS IIIITTTTTTT');
+
+              var user_id = rows[0].id;
               // get LI user Data
               LI_user_data( userLIToken, function( LI_data ) {
 
