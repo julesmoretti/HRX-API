@@ -67,6 +67,7 @@ DROP TABLE IF EXISTS `companies`;
 CREATE TABLE `companies` (
   `id` INT(20) AUTO_INCREMENT,
   `company_id` INT(20),
+  `alumni` VARCHAR(255),
   `name` VARCHAR(255),
   `industry` VARCHAR(255),
   `size` VARCHAR(255),
@@ -74,6 +75,8 @@ CREATE TABLE `companies` (
   `address_no` VARCHAR(255),
   `address_street` VARCHAR(255),
   `address_suite` VARCHAR(255),
+  `www` VARCHAR(255),
+  `logo` VARCHAR(255),
   `city` VARCHAR(255),
   `state` VARCHAR(255),
   `postcode` VARCHAR(255),
