@@ -1017,7 +1017,7 @@ var crypto                                = require('crypto'),
                     if (err) throw err;
 
                     add_LI_company( userToken, LI_data.positions.values[0].company, function(){
-                      res.send( { responseCode: 200, message: 'Thank you all clear here!' } );
+                      res.send( { responseCode: 200, message: 'Thank you all clear here!', user_id: user_id } );
                     });
 
                   });
