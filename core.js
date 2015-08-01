@@ -1052,9 +1052,10 @@ var crypto                                = require('crypto'),
         var latitude = req.query.latitude;
         var longitude = req.query.longitude;
         var addition = req.query.addition
+
         // console.log('THERE IS AN ACCESS TOKEN', latitude, longitude, userToken );
 
-console.log('PASSED 1');
+console.log('PASSED 1: ', req.query );
         connection.query('UPDATE access_right SET latitude = '+latitude+', longitude = '+longitude+', geoposition_timestamp = now() WHERE token = "'+userToken+'"', function( err, rows, fields ) {
           if (err) throw err;
 
