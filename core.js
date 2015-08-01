@@ -1105,12 +1105,25 @@ console.log('PASSED 3');
                   }
 
                 }
-              };
+              }
+
+              if ( alumni.length > 2 ) {
+
+              }
+
+              if ( companies.length > 2 ) {
+
+              }
+
+              if ( companies.length > 2 ) {
+
+              }
+
               console.log('alumni', alumni);
               console.log('companies', companies);
               console.log('geoLocations', geoLocations);
 
-              connection.query('SELECT * FROM access_right WHERE id IN ("'+alumni+'"); SELECT * FROM companies WHERE id IN ("'+companies+'"); SELECT id, latitude, longitude FROM access_right WHERE id IN ("'+geoLocations+')"', function( err, results, fields ) {
+              connection.query('SELECT * FROM access_right WHERE id IN ("'+alumni+'"); SELECT * FROM companies WHERE id IN ("'+companies+'"); SELECT id, latitude, longitude FROM access_right WHERE id IN ("'+geoLocations+'")', function( err, results, fields ) {
                 if (err) throw err;
 console.log('PASSED 4');
 
