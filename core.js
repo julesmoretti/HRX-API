@@ -964,7 +964,7 @@ var crypto                                = require('crypto'),
         // if ( userData.username && userData.token ) {
 
           // check that username exist in the database and that password is a match otherwise return error
-          connection.query('SELECT id, status FROM access_right WHERE token = "'+userToken+'"', function( err, rows, fields ) {
+          connection.query('SELECT id, user_status FROM access_right WHERE token = "'+userToken+'"', function( err, rows, fields ) {
             if (err) throw err;
 
             if ( rows && rows.length ) {
