@@ -1058,7 +1058,9 @@ console.log('PASSED 1');
         connection.query('UPDATE access_right SET latitude = '+latitude+', longitude = '+longitude+', geoposition_timestamp = now() WHERE token = "'+userToken+'"', function( err, rows, fields ) {
           if (err) throw err;
 
-console.log('PASSED 2');
+console.log('PASSED 2: ', typoof addition, addition);
+
+SELECT id, category, category_id FROM addition WHERE id > 0 ORDER BY id ASC;
           connection.query('SELECT id, category, category_id FROM addition WHERE id > '+addition+' ORDER BY id ASC', function( err, rows, fields ) {
             if (err) throw err;
 console.log('PASSED 3');
