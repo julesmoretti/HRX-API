@@ -1053,9 +1053,6 @@ var crypto                                = require('crypto'),
         var longitude = req.query.longitude;
         var addition = req.query.addition
 
-        // console.log('THERE IS AN ACCESS TOKEN', latitude, longitude, userToken );
-
-console.log('PASSED 1: ', req.query );
         connection.query('UPDATE access_right SET latitude = '+latitude+', longitude = '+longitude+', geoposition_timestamp = now() WHERE token = "'+userToken+'"', function( err, rows, fields ) {
           if (err) throw err;
 
@@ -1063,13 +1060,8 @@ console.log('PASSED 1: ', req.query );
             var addition = 0;
           }
 
-console.log('PASSED 2: ', typeof addition, addition);
-
-
-// SELECT id, category, category_id FROM addition WHERE id > 0 ORDER BY id ASC;
           connection.query('SELECT id, category, category_id FROM addition WHERE id > '+addition+' ORDER BY id ASC', function( err, rows, fields ) {
             if (err) throw err;
-console.log('PASSED 3');
 
             if ( rows && rows.length) {
               var new_user = '';
@@ -1107,36 +1099,31 @@ console.log('PASSED 3');
                 }
               }
 
-              if ( new_user.length > 2 ) {
-
-              }
-
-              if ( companies.length > 2 ) {
-
-              }
-
-              if ( companies.length > 2 ) {
-
-              }
-
-              console.log('new_user', new_user);
-              console.log('companies', companies);
-              console.log('geoLocations', geoLocations);
-
-
-
-
               connection.query('SELECT * FROM access_right WHERE id IN ("'+new_user+'"); SELECT * FROM companies WHERE id IN ("'+companies+'"); SELECT id, latitude, longitude FROM access_right WHERE id IN ("'+geoLocations+'")', function( err, results, fields ) {
                 if (err) throw err;
-console.log('PASSED 4');
 
                 if ( results && results.length ) {
-                  console.log( 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX' );
-                  console.log( 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX' );
-                  console.log( 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX' );
-                  console.log( 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX' );
-                  console.log( 'RESUULLLTTTSSSSS: ', results );
-                  res.send( { responseCode: 200, message: 'Updated Geo Position', last_id: last_id } );
+
+                  var data = { responseCode: 200, message: 'Updated Geo Position', last_id: last_id };
+
+                  if ( results.length ) {
+                    // there is new_users
+                    if ( results[0].length ) {
+                      data.new_users = results[0][0];
+                    }
+
+                    // there are new companies
+                    if ( results[1].length ) {
+                      data.companies = results[1][0];
+                    }
+
+                    // there are new geolocatoins
+                    if ( results[2].length ) {
+                      data.geolocatoins = results[2][0];
+                    }
+                  }
+
+                  res.send( data );
                 } else {
                   res.send( { responseCode: 200, message: 'Updated Geo Position', last_id: last_id } );
                 }
