@@ -1057,7 +1057,7 @@ var crypto                                = require('crypto'),
         connection.query('UPDATE access_right SET latitude = '+latitude+', longitude = '+longitude+', geoposition_timestamp = now() WHERE token = "'+userToken+'"', function( err, rows, fields ) {
           if (err) throw err;
 
-          connection.query('SELECT id, category, category_id FROM addition WHERE id > '+addition, function( err, rows, fields ) {
+          connection.query('SELECT id, category, category_id FROM addition WHERE id > '+addition+' ORDER BY id ASC', function( err, rows, fields ) {
             if (err) throw err;
 
             if ( rows && rows.length) {
