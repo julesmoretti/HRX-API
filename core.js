@@ -1059,9 +1059,12 @@ console.log('PASSED 1: ', req.query );
         connection.query('UPDATE access_right SET latitude = '+latitude+', longitude = '+longitude+', geoposition_timestamp = now() WHERE token = "'+userToken+'"', function( err, rows, fields ) {
           if (err) throw err;
 
+          if ( addition === undefined ) {
+            var addition = 0;
+          }
+
 console.log('PASSED 2: ', typeof addition, addition);
 
-          if ( !addition ) addition = 0;
 
 // SELECT id, category, category_id FROM addition WHERE id > 0 ORDER BY id ASC;
           connection.query('SELECT id, category, category_id FROM addition WHERE id > '+addition+' ORDER BY id ASC', function( err, rows, fields ) {
