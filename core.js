@@ -1060,7 +1060,7 @@ console.log('PASSED 1');
 
 console.log('PASSED 2: ', typeof addition, addition);
 
-SELECT id, category, category_id FROM addition WHERE id > 0 ORDER BY id ASC;
+// SELECT id, category, category_id FROM addition WHERE id > 0 ORDER BY id ASC;
           connection.query('SELECT id, category, category_id FROM addition WHERE id > '+addition+' ORDER BY id ASC', function( err, rows, fields ) {
             if (err) throw err;
 console.log('PASSED 3');
