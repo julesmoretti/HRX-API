@@ -964,12 +964,14 @@ var crypto                                = require('crypto'),
         // if ( userData.username && userData.token ) {
 
           // check that username exist in the database and that password is a match otherwise return error
-          connection.query('SELECT id FROM access_right WHERE token = "'+userToken+'"', function( err, rows, fields ) {
+          connection.query('SELECT id, status FROM access_right WHERE token = "'+userToken+'"', function( err, rows, fields ) {
             if (err) throw err;
 
             if ( rows && rows.length ) {
 
               var user_id = rows[0].id;
+              var user_status = rows[0].user_status;
+
               // get LI user Data
               LI_user_data( userLIToken, function( LI_data ) {
 
@@ -1017,8 +1019,7 @@ var crypto                                = require('crypto'),
                     if (err) throw err;
 
                     add_LI_company( userToken, LI_data.positions.values[0].company, function(){
-                      console.log( 'user_id' , user_id );
-                      res.send( { responseCode: 200, message: 'Thank you all clear here!', user_id: user_id } );
+                      res.send( { responseCode: 200, message: 'Thank you all clear here!', user_id: user_id, user_status: user_status } );
                     });
 
                   });
@@ -1050,11 +1051,73 @@ var crypto                                = require('crypto'),
         var userToken = req.headers[ 'x-hrx-user-token' ];
         var latitude = req.query.latitude;
         var longitude = req.query.longitude;
+        var addition = req.query.addition
         // console.log('THERE IS AN ACCESS TOKEN', latitude, longitude, userToken );
 
         connection.query('UPDATE access_right SET latitude = '+latitude+', longitude = '+longitude+', geoposition_timestamp = now() WHERE token = "'+userToken+'"', function( err, rows, fields ) {
           if (err) throw err;
-          res.send( { responseCode: 200, message: 'Updated Geo Position' } );
+
+          connection.query('SELECT id, category, category_id FROM addition WHERE id > '+addition, function( err, rows, fields ) {
+            if (err) throw err;
+
+            if ( rows && rows.length) {
+              var alumni = '';
+              var companies = '';
+              var geoLocations = '';
+
+              for ( var i = 0; i < rows.length; i++ ) {
+
+                var last_id = rows[i].id;
+
+                if ( rows[i].category === "alumni" ) {
+
+                  if ( alumn.length ) {
+                    alumn = alumn + ',' + rows[i].category_id;
+                  } else {
+                    alumn = alumn + rows[i].category_id;
+                  }
+
+                } else if ( rows[i].category === "companies" ) {
+
+                  if ( companies.length ) {
+                    companies = companies + ',' + rows[i].category_id;
+                  } else {
+                    companies = companies + rows[i].category_id;
+                  }
+
+                } else if ( rows[i].category === "geoLocations" ) {
+
+                  if ( geoLocations.length ) {
+                    geoLocations = geoLocations + ',' + rows[i].category_id;
+                  } else {
+                    geoLocations = geoLocations + rows[i].category_id;
+                  }
+
+                }
+              };
+
+              connection.query('SELECT * FROM access_right WHERE id IN ('+alumni+'); SELECT * FROM companies WHERE id IN ('+companies+'); SELECT id, latitude, longitude FROM access_right WHERE id IN ('+geoLocations+')', function( err, results, fields ) {
+                if (err) throw err;
+
+                if ( results && results.length ) {
+                  console.log( 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX' );
+                  console.log( 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX' );
+                  console.log( 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX' );
+                  console.log( 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX' );
+                  console.log( 'RESUULLLTTTSSSSS: ', results );
+                  res.send( { responseCode: 200, message: 'Updated Geo Position', last_id: last_id } );
+                } else {
+                  res.send( { responseCode: 200, message: 'Updated Geo Position', last_id: last_id } );
+                }
+
+              });
+
+            } else {
+              res.send( { responseCode: 200, message: 'Updated Geo Position', last_id: addition } );
+            }
+
+          });
+
         });
 
       // no headers detected so nothing to respond

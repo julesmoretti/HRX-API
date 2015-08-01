@@ -27,6 +27,7 @@ CREATE TABLE `access_right` (
   `blog` VARCHAR(255),
   `skills` VARCHAR(255),  -- TODO
   `token` VARCHAR(32),
+  `user_status` VARCHAR(32) DEFAULT 'alumni',
 
   `latitude` INT,
   `longitude` INT,
