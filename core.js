@@ -1054,11 +1054,14 @@ var crypto                                = require('crypto'),
         var addition = req.query.addition
         // console.log('THERE IS AN ACCESS TOKEN', latitude, longitude, userToken );
 
+console.log('PASSED 1');
         connection.query('UPDATE access_right SET latitude = '+latitude+', longitude = '+longitude+', geoposition_timestamp = now() WHERE token = "'+userToken+'"', function( err, rows, fields ) {
           if (err) throw err;
 
+console.log('PASSED 2');
           connection.query('SELECT id, category, category_id FROM addition WHERE id > '+addition+' ORDER BY id ASC', function( err, rows, fields ) {
             if (err) throw err;
+console.log('PASSED 3');
 
             if ( rows && rows.length) {
               var alumni = '';
@@ -1098,6 +1101,7 @@ var crypto                                = require('crypto'),
 
               connection.query('SELECT * FROM access_right WHERE id IN ('+alumni+'); SELECT * FROM companies WHERE id IN ('+companies+'); SELECT id, latitude, longitude FROM access_right WHERE id IN ('+geoLocations+')', function( err, results, fields ) {
                 if (err) throw err;
+console.log('PASSED 4');
 
                 if ( results && results.length ) {
                   console.log( 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX' );
