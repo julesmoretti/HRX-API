@@ -1072,7 +1072,7 @@ console.log('PASSED 2: ', typeof addition, addition);
 console.log('PASSED 3');
 
             if ( rows && rows.length) {
-              var alumni = '';
+              var new_user = '';
               var companies = '';
               var geoLocations = '';
 
@@ -1080,12 +1080,12 @@ console.log('PASSED 3');
 
                 var last_id = rows[i].id;
 
-                if ( rows[i].category === "alumni" ) {
+                if ( rows[i].category === "new_user" ) {
 
-                  if ( alumn.length ) {
-                    alumn = alumn + ',' + rows[i].category_id;
+                  if ( new_user.length ) {
+                    new_user = new_user + ',' + rows[i].category_id;
                   } else {
-                    alumn = alumn + rows[i].category_id;
+                    new_user = new_user + rows[i].category_id;
                   }
 
                 } else if ( rows[i].category === "companies" ) {
@@ -1107,7 +1107,7 @@ console.log('PASSED 3');
                 }
               }
 
-              if ( alumni.length > 2 ) {
+              if ( new_user.length > 2 ) {
 
               }
 
@@ -1119,11 +1119,14 @@ console.log('PASSED 3');
 
               }
 
-              console.log('alumni', alumni);
+              console.log('new_user', new_user);
               console.log('companies', companies);
               console.log('geoLocations', geoLocations);
 
-              connection.query('SELECT * FROM access_right WHERE id IN ("'+alumni+'"); SELECT * FROM companies WHERE id IN ("'+companies+'"); SELECT id, latitude, longitude FROM access_right WHERE id IN ("'+geoLocations+'")', function( err, results, fields ) {
+
+
+
+              connection.query('SELECT * FROM access_right WHERE id IN ("'+new_user+'"); SELECT * FROM companies WHERE id IN ("'+companies+'"); SELECT id, latitude, longitude FROM access_right WHERE id IN ("'+geoLocations+'")', function( err, results, fields ) {
                 if (err) throw err;
 console.log('PASSED 4');
 
