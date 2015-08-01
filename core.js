@@ -1061,6 +1061,8 @@ console.log('PASSED 1: ', req.query );
 
 console.log('PASSED 2: ', typeof addition, addition);
 
+          if ( !addition ) addition = 0;
+
 // SELECT id, category, category_id FROM addition WHERE id > 0 ORDER BY id ASC;
           connection.query('SELECT id, category, category_id FROM addition WHERE id > '+addition+' ORDER BY id ASC', function( err, rows, fields ) {
             if (err) throw err;
