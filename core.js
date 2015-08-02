@@ -1099,6 +1099,8 @@ var crypto                                = require('crypto'),
                 }
               }
 
+              // TODO - REDUCE return count
+
               connection.query('SELECT * FROM access_right WHERE id IN ("'+new_user+'"); SELECT * FROM companies WHERE id IN ("'+companies+'"); SELECT id, latitude, longitude FROM access_right WHERE id IN ("'+geoLocations+'")', function( err, results, fields ) {
                 if (err) throw err;
 
