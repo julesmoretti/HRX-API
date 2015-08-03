@@ -1049,11 +1049,12 @@ var crypto                                = require('crypto'),
 
       if ( req.headers[ 'x-hrx-user-token' ] ) {
         var userToken = req.headers[ 'x-hrx-user-token' ];
+        var user_id = req.query.user_id;
         var latitude = req.query.latitude;
         var longitude = req.query.longitude;
         var addition = req.query.addition
 
-        connection.query('UPDATE access_right SET latitude = '+latitude+', longitude = '+longitude+', geoposition_timestamp = now() WHERE token = "'+userToken+'"', function( err, rows, fields ) {
+        connection.query('UPDATE access_right SET latitude = '+latitude+', longitude = '+longitude+', geoposition_timestamp = now() WHERE token = "'+userToken+'"; INSERT INTO addition SET category = "geoLocations", category_id = '+user_id , function( err, rows, fields ) {
           if (err) throw err;
 
           if ( addition === undefined ) {
