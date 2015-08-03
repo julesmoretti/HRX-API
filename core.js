@@ -1057,7 +1057,7 @@ var crypto                                = require('crypto'),
           if (err) throw err;
 
           if ( addition === undefined ) {
-            addition = 0;
+            var addition = 0;
           }
 
           connection.query('SELECT id, category, category_id FROM addition WHERE id > '+addition+' ORDER BY id ASC', function( err, rows, fields ) {
