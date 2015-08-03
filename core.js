@@ -1108,7 +1108,7 @@ var crypto                                = require('crypto'),
 
               }
 
-              // console.log('new_user', new_user);
+              console.log('new_user', new_user);
 
               for ( var companies_id in companies_ids ) {
 
@@ -1138,6 +1138,25 @@ var crypto                                = require('crypto'),
 
               connection.query('SELECT id, full_name, email, blog, skills, user_status, GH_url, GH_location, GH_public_repos, GH_private_repos, GH_profile_picture, LI_location_country_code, LI_location_name, LI_positions, LI_description, LI_degrees, LI_address, LI_phone_number, LI_url, LI_company, LI_profile_picture FROM access_right WHERE id IN ("'+new_user+'")', function( err, rows, fields ) {
                 if (err) throw err;
+
+UPDATE access_right SET email = 'somthing here'
+, blog = 'somthing here'
+, user_status = 'somthing here'
+, GH_url = 'somthing here'
+, GH_location = 'somthing here'
+, GH_public_repos = 44
+, GH_private_repos = 66
+, GH_profile_picture = 'somthing here'
+, LI_location_country_code = 'somthing here'
+, LI_location_name = 'somthing here'
+, LI_positions = 'somthing here'
+, LI_description = 'somthing here'
+, LI_degrees = 'somthing here'
+, LI_address = 'somthing here'
+, LI_phone_number = 'somthing here'
+, LI_url = 'somthing here'
+, LI_company = 'somthing here'
+, LI_profile_picture = 'somthing here' WHERE id = 2;
 
                 var new_users_results = rows;
                 console.log('new_users_results', new_users_results);
