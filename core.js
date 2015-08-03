@@ -1092,6 +1092,10 @@ var crypto                                = require('crypto'),
                 }
               }
 
+              console.log('new_user_ids', new_user_ids);
+              console.log('companies_ids', companies_ids);
+              console.log('geoLocations_ids', geoLocations_ids);
+
               for ( var new_user_id in new_user_ids ) {
 
                 if ( new_user.length ) {
@@ -1102,6 +1106,7 @@ var crypto                                = require('crypto'),
 
               }
 
+              console.log('new_user', new_user);
 
               for ( var companies_id in companies_ids ) {
 
@@ -1113,6 +1118,8 @@ var crypto                                = require('crypto'),
 
               }
 
+              console.log('companies', companies);
+
               for ( var geoLocations_id in geoLocations_ids ) {
 
                 if ( geoLocations.length ) {
@@ -1122,6 +1129,8 @@ var crypto                                = require('crypto'),
                 }
 
               }
+
+              console.log('geoLocations', geoLocations);
 
               // TODO - REDUCE return count
 
