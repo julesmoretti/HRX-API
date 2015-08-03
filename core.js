@@ -1064,8 +1064,13 @@ var crypto                                = require('crypto'),
             if (err) throw err;
 
             if ( rows && rows.length) {
+              var new_user_ids = {};
               var new_user = '';
+
+              var companies_ids = {};
               var companies = '';
+
+              var geoLocations_ids = {};
               var geoLocations = '';
 
               for ( var i = 0; i < rows.length; i++ ) {
@@ -1074,34 +1079,53 @@ var crypto                                = require('crypto'),
 
                 if ( rows[i].category === "new_user" ) {
 
-                  if ( new_user.length ) {
-                    new_user = new_user + ',' + rows[i].category_id;
-                  } else {
-                    new_user = new_user + rows[i].category_id;
-                  }
+                  new_user_ids[ rows[i].category_id ];
 
                 } else if ( rows[i].category === "companies" ) {
 
-                  if ( companies.length ) {
-                    companies = companies + ',' + rows[i].category_id;
-                  } else {
-                    companies = companies + rows[i].category_id;
-                  }
+                  companies_ids[ rows[i].category_id ];
 
                 } else if ( rows[i].category === "geoLocations" ) {
 
-                  if ( geoLocations.length ) {
-                    geoLocations = geoLocations + ',' + rows[i].category_id;
-                  } else {
-                    geoLocations = geoLocations + rows[i].category_id;
-                  }
+                  geoLocations_ids[ rows[i].category_id ];
 
                 }
               }
 
+              for ( var new_user_id in new_user_ids ) {
+
+                if ( new_user.length ) {
+                  new_user = new_user + ',' + new_user_id;
+                } else {
+                  new_user = new_user + new_user_id;
+                }
+
+              }
+
+
+              for ( var companies_id in companies_ids ) {
+
+                if ( companies.length ) {
+                  companies = companies + ',' + companies_id;
+                } else {
+                  companies = companies + companies_id;
+                }
+
+              }
+
+              for ( var geoLocations_id in geoLocations_ids ) {
+
+                if ( geoLocations.length ) {
+                  geoLocations = geoLocations + ',' + geoLocations_id;
+                } else {
+                  geoLocations = geoLocations + geoLocations_id;
+                }
+
+              }
+
               // TODO - REDUCE return count
 
-              connection.query('SELECT * FROM access_right WHERE id IN ("'+new_user+'"); SELECT * FROM companies WHERE id IN ("'+companies+'"); SELECT id, latitude, longitude FROM access_right WHERE id IN ("'+geoLocations+'")', function( err, results, fields ) {
+              connection.query('SELECT id, full_name, email, blog, skills, user_status, GH_url, GH_location, GH_public_repos, GH_private_repos, GH_profile_picture, LI_location_country_code, LI_location_name, LI_positions, LI_description, LI_degrees, LI_address, LI_phone_number, LI_url, LI_company, LI_profile_picture FROM access_right WHERE id IN ("'+new_user+'"); SELECT * FROM companies WHERE id IN ("'+companies+'"); SELECT id, latitude, longitude FROM access_right WHERE id IN ("'+geoLocations+'")', function( err, results, fields ) {
                 if (err) throw err;
 
                 if ( results && results.length ) {
