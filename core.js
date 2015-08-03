@@ -1125,9 +1125,9 @@ var crypto                                = require('crypto'),
               for ( var geolocations_id in geolocations_ids ) {
 
                 if ( geolocations.length ) {
-                  geolocations = geoLocations + ',' + geolocations_id;
+                  geolocations = geolocations + ',' + geolocations_id;
                 } else {
-                  geolocations = geoLocations + geolocations_id;
+                  geolocations = geolocations + geolocations_id;
                 }
 
               }
