@@ -1084,15 +1084,15 @@ var crypto                                = require('crypto'),
 
                 if ( rows[i].category === "new_user" ) {
 
-                  new_user_ids[ rows[i].category_id ];
+                  new_user_ids[ rows[i].category_id ] = true;
 
                 } else if ( rows[i].category === "companies" ) {
 
-                  companies_ids[ rows[i].category_id ];
+                  companies_ids[ rows[i].category_id ] = true;
 
                 } else if ( rows[i].category === "geoLocations" ) {
 
-                  geoLocations_ids[ rows[i].category_id ];
+                  geoLocations_ids[ rows[i].category_id ] = true;
 
                 }
               }
