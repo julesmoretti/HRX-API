@@ -1136,7 +1136,7 @@ var crypto                                = require('crypto'),
 
               // TODO - REDUCE return count
 
-              connection.query('SELECT id, full_name, email, blog, skills, user_status, GH_url, GH_location, GH_public_repos, GH_private_repos, GH_profile_picture, LI_location_country_code, LI_location_name, LI_positions, LI_description, LI_degrees, LI_address, LI_phone_number, LI_url, LI_company, LI_profile_picture FROM access_right WHERE id IN ("'+new_user+'")', function( err, rows, fields ) {
+              connection.query('SELECT id, full_name, email, blog, skills, user_status, GH_url, GH_location, GH_public_repos, GH_private_repos, GH_profile_picture, LI_location_country_code, LI_location_name, LI_positions, LI_description, LI_degrees, LI_address, LI_phone_number, LI_url, LI_company, LI_profile_picture FROM access_right WHERE id IN ('+new_user+')', function( err, rows, fields ) {
                 if (err) throw err;
 
                 var new_users_results = rows;
@@ -1147,14 +1147,14 @@ var crypto                                = require('crypto'),
                   if (err) throw err;
 
                   var companies_results = rows;
-                  console.log('companies_results', companies_results);
+                  // console.log('companies_results', companies_results);
 
 
                   connection.query('SELECT id, latitude, longitude FROM access_right WHERE id IN ("'+geolocations+'")', function( err, rows, fields ) {
                     if (err) throw err;
 
                     var geolocations_results = rows;
-                    console.log('geolocations_results', geolocations_results);
+                    // console.log('geolocations_results', geolocations_results);
 
                     var data = { responseCode: 200, message: 'Updated Geo Position', last_id: last_id };
 
@@ -1183,7 +1183,7 @@ var crypto                                = require('crypto'),
                       };
                     }
 
-                    console.log('data', data);
+                    // console.log('data', data);
 
                     res.send( data );
 
