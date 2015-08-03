@@ -1057,13 +1057,18 @@ var crypto                                = require('crypto'),
           if (err) throw err;
 
           if ( addition === undefined ) {
-            var addition = 0;
+            addition = 0;
           }
 
           connection.query('SELECT id, category, category_id FROM addition WHERE id > '+addition+' ORDER BY id ASC', function( err, rows, fields ) {
             if (err) throw err;
 
             if ( rows && rows.length) {
+
+              console.log( 'addition', addition );
+              console.log( 'rows', rows );
+
+
               var new_user_ids = {};
               var new_user = '';
 
