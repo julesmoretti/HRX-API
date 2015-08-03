@@ -1089,7 +1089,7 @@ var crypto                                = require('crypto'),
 
                 } else if ( rows[i].category === "geolocation" ) {
 
-                  geoLocations_ids[ rows[i].category_id ] = true;
+                  geolocations_ids[ rows[i].category_id ] = true;
 
                 }
               }
