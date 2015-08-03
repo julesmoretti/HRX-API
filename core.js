@@ -1094,9 +1094,9 @@ var crypto                                = require('crypto'),
                 }
               }
 
-              console.log('new_user_ids', new_user_ids);
-              console.log('companies_ids', companies_ids);
-              console.log('geolocations_ids', geolocations_ids);
+              // console.log('new_user_ids', new_user_ids);
+              // console.log('companies_ids', companies_ids);
+              // console.log('geolocations_ids', geolocations_ids);
 
               for ( var new_user_id in new_user_ids ) {
 
@@ -1108,7 +1108,7 @@ var crypto                                = require('crypto'),
 
               }
 
-              console.log('new_user', new_user);
+              // console.log('new_user', new_user);
 
               for ( var companies_id in companies_ids ) {
 
@@ -1120,7 +1120,7 @@ var crypto                                = require('crypto'),
 
               }
 
-              console.log('companies', companies);
+              // console.log('companies', companies);
 
               for ( var geolocations_id in geolocations_ids ) {
 
@@ -1132,51 +1132,64 @@ var crypto                                = require('crypto'),
 
               }
 
-              console.log('geolocations', geolocations);
+              // console.log('geolocations', geolocations);
 
               // TODO - REDUCE return count
 
-              connection.query('SELECT id, full_name, email, blog, skills, user_status, GH_url, GH_location, GH_public_repos, GH_private_repos, GH_profile_picture, LI_location_country_code, LI_location_name, LI_positions, LI_description, LI_degrees, LI_address, LI_phone_number, LI_url, LI_company, LI_profile_picture FROM access_right WHERE id IN ("'+new_user+'"); SELECT * FROM companies WHERE id IN ("'+companies+'"); SELECT id, latitude, longitude FROM access_right WHERE id IN ("'+geolocations+'")', function( err, results, fields ) {
+              connection.query('SELECT id, full_name, email, blog, skills, user_status, GH_url, GH_location, GH_public_repos, GH_private_repos, GH_profile_picture, LI_location_country_code, LI_location_name, LI_positions, LI_description, LI_degrees, LI_address, LI_phone_number, LI_url, LI_company, LI_profile_picture FROM access_right WHERE id IN ("'+new_user+'")', function( err, rows, fields ) {
                 if (err) throw err;
 
-                if ( results && results.length ) {
+                var new_users_results = rows;
+                console.log('new_users_results', new_users_results);
 
-                  var data = { responseCode: 200, message: 'Updated Geo Position', last_id: last_id };
 
-                  console.log('results', results);
+                connection.query('SELECT * FROM companies WHERE id IN ("'+companies+'")', function( err, rows, fields ) {
+                  if (err) throw err;
 
-                  if ( results.length ) {
+                  var companies_results = rows;
+                  console.log('companies_results', companies_results);
+
+
+                  connection.query('SELECT id, latitude, longitude FROM access_right WHERE id IN ("'+geolocations+'")', function( err, rows, fields ) {
+                    if (err) throw err;
+
+                    var geolocations_results = rows;
+                    console.log('geolocations_results', geolocations_results);
+
+                    var data = { responseCode: 200, message: 'Updated Geo Position', last_id: last_id };
+
+
                     // there is new_users
-                    if ( results[0].length ) {
+                    if ( new_users_results && new_users_results.length ) {
                       data.new_users = {};
-                      for (var i = 0; i < results[0].length; i++) {
-                        data.new_users[ results[0][i].id ] = results[0][i];
+                      for (var i = 0; i < new_users_results.length; i++) {
+                        data.new_users[ new_users_results[i].id ] = new_users_results[i];
                       };
                     }
 
                     // there are new companies
-                    if ( results[1].length ) {
+                    if ( companies_results && companies_results.length ) {
                       data.companies = {};
-                      for (var i = 0; i < results[1].length; i++) {
-                        data.companies[ results[1][i].id ] = results[1][i];
+                      for (var i = 0; i < companies_results.length; i++) {
+                        data.companies[ companies_results[i].id ] = companies_results[i];
                       };
                     }
 
                     // there are new geolocatoins
-                    if ( results[2].length ) {
+                    if ( geolocations_results && geolocations_results.length ) {
                       data.geolocations = {};
-                      for (var i = 0; i < results[2].length; i++) {
-                        data.geolocations[ results[2][i].id ] = results[2][i];
+                      for (var i = 0; i < geolocations_results.length; i++) {
+                        data.geolocations[ geolocations_results[i].id ] = geolocations_results[i];
                       };
                     }
-                  }
 
-                  console.log('data', data);
+                    console.log('data', data);
 
-                  res.send( data );
-                } else {
-                  res.send( { responseCode: 200, message: 'Updated Geo Position', last_id: last_id } );
-                }
+                    res.send( data );
+
+                  });
+
+                });
 
               });
 
