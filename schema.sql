@@ -29,8 +29,8 @@ CREATE TABLE `access_right` (
   `token` VARCHAR(32),
   `user_status` VARCHAR(32) DEFAULT 'alumni',
 
-  `latitude` INT,
-  `longitude` INT,
+  `latitude` FLOAT(17,14),
+  `longitude` FLOAT(17,14),
   `geoposition_timestamp` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `share_geoposition` INT DEFAULT 1,
 

@@ -1143,7 +1143,7 @@ var crypto                                = require('crypto'),
 
                   var data = { responseCode: 200, message: 'Updated Geo Position', last_id: last_id };
 
-                  console.log('results', results);
+                  // console.log('results', results);
 
                   if ( results.length ) {
                     // there is new_users
