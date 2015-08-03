@@ -1094,9 +1094,9 @@ var crypto                                = require('crypto'),
                 }
               }
 
-              // console.log('new_user_ids', new_user_ids);
-              // console.log('companies_ids', companies_ids);
-              // console.log('geoLocations_ids', geoLocations_ids);
+              console.log('new_user_ids', new_user_ids);
+              console.log('companies_ids', companies_ids);
+              console.log('geoLocations_ids', geoLocations_ids);
 
               for ( var new_user_id in new_user_ids ) {
 
@@ -1108,7 +1108,7 @@ var crypto                                = require('crypto'),
 
               }
 
-              // console.log('new_user', new_user);
+              console.log('new_user', new_user);
 
               for ( var companies_id in companies_ids ) {
 
@@ -1120,7 +1120,7 @@ var crypto                                = require('crypto'),
 
               }
 
-              // console.log('companies', companies);
+              console.log('companies', companies);
 
               for ( var geolocations_id in geolocations_ids ) {
 
@@ -1132,7 +1132,7 @@ var crypto                                = require('crypto'),
 
               }
 
-              // console.log('geoLocations', geoLocations);
+              console.log('geoLocations', geoLocations);
 
               // TODO - REDUCE return count
 
@@ -1142,6 +1142,8 @@ var crypto                                = require('crypto'),
                 if ( results && results.length ) {
 
                   var data = { responseCode: 200, message: 'Updated Geo Position', last_id: last_id };
+
+                  console.log('results', results);
 
                   if ( results.length ) {
                     // there is new_users
@@ -1168,6 +1170,8 @@ var crypto                                = require('crypto'),
                       };
                     }
                   }
+
+                  console.log('data', data);
 
                   res.send( data );
                 } else {
