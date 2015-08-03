@@ -1108,7 +1108,7 @@ var crypto                                = require('crypto'),
 
               }
 
-              console.log('new_user', new_user);
+              // console.log('new_user', new_user);
 
               for ( var companies_id in companies_ids ) {
 
@@ -1136,60 +1136,47 @@ var crypto                                = require('crypto'),
 
               // TODO - REDUCE return count
 
-              connection.query('SELECT id, full_name, email, blog, skills, user_status, GH_url, GH_location, GH_public_repos, GH_private_repos, GH_profile_picture, LI_location_country_code, LI_location_name, LI_positions, LI_description, LI_degrees, LI_address, LI_phone_number, LI_url, LI_company, LI_profile_picture FROM access_right WHERE id IN ('+new_user+')', function( err, rows, fields ) {
+              connection.query('SELECT id, full_name, email, blog, skills, user_status, GH_url, GH_location, GH_public_repos, GH_private_repos, GH_profile_picture, LI_location_country_code, LI_location_name, LI_positions, LI_description, LI_degrees, LI_address, LI_phone_number, LI_url, LI_company, LI_profile_picture FROM access_right WHERE id IN ('+new_user+'); SELECT * FROM companies WHERE id IN ('+companies+'); SELECT id, latitude, longitude FROM access_right WHERE id IN ('+geolocations+')', function( err, results, fields ) {
                 if (err) throw err;
 
-                var new_users_results = rows;
-                console.log('new_users_results', new_users_results);
+                if ( results && results.length ) {
 
+                  var data = { responseCode: 200, message: 'Updated Geo Position', last_id: last_id };
 
-                connection.query('SELECT * FROM companies WHERE id IN ("'+companies+'")', function( err, rows, fields ) {
-                  if (err) throw err;
+                  console.log('results', results);
 
-                  var companies_results = rows;
-                  // console.log('companies_results', companies_results);
-
-
-                  connection.query('SELECT id, latitude, longitude FROM access_right WHERE id IN ("'+geolocations+'")', function( err, rows, fields ) {
-                    if (err) throw err;
-
-                    var geolocations_results = rows;
-                    // console.log('geolocations_results', geolocations_results);
-
-                    var data = { responseCode: 200, message: 'Updated Geo Position', last_id: last_id };
-
-
+                  if ( results.length ) {
                     // there is new_users
-                    if ( new_users_results && new_users_results.length ) {
+                    if ( results[0].length ) {
                       data.new_users = {};
-                      for (var i = 0; i < new_users_results.length; i++) {
-                        data.new_users[ new_users_results[i].id ] = new_users_results[i];
+                      for (var i = 0; i < results[0].length; i++) {
+                        data.new_users[ results[0][i].id ] = results[0][i];
                       };
                     }
 
                     // there are new companies
-                    if ( companies_results && companies_results.length ) {
+                    if ( results[1].length ) {
                       data.companies = {};
-                      for (var i = 0; i < companies_results.length; i++) {
-                        data.companies[ companies_results[i].id ] = companies_results[i];
+                      for (var i = 0; i < results[1].length; i++) {
+                        data.companies[ results[1][i].id ] = results[1][i];
                       };
                     }
 
                     // there are new geolocatoins
-                    if ( geolocations_results && geolocations_results.length ) {
+                    if ( results[2].length ) {
                       data.geolocations = {};
-                      for (var i = 0; i < geolocations_results.length; i++) {
-                        data.geolocations[ geolocations_results[i].id ] = geolocations_results[i];
+                      for (var i = 0; i < results[2].length; i++) {
+                        data.geolocations[ results[2][i].id ] = results[2][i];
                       };
                     }
+                  }
 
-                    // console.log('data', data);
+                  // console.log('data', data);
 
-                    res.send( data );
-
-                  });
-
-                });
+                  res.send( data );
+                } else {
+                  res.send( { responseCode: 200, message: 'Updated Geo Position', last_id: last_id } );
+                }
 
               });
 
