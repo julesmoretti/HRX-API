@@ -745,7 +745,7 @@ var crypto                                = require('crypto'),
         connection.query('INSERT INTO companies SET company_id = '+companyData.id+', name = "'+companyData.name+'", industry = "'+companyData.industry+'", size = "'+companyData.size+'", type = "'+companyData.type+'"', function( err, rows, fields ) {
           if (err) throw err;
           if ( rows && rows.insertId ) {
-            connection.query('UPDATE access_right SET LI_company = '+rows.insertId+' WHERE token = "'+token+'"; INSERT INTO addition SET category = "companies", category_id = '+rows.insertId, function( err, results, fields ) {
+            connection.query('UPDATE access_right SET LI_company = '+rows.insertId+' WHERE token = "'+token+'"; INSERT INTO addition SET category = "company", category_id = '+rows.insertId, function( err, results, fields ) {
               if (err) throw err;
               callback();
             });
@@ -1044,7 +1044,7 @@ var crypto                                = require('crypto'),
   exports.geo_position                    = function ( req, res ) {
       console.log('++++++++ geo_position ++++++++');
       // console.log( "HEADER: ", req.headers );
-      console.log( "QUERY: ", req.query );
+      // console.log( "QUERY: ", req.query );
       // console.log( "BODY: ", req.body );
 
       if ( req.headers[ 'x-hrx-user-token' ] ) {
@@ -1054,7 +1054,7 @@ var crypto                                = require('crypto'),
         var longitude = req.query.longitude;
         var addition = req.query.addition
 
-        connection.query('UPDATE access_right SET latitude = '+latitude+', longitude = '+longitude+', geoposition_timestamp = now() WHERE token = "'+userToken+'"; INSERT INTO addition SET category = "geoLocations", category_id = '+user_id , function( err, rows, fields ) {
+        connection.query('UPDATE access_right SET latitude = '+latitude+', longitude = '+longitude+', geoposition_timestamp = now() WHERE token = "'+userToken+'"; INSERT INTO addition SET category = "geolocation", category_id = '+user_id , function( err, rows, fields ) {
           if (err) throw err;
 
           if ( addition === undefined ) {
@@ -1066,18 +1066,14 @@ var crypto                                = require('crypto'),
 
             if ( rows && rows.length) {
 
-              console.log( 'addition', addition );
-              console.log( 'rows', rows );
-
-
               var new_user_ids = {};
               var new_user = '';
 
               var companies_ids = {};
               var companies = '';
 
-              var geoLocations_ids = {};
-              var geoLocations = '';
+              var geolocations_ids = {};
+              var geolocations = '';
 
               for ( var i = 0; i < rows.length; i++ ) {
 
@@ -1087,20 +1083,20 @@ var crypto                                = require('crypto'),
 
                   new_user_ids[ rows[i].category_id ] = true;
 
-                } else if ( rows[i].category === "companies" ) {
+                } else if ( rows[i].category === "company" ) {
 
                   companies_ids[ rows[i].category_id ] = true;
 
-                } else if ( rows[i].category === "geoLocations" ) {
+                } else if ( rows[i].category === "geolocation" ) {
 
                   geoLocations_ids[ rows[i].category_id ] = true;
 
                 }
               }
 
-              console.log('new_user_ids', new_user_ids);
-              console.log('companies_ids', companies_ids);
-              console.log('geoLocations_ids', geoLocations_ids);
+              // console.log('new_user_ids', new_user_ids);
+              // console.log('companies_ids', companies_ids);
+              // console.log('geoLocations_ids', geoLocations_ids);
 
               for ( var new_user_id in new_user_ids ) {
 
@@ -1112,7 +1108,7 @@ var crypto                                = require('crypto'),
 
               }
 
-              console.log('new_user', new_user);
+              // console.log('new_user', new_user);
 
               for ( var companies_id in companies_ids ) {
 
@@ -1124,23 +1120,23 @@ var crypto                                = require('crypto'),
 
               }
 
-              console.log('companies', companies);
+              // console.log('companies', companies);
 
-              for ( var geoLocations_id in geoLocations_ids ) {
+              for ( var geolocations_id in geolocations_ids ) {
 
-                if ( geoLocations.length ) {
-                  geoLocations = geoLocations + ',' + geoLocations_id;
+                if ( geolocations.length ) {
+                  geolocations = geoLocations + ',' + geolocations_id;
                 } else {
-                  geoLocations = geoLocations + geoLocations_id;
+                  geolocations = geoLocations + geolocations_id;
                 }
 
               }
 
-              console.log('geoLocations', geoLocations);
+              // console.log('geoLocations', geoLocations);
 
               // TODO - REDUCE return count
 
-              connection.query('SELECT id, full_name, email, blog, skills, user_status, GH_url, GH_location, GH_public_repos, GH_private_repos, GH_profile_picture, LI_location_country_code, LI_location_name, LI_positions, LI_description, LI_degrees, LI_address, LI_phone_number, LI_url, LI_company, LI_profile_picture FROM access_right WHERE id IN ("'+new_user+'"); SELECT * FROM companies WHERE id IN ("'+companies+'"); SELECT id, latitude, longitude FROM access_right WHERE id IN ("'+geoLocations+'")', function( err, results, fields ) {
+              connection.query('SELECT id, full_name, email, blog, skills, user_status, GH_url, GH_location, GH_public_repos, GH_private_repos, GH_profile_picture, LI_location_country_code, LI_location_name, LI_positions, LI_description, LI_degrees, LI_address, LI_phone_number, LI_url, LI_company, LI_profile_picture FROM access_right WHERE id IN ("'+new_user+'"); SELECT * FROM companies WHERE id IN ("'+companies+'"); SELECT id, latitude, longitude FROM access_right WHERE id IN ("'+geolocations+'")', function( err, results, fields ) {
                 if (err) throw err;
 
                 if ( results && results.length ) {
@@ -1150,17 +1146,24 @@ var crypto                                = require('crypto'),
                   if ( results.length ) {
                     // there is new_users
                     if ( results[0].length ) {
-                      data.new_users = results[0][0];
+                      for (var i = 0; i < results[0].length; i++) {
+                        data.new_users[ results[0][i].id ] = results[0][i];
+                      };
                     }
 
                     // there are new companies
                     if ( results[1].length ) {
-                      data.companies = results[1][0];
+                      for (var i = 0; i < results[1].length; i++) {
+                        data.companies[ results[1][i].id ] = results[1][i];
+                      };
                     }
 
                     // there are new geolocatoins
                     if ( results[2].length ) {
-                      data.geolocatoins = results[2][0];
+                      data.geolocations = results[2][0];
+                      for (var i = 0; i < results[2].length; i++) {
+                        data.geolocations[ results[2][i].id ] = results[2][i];
+                      };
                     }
                   }
 
