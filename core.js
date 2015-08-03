@@ -1044,7 +1044,7 @@ var crypto                                = require('crypto'),
   exports.geo_position                    = function ( req, res ) {
       console.log('++++++++ geo_position ++++++++');
       // console.log( "HEADER: ", req.headers );
-      // console.log( "QUERY: ", req.query );
+      console.log( "QUERY: ", req.query );
       // console.log( "BODY: ", req.body );
 
       if ( req.headers[ 'x-hrx-user-token' ] ) {
