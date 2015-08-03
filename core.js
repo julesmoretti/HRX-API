@@ -1146,6 +1146,7 @@ var crypto                                = require('crypto'),
                   if ( results.length ) {
                     // there is new_users
                     if ( results[0].length ) {
+                      data.new_users = {};
                       for (var i = 0; i < results[0].length; i++) {
                         data.new_users[ results[0][i].id ] = results[0][i];
                       };
@@ -1153,6 +1154,7 @@ var crypto                                = require('crypto'),
 
                     // there are new companies
                     if ( results[1].length ) {
+                      data.companies = {};
                       for (var i = 0; i < results[1].length; i++) {
                         data.companies[ results[1][i].id ] = results[1][i];
                       };
@@ -1160,7 +1162,7 @@ var crypto                                = require('crypto'),
 
                     // there are new geolocatoins
                     if ( results[2].length ) {
-                      data.geolocations = results[2][0];
+                      data.geolocations = {};
                       for (var i = 0; i < results[2].length; i++) {
                         data.geolocations[ results[2][i].id ] = results[2][i];
                       };
