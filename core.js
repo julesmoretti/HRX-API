@@ -1096,7 +1096,7 @@ var crypto                                = require('crypto'),
 
               console.log('new_user_ids', new_user_ids);
               console.log('companies_ids', companies_ids);
-              console.log('geoLocations_ids', geolocations_ids);
+              console.log('geolocations_ids', geolocations_ids);
 
               for ( var new_user_id in new_user_ids ) {
 
@@ -1132,7 +1132,7 @@ var crypto                                = require('crypto'),
 
               }
 
-              console.log('geolocations', geoLocations);
+              console.log('geolocations', geolocations);
 
               // TODO - REDUCE return count
 
