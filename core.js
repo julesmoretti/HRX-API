@@ -1180,7 +1180,7 @@ var crypto                                = require('crypto'),
 
               // TODO - REDUCE return count
 
-              connection.query('SELECT id, full_name, email, blog, skills, user_status, GH_url, GH_public_repos, GH_private_repos, GH_profile_picture, LI_location_country_code, LI_location_name, LI_positions, LI_description, LI_degrees, LI_address, LI_phone_number, LI_url, LI_company, LI_profile_picture FROM access_right WHERE id IN ('+new_user+'); SELECT * FROM companies WHERE id IN ('+companies+'); SELECT id, latitude, longitude FROM access_right WHERE id IN ('+geolocations+')', function( err, results, fields ) {
+              connection.query('SELECT id, full_name, email, blog, skills, user_status, GH_url, GH_public_repos, GH_private_repos, GH_profile_picture, LI_location_country_code, LI_location_name, LI_positions, LI_description, LI_address, LI_phone_number, LI_url, LI_company, LI_profile_picture FROM access_right WHERE id IN ('+new_user+'); SELECT * FROM companies WHERE id IN ('+companies+'); SELECT id, latitude, longitude FROM access_right WHERE id IN ('+geolocations+')', function( err, results, fields ) {
                 if (err) throw err;
 
                 if ( results && results.length ) {
