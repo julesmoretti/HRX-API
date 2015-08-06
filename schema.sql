@@ -68,7 +68,7 @@ DROP TABLE IF EXISTS `companies`;
 CREATE TABLE `companies` (
   `id` INT(20) AUTO_INCREMENT,
   `company_id` INT(20),
-  `alumni` VARCHAR(255),
+  `alumni` VARCHAR(255) DEFAULT '[]',
   `name` VARCHAR(255),
   `industry` VARCHAR(255),
   `size` VARCHAR(255),

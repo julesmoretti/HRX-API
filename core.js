@@ -720,7 +720,7 @@ var crypto                                = require('crypto'),
       });
   }
 
-  var add_LI_company                      = function ( token, companyData, callback ) {
+  var add_LI_company                      = function ( token, companyData, user_id, callback ) {
     console.log('++++++ add_LI_company +++++');
 
     // companyData = {
@@ -731,18 +731,62 @@ var crypto                                = require('crypto'),
       //                 "type": "Privately Held"
       //               }
 
-    connection.query('SELECT id FROM companies WHERE company_id = '+companyData.id, function( err, rows, fields ) {
+    var user_id = user_id;
+
+    connection.query('SELECT id, alumni FROM companies WHERE company_id = '+companyData.id, function( err, rows, fields ) {
       if (err) throw err;
 
       // already exist returns HRX company id
       if ( rows && rows.length ) {
+
+        var alumni_array = JSON.parse( rows[0].alumni );
         connection.query('UPDATE access_right SET LI_company = '+rows[0].id+' WHERE token = "'+token+'"', function( err, rows, fields ) {
           if (err) throw err;
-          callback();
+
+          if ( alumni_array.length ) {
+
+            var exist = false;
+            // check if user is present in array
+            for (var i = 0; i < alumni_array.length; i++) {
+              if ( alumni_array[i] === user_id ) {
+                exist = true;
+              }
+            };
+
+            // if so callback
+            if ( exist ) {
+
+              callback();
+
+            // if not push user
+            } else {
+
+              // add user to empty array
+              alumni_array.push( user_id );
+
+              // update company alumni
+              connection.query('UPDATE companies SET alumni = '+JSON.stringify( alumni_array )+' WHERE company_id = '+companyData.id, function( err, rows, fields ) {
+                if (err) throw err;
+                callback();
+              });
+            }
+
+          } else {
+
+            // add user to empty array
+            alumni_array.push( user_id );
+
+            // update company alumni
+            connection.query('UPDATE companies SET alumni = '+JSON.stringify( alumni_array )+' WHERE company_id = '+companyData.id, function( err, rows, fields ) {
+              if (err) throw err;
+              callback();
+            });
+          }
+
         });
       } else {
 
-        connection.query('INSERT INTO companies SET company_id = '+companyData.id+', name = "'+companyData.name+'", industry = "'+companyData.industry+'", size = "'+companyData.size+'", type = "'+companyData.type+'"', function( err, rows, fields ) {
+        connection.query('INSERT INTO companies SET company_id = '+companyData.id+', name = "'+companyData.name+'", alumni = "['+JSON.stringify( user_id )+']", industry = "'+companyData.industry+'", size = "'+companyData.size+'", type = "'+companyData.type+'"', function( err, rows, fields ) {
           if (err) throw err;
           if ( rows && rows.insertId ) {
             connection.query('UPDATE access_right SET LI_company = '+rows.insertId+' WHERE token = "'+token+'"; INSERT INTO addition SET category = "company", category_id = '+rows.insertId, function( err, results, fields ) {
@@ -854,7 +898,7 @@ var crypto                                = require('crypto'),
 
                 if ( !inDatabase ) {
 
-                  connection.query( 'INSERT INTO access_right SET full_name = "'+result.name+'", username = "'+result.login+'", email = "'+result.email+'", blog = "'+result.blog+'", GH_location = "'+result.location+'", token = "'+token+'", GH_id = "'+GH_id+'", GH_url = "'+result.html_url+'", GH_profile_picture = "'+result.avatar_url+'", GH_public_repos = '+result.public_repos+', GH_private_repos = '+result.total_private_repos+', GH_access_token = "'+GH_access_token+'", creation_date = now()', function( err, rows, fields ) {
+                  connection.query( 'INSERT INTO access_right SET full_name = "'+result.name+'", username = "'+result.login+'", email = "'+result.email+'", blog = "'+result.blog+'", token = "'+token+'", GH_id = "'+GH_id+'", GH_url = "'+result.html_url+'", GH_profile_picture = "'+result.avatar_url+'", GH_public_repos = '+result.public_repos+', GH_private_repos = '+result.total_private_repos+', GH_access_token = "'+GH_access_token+'", creation_date = now()', function( err, rows, fields ) {
                   // connection.query'INSERT INTO access_right SET full_name = '+result.avatar_url, function( err, rows, fields ) {
                     if (err) throw err;
 
@@ -1018,7 +1062,7 @@ var crypto                                = require('crypto'),
                   connection.query('INSERT INTO addition SET category = "new_user", category_id = '+user_id, function( err, rows, fields ) {
                     if (err) throw err;
 
-                    add_LI_company( userToken, LI_data.positions.values[0].company, function(){
+                    add_LI_company( userToken, LI_data.positions.values[0].company, user_id, function(){
                       res.send( { responseCode: 200, message: 'Thank you all clear here!', user_id: user_id, user_status: user_status } );
                     });
 
