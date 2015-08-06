@@ -27,6 +27,7 @@ CREATE TABLE `access_right` (
   `blog` VARCHAR(255),
   `skills` VARCHAR(255),  -- TODO
   `token` VARCHAR(32),
+  `cohort` INT(20),
   `user_status` VARCHAR(32) DEFAULT 'alumni',
 
   `latitude` FLOAT(17,14),
@@ -36,7 +37,6 @@ CREATE TABLE `access_right` (
 
   `GH_id` VARCHAR(255),
   `GH_url` VARCHAR(255),
-  `GH_location` VARCHAR(255),
   `GH_public_repos` INT,
   `GH_private_repos` INT,
   `GH_profile_picture` VARCHAR(255),
@@ -48,13 +48,13 @@ CREATE TABLE `access_right` (
   `LI_positions` VARCHAR(255),
   `LI_description` VARCHAR(2048),
 
-  `LI_degrees` VARCHAR(255),  -- TODO
-  `LI_address` VARCHAR(255),  -- TODO
-  `LI_phone_number` VARCHAR(255),  -- TODO
+  -- `LI_degrees` VARCHAR(255),  -- TODO
+  `address` VARCHAR(255),
+  `phone_number` VARCHAR(255),
 
   `LI_url` VARCHAR(255),
   `LI_company` INT,
-  `LI_profile_picture` VARCHAR(255),
+  `LI_profile_picture` VARCHAR(255), -- as a backup but not used
   `LI_access_token` VARCHAR(255),
 
   `creation_date` TIMESTAMP DEFAULT 0,
@@ -73,15 +73,9 @@ CREATE TABLE `companies` (
   `industry` VARCHAR(255),
   `size` VARCHAR(255),
   `type` VARCHAR(255),
-  `address_no` VARCHAR(255),
-  `address_street` VARCHAR(255),
-  `address_suite` VARCHAR(255),
+  `address` VARCHAR(255),
   `www` VARCHAR(255),
   `logo` VARCHAR(255),
-  `city` VARCHAR(255),
-  `state` VARCHAR(255),
-  `postcode` VARCHAR(255),
-  `country` VARCHAR(255),
   `lat` INT,
   `long` INT,
   PRIMARY KEY (`id`)
