@@ -76,8 +76,8 @@ CREATE TABLE `companies` (
   `address` VARCHAR(255),
   `www` VARCHAR(255),
   `logo` VARCHAR(255),
-  `lat` INT,
-  `long` INT,
+  `lat` FLOAT(17,14),
+  `long` FLOAT(17,14),
   PRIMARY KEY (`id`)
 ) COMMENT 'List of companies for the HRX Alumn';
 
