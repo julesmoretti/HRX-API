@@ -58,7 +58,7 @@ var core                                  = require('./core.js');
     app.get('/tokencheck', core.tokencheck);
 
     // handles login request and provides a token in response
-    app.get('/updateprofile', core.geo_position);
+    app.get('/updateprofile', core.update_profile);
 
     // handles login request and provides a token in response
     app.get('/geoposition', core.geo_position);
