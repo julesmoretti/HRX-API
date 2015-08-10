@@ -1225,6 +1225,8 @@ var crypto                                = require('crypto'),
 
                 mysql_string = mysql_string + 'SELECT * FROM companies WHERE id IN ('+companies+')';
               } else {
+                if ( mysql_string.length ) mysql_string = mysql_string + '; ';
+
                 mysql_string = mysql_string + 'SELECT * FROM addition WHERE category = null'
               }
 
@@ -1233,6 +1235,7 @@ var crypto                                = require('crypto'),
 
                 mysql_string = mysql_string + 'SELECT id, latitude, longitude FROM access_right WHERE id IN ('+geolocations+')';
               } else {
+                if ( mysql_string.length ) mysql_string = mysql_string + '; ';
                 mysql_string = mysql_string + 'SELECT * FROM addition WHERE category = null'
               }
 
