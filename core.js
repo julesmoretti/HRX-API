@@ -1085,6 +1085,31 @@ var crypto                                = require('crypto'),
       }
     };
 
+  exports.update_profile                  = function ( req, res ) {
+      console.log('++++++++ update_profile ++++++++');
+      // console.log( "HEADER: ", req.headers );
+      // console.log( "QUERY: ", req.query );
+      // console.log( "BODY: ", req.body );
+
+      if ( req.headers[ 'x-hrx-user-token' ] ) {
+        var userToken = req.headers[ 'x-hrx-user-token' ];
+        var user_mysql_updates = req.query.user_mysql_updates;
+        var user_updates = req.query.user_updates;
+        var user_id = req.query.user_id;
+
+        connection.query('UPDATE access_right SET '+user_mysql_updates+' WHERE token = "'+userToken+'"; INSERT INTO addition SET category = "new_users", category_id = '+user_id , function( err, rows, fields ) {
+          if (err) throw err;
+
+          res.send( { responseCode: 200, message: 'Updated User Profile', user_updates: user_updates } );
+
+        });
+
+      // no headers detected so nothing to respond
+      } else {
+        res.send( { responseCode: 400, message: 'no header detected' } );
+      }
+    };
+
   exports.geo_position                    = function ( req, res ) {
       console.log('++++++++ geo_position ++++++++');
       // console.log( "HEADER: ", req.headers );
