@@ -1159,6 +1159,7 @@ var crypto                                = require('crypto'),
               for ( var i = 0; i < rows.length; i++ ) {
 
                 var last_id = rows[i].id;
+                var mysql_string = '';
 
                 if ( rows[i].category === "new_user" ) {
 
@@ -1213,11 +1214,27 @@ var crypto                                = require('crypto'),
 
               }
 
+              if ( new_users.length ) {
+                mysql_string = mysql_string + 'SELECT id, full_name, email, blog, skills, user_status, GH_url, GH_public_repos, GH_private_repos, GH_profile_picture, LI_location_country_code, LI_location_name, LI_positions, LI_description, address, phone_number, LI_url, LI_company, LI_profile_picture FROM access_right WHERE id IN ('+new_user+')';
+              }
+
+              if ( companies.length ) {
+                if ( mysql_string.length ) mysql_string = mysql_string + '; ';
+
+                mysql_string = mysql_string + 'SELECT * FROM companies WHERE id IN ('+companies+')';
+              }
+
+              if ( geolocations.length ) {
+                if ( mysql_string.length ) mysql_string = mysql_string + '; ';
+
+                mysql_string = mysql_string + 'SELECT id, latitude, longitude FROM access_right WHERE id IN ('+geolocations+')';
+              }
+
               // console.log('geolocations', geolocations);
 
               // TODO - REDUCE return count
 
-              connection.query('SELECT id, full_name, email, blog, skills, user_status, GH_url, GH_public_repos, GH_private_repos, GH_profile_picture, LI_location_country_code, LI_location_name, LI_positions, LI_description, address, phone_number, LI_url, LI_company, LI_profile_picture FROM access_right WHERE id IN ('+new_user+'); SELECT * FROM companies WHERE id IN ('+companies+'); SELECT id, latitude, longitude FROM access_right WHERE id IN ('+geolocations+')', function( err, results, fields ) {
+              connection.query( mysql_string , function( err, results, fields ) {
                 if (err) throw err;
 
                 if ( results && results.length ) {
