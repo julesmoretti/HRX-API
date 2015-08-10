@@ -1119,13 +1119,6 @@ var crypto                                = require('crypto'),
       if ( req.headers[ 'x-hrx-user-token' ] ) {
         var userToken = req.headers[ 'x-hrx-user-token' ];
 
-        console.log( 'geo_position: ', req.query );
-
-        // { addition: '20',
-        //   latitude: '37.82570775190391',
-        //   longitude: '-122.2868890810328',
-        //   user_id: '1' }
-
         var addition = req.query.addition;
 
         var user_id = req.query.user_id;
@@ -1135,7 +1128,6 @@ var crypto                                = require('crypto'),
         var longitude = req.query.longitude;
 
         if ( !addition ) {
-          console.log('geo_position - did not detect any addition variable so 0 for first');
           var addition = 0;
         }
 
@@ -1238,8 +1230,6 @@ var crypto                                = require('crypto'),
                 if ( mysql_string.length ) mysql_string = mysql_string + '; ';
                 mysql_string = mysql_string + 'SELECT * FROM addition WHERE category = null'
               }
-
-              console.log( 'mysql_string_error', mysql_string );
 
               // console.log('geolocations', geolocations);
 
