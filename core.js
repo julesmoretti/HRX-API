@@ -1214,7 +1214,7 @@ var crypto                                = require('crypto'),
 
               }
 
-              if ( new_users.length ) {
+              if ( new_user.length ) {
                 mysql_string = mysql_string + 'SELECT id, full_name, email, blog, skills, user_status, GH_url, GH_public_repos, GH_private_repos, GH_profile_picture, LI_location_country_code, LI_location_name, LI_positions, LI_description, address, phone_number, LI_url, LI_company, LI_profile_picture FROM access_right WHERE id IN ('+new_user+')';
               }
 
