@@ -1236,6 +1236,8 @@ var crypto                                = require('crypto'),
                 mysql_string = mysql_string + 'SELECT * FROM addition WHERE category = null'
               }
 
+              console.log( 'mysql_string_error', mysql_string );
+
               // console.log('geolocations', geolocations);
 
               // TODO - REDUCE return count
