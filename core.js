@@ -1121,22 +1121,26 @@ var crypto                                = require('crypto'),
 
         console.log( 'geo_position: ', req.query );
 
+        // { addition: '20',
+        //   latitude: '37.82570775190391',
+        //   longitude: '-122.2868890810328',
+        //   user_id: '1' }
+
+        var addition = req.query.addition;
+
         var user_id = req.query.user_id;
 
         var latitude = req.query.latitude;
 
         var longitude = req.query.longitude;
 
-        var addition = req.query.addition;
-
+        if ( !addition ) {
+          console.log('geo_position - did not detect any addition variable so 0 for first');
+          var addition = 0;
+        }
 
         connection.query('UPDATE access_right SET latitude = '+latitude+', longitude = '+longitude+', geoposition_timestamp = now() WHERE token = "'+userToken+'"; INSERT INTO addition SET category = "geolocation", category_id = '+user_id , function( err, rows, fields ) {
           if (err) throw err;
-
-          if ( !addition ) {
-            console.log('geo_position - did not detect any addition variable so 0 for first');
-            var addition = 0;
-          }
 
           connection.query('SELECT id, category, category_id FROM addition WHERE id > '+addition+' ORDER BY id ASC', function( err, rows, fields ) {
             if (err) throw err;
