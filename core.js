@@ -1126,7 +1126,8 @@ var crypto                                = require('crypto'),
         connection.query('UPDATE access_right SET latitude = '+latitude+', longitude = '+longitude+', geoposition_timestamp = now() WHERE token = "'+userToken+'"; INSERT INTO addition SET category = "geolocation", category_id = '+user_id , function( err, rows, fields ) {
           if (err) throw err;
 
-          if ( addition === undefined ) {
+          if ( !addition ) {
+            console.log('geo_position - did not detect any addition variable so 0 for first');
             var addition = 0;
           }
 
