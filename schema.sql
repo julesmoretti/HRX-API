@@ -25,7 +25,9 @@ CREATE TABLE `access_right` (
   `username` VARCHAR(255),
   `email` VARCHAR(255),
   `blog` VARCHAR(255),
-  `skills` VARCHAR(255),  -- TODO
+  `skill_1` VARCHAR(255),
+  `skill_2` VARCHAR(255),
+  `skill_3` VARCHAR(255),
   `token` VARCHAR(32),
   `cohort` INT(20),
   `user_status` VARCHAR(32) DEFAULT 'alumni',

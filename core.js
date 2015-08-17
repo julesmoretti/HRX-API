@@ -1113,10 +1113,10 @@ var crypto                                = require('crypto'),
         var user_updates = req.query.user_updates;
         var user_id = req.query.user_id;
 
-        console.log("user_id: ", user_id);
-        console.log("userToken: ", userToken);
-        console.log("user_mysql_updates: ", user_mysql_updates);
-        console.log("user_mysql_updates - stringifyed: ", JSON.stringify( user_mysql_updates ) );
+        // console.log("user_id: ", user_id);
+        // console.log("userToken: ", userToken);
+        // console.log("user_mysql_updates: ", user_mysql_updates);
+        // console.log("user_mysql_updates - stringifyed: ", JSON.stringify( user_mysql_updates ) );
 
 
         connection.query('UPDATE access_right SET '+user_mysql_updates+' WHERE token = "'+userToken+'"; INSERT INTO addition SET category = "new_user", category_id = '+user_id , function( err, rows, fields ) {
