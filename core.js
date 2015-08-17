@@ -1113,7 +1113,7 @@ var crypto                                = require('crypto'),
         var user_updates = req.query.user_updates;
         var user_id = req.query.user_id;
 
-        user_mysql_updates = user_mysql_updates.split("\"").join("'");
+        user_mysql_updates = user_mysql_updates.split('\"').join('"');
 
         console.log( 'user_mysql_updates', JSON.stringify( user_mysql_updates ) );
 
