@@ -986,7 +986,6 @@ var crypto                                = require('crypto'),
           var url = 'http://localhost:1234/li_success/';
           var params = { LI_token : LI_token, message: 'Welcome to HRX!' };
 
-          res.redirect( url + "?" + encodeURIComponent( JSON.stringify( params ) ) );
         }
       });
     };
@@ -1008,13 +1007,17 @@ var crypto                                = require('crypto'),
         // if ( userData.username && userData.token ) {
 
           // check that username exist in the database and that password is a match otherwise return error
-          connection.query('SELECT id, user_status FROM access_right WHERE token = "'+userToken+'"', function( err, rows, fields ) {
+          connection.query('SELECT id, cohort, user_status FROM access_right WHERE token = "'+userToken+'"', function( err, rows, fields ) {
             if (err) throw err;
 
             if ( rows && rows.length ) {
 
               var user_id = rows[0].id;
               var user_status = rows[0].user_status;
+
+              if ( !rows[0].cohort ) {
+                var first_time = true;
+              }
 
               // get LI user Data
               LI_user_data( userLIToken, function( LI_data ) {
@@ -1063,7 +1066,14 @@ var crypto                                = require('crypto'),
                     if (err) throw err;
 
                     add_LI_company( userToken, LI_data.positions.values[0].company, user_id, function(){
-                      res.send( { responseCode: 200, message: 'Thank you all clear here!', user_id: user_id, user_status: user_status } );
+
+                      console.log('first time detections~~~~~~~~~: ', first_time );
+
+                      if ( first_time ) {
+                        res.send( { responseCode: 200, message: 'Thank you all clear here!', user_id: user_id, user_status: user_status, first_time: true } );
+                      } else {
+                        res.send( { responseCode: 200, message: 'Thank you all clear here!', user_id: user_id, user_status: user_status } );
+                      }
                     });
 
                   });
