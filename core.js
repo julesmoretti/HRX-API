@@ -1119,7 +1119,7 @@ var crypto                                = require('crypto'),
         console.log("user_mysql_updates - stringifyed: ", JSON.stringify( user_mysql_updates ) );
 
 
-        connection.query('UPDATE access_right SET '+user_mysql_updates+' WHERE token = "'+userToken+'"; INSERT INTO addition SET category = "new_users", category_id = '+user_id , function( err, rows, fields ) {
+        connection.query('UPDATE access_right SET '+user_mysql_updates+' WHERE token = "'+userToken+'"; INSERT INTO addition SET category = "new_user", category_id = '+user_id , function( err, rows, fields ) {
           if (err) throw err;
 
           res.send( { responseCode: 200, message: 'Updated User Profile', user_updates: JSON.parse( user_updates ) } );
