@@ -1072,9 +1072,9 @@ var crypto                                = require('crypto'),
                       console.log('first time detections~~~~~~~~~: ', first_time );
 
                       if ( first_time ) {
-                        res.send( { responseCode: 200, message: 'Thank you all clear here!', user_id: user_id, user_status: user_status, first_time: true } );
-                      } else {
                         res.send( { responseCode: 200, message: 'Thank you all clear here!', user_id: user_id, user_status: user_status } );
+                      } else {
+                        res.send( { responseCode: 200, message: 'Thank you all clear here!', user_id: user_id, user_status: user_status, first_time: true } );
                       }
                     });
 
