@@ -954,7 +954,7 @@ var crypto                                = require('crypto'),
       // console.log( "HEADER: ", req.headers );
       // console.log( "QUERY: ", req.query );
       // console.log( "BODY: ", req.body );
-      console.log('LIO - A');
+
       // res.send( req.query );
 
       var data = { 'grant_type' : 'authorization_code',
@@ -964,32 +964,29 @@ var crypto                                = require('crypto'),
                    'client_secret' : process.env.LI_CLIENT_SECRET
                   };
 
-                  console.log('LIO - B');
-
       var options = {
           uri: 'https://www.linkedin.com/uas/oauth2/accessToken',
           method: 'POST',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           form: data
       }
-                  console.log('LIO - C');
 
       request( options, function (error, response, body) {
-
         if (error) {
           console.log( error );
           res.send( error );
         } else {
 
-          console.log( "BODY OF LI_OAUTH", body);
+          // console.log( "BODY OF LI_OAUTH", body);
 
           var LI_token = JSON.parse( body ).access_token
 
-          console.log( "TOKEN", LI_token );
+          // console.log( "TOKEN", LI_token );
 
           var url = 'http://localhost:1234/li_success/';
           var params = { LI_token : LI_token, message: 'Welcome to HRX!' };
 
+          res.redirect( url + "?" + encodeURIComponent( JSON.stringify( params ) ) );
         }
       });
     };
@@ -1019,7 +1016,7 @@ var crypto                                = require('crypto'),
               var user_id = rows[0].id;
               var user_status = rows[0].user_status;
 
-              if ( !rows[0].cohort ) {
+              if ( rows[0].cohort ) {
                 var first_time = true;
               }
 
