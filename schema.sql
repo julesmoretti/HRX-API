@@ -84,6 +84,29 @@ CREATE TABLE `companies` (
 ) COMMENT 'List of companies for the HRX Alumn';
 
 
+DROP TABLE IF EXISTS `hr_chapters`;
+
+CREATE TABLE `hr_chapters` (
+  `id` INT(20) AUTO_INCREMENT,
+  `name` VARCHAR(255),
+  `address` VARCHAR(255),
+  `www` VARCHAR(255),
+  `logo` VARCHAR(255),
+  `phone_number` VARCHAR(255),
+  `latitude` FLOAT(17,14),
+  `longitude` FLOAT(17,14),
+  PRIMARY KEY (`id`)
+) COMMENT 'List of Hack Reactor chapters around the world';
+
+INSERT INTO hr_chapters
+SET
+name = "Hack Reactor HQ",
+address = "944 Market St #8, San Francisco, CA 94102",
+www = "www.hackreactor.com",
+phone_number = "4155470254",
+latitude = 37.783624,
+longitude = -122.408999;
+
 DROP TABLE IF EXISTS `addition`;
 
 CREATE TABLE `addition` (
@@ -91,7 +114,7 @@ CREATE TABLE `addition` (
   `category` VARCHAR(255),
   `category_id` INT(20),
   PRIMARY KEY (`id`)
-) COMMENT 'List all new addition, companies or alum';
+) COMMENT 'List all new_user, company, geolocation, hr_chapter that undergot an update';
 
 
 DROP TABLE IF EXISTS `devices`;

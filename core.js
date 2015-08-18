@@ -1170,6 +1170,9 @@ var crypto                                = require('crypto'),
               var geolocations_ids = {};
               var geolocations = '';
 
+              var hr_chapters_ids = {};
+              var hr_chapters = '';
+
               for ( var i = 0; i < rows.length; i++ ) {
 
                 var last_id = rows[i].id;
@@ -1186,6 +1189,10 @@ var crypto                                = require('crypto'),
                 } else if ( rows[i].category === "geolocation" ) {
 
                   geolocations_ids[ rows[i].category_id ] = true;
+
+                } else if ( rows[i].category === "hr_chapter" ) {
+
+                  hr_chapters_ids[ rows[i].category_id ] = true;
 
                 }
               }
@@ -1228,8 +1235,20 @@ var crypto                                = require('crypto'),
 
               }
 
+              for ( var hr_chapters_id in hr_chapters_ids ) {
+
+                if ( hr_chapters.length ) {
+                  hr_chapters = hr_chapters + ',' + hr_chapters_id;
+                } else {
+                  hr_chapters = hr_chapters + hr_chapters;
+                }
+
+              }
+
+
+
               if ( new_user.length ) {
-                mysql_string = mysql_string + 'SELECT id, full_name, email, blog, skill_1, skill_2, skill_3, user_status, GH_url, GH_public_repos, GH_private_repos, GH_profile_picture, LI_location_country_code, LI_location_name, LI_positions, LI_description, address, phone_number, LI_url, LI_company, LI_profile_picture FROM access_right WHERE id IN ('+new_user+')';
+                mysql_string = mysql_string + 'SELECT id, full_name, email, blog, skill_1, skill_2, skill_3, user_status, share_geoposition, GH_url, GH_public_repos, GH_private_repos, GH_profile_picture, LI_location_country_code, LI_location_name, LI_positions, LI_description, address, phone_number, LI_url, LI_company, LI_profile_picture FROM access_right WHERE id IN ('+new_user+')';
               } else {
                 mysql_string = mysql_string + 'SELECT * FROM addition WHERE category = null'
               }
@@ -1248,6 +1267,15 @@ var crypto                                = require('crypto'),
                 if ( mysql_string.length ) mysql_string = mysql_string + '; ';
 
                 mysql_string = mysql_string + 'SELECT id, latitude, longitude FROM access_right WHERE id IN ('+geolocations+')';
+              } else {
+                if ( mysql_string.length ) mysql_string = mysql_string + '; ';
+                mysql_string = mysql_string + 'SELECT * FROM addition WHERE category = null'
+              }
+
+              if ( hr_chapters.length ) {
+                if ( mysql_string.length ) mysql_string = mysql_string + '; ';
+
+                mysql_string = mysql_string + 'SELECT * FROM hr_chapters WHERE id IN ('+hr_chapters+')';
               } else {
                 if ( mysql_string.length ) mysql_string = mysql_string + '; ';
                 mysql_string = mysql_string + 'SELECT * FROM addition WHERE category = null'
@@ -1288,6 +1316,14 @@ var crypto                                = require('crypto'),
                       data.geolocations = {};
                       for (var i = 0; i < results[2].length; i++) {
                         data.geolocations[ results[2][i].id ] = results[2][i];
+                      };
+                    }
+
+                    // there are new hr_chapters
+                    if ( results[3].length ) {
+                      data.hr_chapters = {};
+                      for (var i = 0; i < results[3].length; i++) {
+                        data.hr_chapters[ results[3][i].id ] = results[3][i];
                       };
                     }
                   }
