@@ -1240,7 +1240,7 @@ var crypto                                = require('crypto'),
                 if ( hr_chapters.length ) {
                   hr_chapters = hr_chapters + ',' + hr_chapters_id;
                 } else {
-                  hr_chapters = hr_chapters + hr_chapters;
+                  hr_chapters = hr_chapters + hr_chapters_id;
                 }
 
               }
