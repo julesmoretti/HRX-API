@@ -109,6 +109,11 @@ phone_number = "4155470254",
 latitude = 37.783624,
 longitude = -122.408999;
 
+INSERT INTO addition
+SET
+category = "hr_chapter",
+category_id = 1;
+
 DROP TABLE IF EXISTS `addition`;
 
 CREATE TABLE `addition` (
