@@ -109,11 +109,6 @@ phone_number = "4155470254",
 latitude = 37.783624,
 longitude = -122.408999;
 
-INSERT INTO addition
-SET
-category = "hr_chapter",
-category_id = 1;
-
 DROP TABLE IF EXISTS `addition`;
 
 CREATE TABLE `addition` (
@@ -122,6 +117,11 @@ CREATE TABLE `addition` (
   `category_id` INT(20),
   PRIMARY KEY (`id`)
 ) COMMENT 'List all new_user, company, geolocation, hr_chapter that undergot an update';
+
+INSERT INTO addition
+SET
+category = "hr_chapter",
+category_id = 1;
 
 
 DROP TABLE IF EXISTS `devices`;
