@@ -1367,14 +1367,16 @@ var crypto                                = require('crypto'),
           if (err) throw err;
           if ( rows && rows.length ) {
 
+            var user_id = rows[0].id;
+
             if ( state === 'true' ) {
-              connection.query('UPDATE access_right SET share_geoposition = 1 WHERE token = "'+userToken+'"', function( err, rows, fields ) {
+              connection.query('UPDATE access_right SET share_geoposition = 1 WHERE token = "'+userToken+'"; INSERT INTO addition SET category = "new_user", category_id = '+user_id, function( err, rows, fields ) {
                 if (err) throw err;
                 res.send( { responseCode: 200, message: 'Updated geo position settings to ON', value: true } );
               });
 
             } else {
-              connection.query('UPDATE access_right SET share_geoposition = 0 WHERE token = "'+userToken+'"', function( err, rows, fields ) {
+              connection.query('UPDATE access_right SET share_geoposition = 0 WHERE token = "'+userToken+'"; INSERT INTO addition SET category = "new_user", category_id = '+user_id, function( err, rows, fields ) {
                 if (err) throw err;
                 res.send( { responseCode: 200, message: 'Updated geo position settings to OFF', value: false } );
               });
