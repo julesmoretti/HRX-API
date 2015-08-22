@@ -89,6 +89,7 @@ DROP TABLE IF EXISTS `hr_chapters`;
 CREATE TABLE `hr_chapters` (
   `id` INT(20) AUTO_INCREMENT,
   `name` VARCHAR(255),
+  `location` VARCHAR(255),
   `address` VARCHAR(255),
   `www` VARCHAR(255),
   `logo` VARCHAR(255),
@@ -100,7 +101,8 @@ CREATE TABLE `hr_chapters` (
 
 INSERT INTO hr_chapters
 SET
-name = "Hack Reactor HQ",
+name = "Hack Reactor",
+location = "Head Quarters",
 address = "944 Market St #8, San Francisco, CA 94102",
 www = "www.hackreactor.com",
 phone_number = "4155470254",
