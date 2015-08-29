@@ -3,53 +3,111 @@
 /** run the following to see changes live **/
 /** nodemon --watch / -e je,scss server.js **/
 
-$darkblue: #26404d;
-$background_boder: #4d4d4d;
-$background_grey: #424242;
-$background_main_stats: #808080;
+@font-face {
+  font-family: "Roboto-Light";
+  src: url("../fonts/Roboto-Light.eot?v=2.0.0");
+  src: url("../fonts/Roboto-Light.eot?v=2.0.0#iefix") format("embedded-opentype"), url("../fonts/Roboto-Light.ttf?v=2.0.0") format("truetype"), url("../fonts/Roboto-Light.woff?v=2.0.0") format("woff"), url("../fonts/Roboto-Light.svg?v=2.0.0#Roboto-Light") format("svg");
+  font-weight: 100;
+  font-style: 100;
+}
 
 @font-face {
-  font-family: ionicons;
-  src: url(/views/fonts/ionicons.woff);
+  font-family: 'Ubuntu Mono derivative Powerline';
+  src: url("../fonts/Ubuntu Mono derivative Powerline Bold.eot");
+  /* IE9 Compat Modes */
+  src: url("../fonts/Ubuntu Mono derivative Powerline Bold.eot?#iefix") format("embedded-opentype"), url("../fonts/Ubuntu Mono derivative Powerline Bold.woff") format("woff"), url("../fonts/Ubuntu Mono derivative Powerline Bold.ttf") format("truetype"), url("../fonts/Ubuntu Mono derivative Powerline Bold.svg#c73c85af22f1c2bcd7f8faff106eacd4") format("svg");
+  /* Legacy iOS */
+  font-style: normal;
+  font-weight: 700;
 }
+
+@font-face {
+  font-family: 'Ubuntu Mono derivative Powerline';
+  src: url("../fonts/Ubuntu Mono derivative Powerline Bold Italic.eot");
+  /* IE9 Compat Modes */
+  src: url("../fonts/Ubuntu Mono derivative Powerline Bold Italic.eot?#iefix") format("embedded-opentype"), url("../fonts/Ubuntu Mono derivative Powerline Bold Italic.woff") format("woff"), url("../fonts/Ubuntu Mono derivative Powerline Bold Italic.ttf") format("truetype"), url("../fonts/Ubuntu Mono derivative Powerline Bold Italic.svg#c6d75684997c76201a457d270f7a2dbb") format("svg");
+  /* Legacy iOS */
+  font-style: italic;
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: 'Ubuntu Mono derivative Powerline';
+  src: url("../fonts/Ubuntu Mono derivative Powerline.eot");
+  /* IE9 Compat Modes */
+  src: url("../fonts/Ubuntu Mono derivative Powerline.eot?#iefix") format("embedded-opentype"), url("../fonts/Ubuntu Mono derivative Powerline.woff") format("woff"), url("../fonts/Ubuntu Mono derivative Powerline.ttf") format("truetype"), url("../fonts/Ubuntu Mono derivative Powerline.svg#98f86a252556e87f04e6950d7f8c1d3f") format("svg");
+  /* Legacy iOS */
+  font-style: normal;
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'Ubuntu Mono derivative Powerline';
+  src: url("../fonts/Ubuntu Mono derivative Powerline Italic.eot");
+  /* IE9 Compat Modes */
+  src: url("../fonts/Ubuntu Mono derivative Powerline Italic.eot?#iefix") format("embedded-opentype"), url("../fonts/Ubuntu Mono derivative Powerline Italic.woff") format("woff"), url("../fonts/Ubuntu Mono derivative Powerline Italic.ttf") format("truetype"), url("../fonts/Ubuntu Mono derivative Powerline Italic.svg#e92c3ab117c506b98fac1a246d46edd1") format("svg");
+  /* Legacy iOS */
+  font-style: italic;
+  font-weight: 400;
+}
+
+$light_grey: #CCC;
+
+$medium_grey: #666;
+
+$dark_grey: #222;
+
+$darkblue: #26404d;
+
+$background_boder: #4d4d4d;
+
+$background_grey: #424242;
 
 html {
   height: 100%;
 
   body {
-    margin: 20;
-    font-family: inst_reg;
-    padding: 0;
-    background: $background_grey;
-    height: 100%;
-    color: white;
 
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+    &#main {
+      font-family: Ubuntu Mono derivative Powerline;
+      background: $background_grey;
+      color: white;
 
-    .centerFloat {
-      position: absolute;
-      top: calc(50% - 100px);
-      left: calc(50% - 100px);
-      width: 200px;
-      height: 200px;
-      color: hsla(0,0%,100%,0.4);
-      font-size: 14px;
-      line-height: 200px;
-      font-family: 'Alvar Thin';
-      text-align: center;
+      div {
 
-      span {
-        font-size: 24px;
-        color: purple;
-        font-family: 'Alvar Bold';
+        &.main_container {
+          padding: 20px;
+          width: 100%;
+          max-width: 1048px;
+          /*background-color: rebeccapurple;*/
+          margin: 20px auto !important;
+          float: none !important;
+        }
       }
     }
+    /*-webkit-user-select: none;*/
+    /*-moz-user-select: none;*/
+    /*-ms-user-select: none;*/
+    /*user-select: none;*/
 
-    input {
-      margin-bottom: 10px;
+    h1  {
+      color: $light_grey;
     }
+
+    h2  {
+      color: $dark_grey;
+    }
+
+    h3  {
+      color: $medium_grey;
+    }
+
+    hr  {
+      border-top: 1px solid grey;
+      border-bottom: 0px solid grey;
+      border-left: 0px solid grey;
+      border-right: 0px solid grey;
+    }
+
   }
 }

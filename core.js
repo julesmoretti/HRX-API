@@ -172,9 +172,16 @@ var crypto                                = require('crypto'),
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   exports.main                            = function ( req, res ) {
       console.log('++++++++ main ++++++++');
-      var metrics = {};
 
-      res.render('./partials/main.ejs',  metrics );
+      connection.query('SELECT id, username, full_name, cohort FROM access_right; SELECT * FROM companies; SELECT * FROM hr_chapters', function( err, results, fields ) {
+        if (err) throw err;
+
+        var metrics = { new_users: results[0], companies: results[1], hr_chapters: results[2] };
+        // var metrics = { test: "yolo" };
+
+        res.render('./partials/main.ejs',  metrics );
+      });
+
     };
 
 //  -----------------------------------------------------------------------------
