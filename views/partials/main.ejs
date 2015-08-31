@@ -18,15 +18,37 @@
     <div class="main_container">
 
       <h1>HRX API</h1>
-      <h3>Welcome to the HRX api. Right here you will be able to see all the companies and users that HRX currently holds. For more specific accesses please use the iPhone app soon available on the Apple store.</h3>
+      <h3>
+
+        Welcome to the HRX api. Right here you will be able to see all the companies and users that HRX currently holds. For more specific accesses please use the iPhone app soon available on the Apple store.
+      </h3>
 
       <hr>
-      <div ng-controller="UserCtrl">
+      <div ng-controller="ListCtrl">
         <h2>Companies ({{companies.length}}) - <input type="text" placeholder="Search by name, industry and more ..." ng-model="company_search"/></h2>
         <ul>
-          <li ng-repeat="company in companies | filter: company_search | orderBy: company.name | limitTo: 20">
+          <li ng-repeat="company in companies | filter: company_search | orderBy: company.name | limitTo: 20" ng-init="company[ $index ] = true">
             <span>{{company.name}}</span> - {{company.industry}}
-            <span ng-hide="company.address && company.latitude" class="company_not_edited">[TO DO]</span>
+            <span ng-hide="company.address && company.latitude" class="company_not_edited">[TO DO]</span><span class="ion-edit" ng-click="company[ $index ] = !company[ $index ]"></span>
+            <div ng-show="company[ $index ]" style="background-color: red; width: 100%; height: 100%; position: absolute; top: 0px; left: 0px;">
+
+
+            logo - {{company.logo}}<br>
+            <h3>{{company.name}}</h3>
+            industry - {{company.industry}}<br>
+            size - {{company.size}}<br>
+            type - {{company.type}}<br>
+            www - {{company.www}}<br>
+            address - {{company.address}}<br>
+            latitude - {{company.latitude}}<br>
+            longitude - {{company.longitude}}<br>
+
+
+            <div style="height: 400px;" id="map"></div>
+
+
+              <span style="position: absolute; bottom: 10px; right: 10px;" class="ion-close" ng-click="company[ $index ] = !company[ $index ]"></span>
+            </div>
           </li>
         </ul>
 
@@ -34,15 +56,17 @@
 
         <h2>HR Alumn ({{new_users.length}}) - <input type="text" placeholder="Search by name, cohort and more ..." ng-model="alumni_search"/></h2>
         <ul>
+
           <li ng-repeat="user in new_users | filter: alumni_search | orderBy: user.full_name | limitTo: 10"><span title="{{user.username}}">{{user.full_name}}</span> - (HR{{user.cohort}})</li>
         </ul>
         <hr>
+
         <h2>HR Chapters ({{hr_chapters.length}})</h2>
         <ul>
+
           <li ng-repeat="chapter in hr_chapters | orderBy: chapter.name"><span>{{chapter.name}}</span> - {{chapter.location}}</li>
         </ul>
-        <!-- {{companies}}<br> -->
-        <!-- {{hr_chapters}} -->
+
       </div>
 
     </div>
@@ -56,6 +80,7 @@
     <!-- ANGULAR STRUCTURE -->
     <script src="modules/core/core.js"></script>
     <script src="modules/core/directives/hello_dir.js"></script>
+    <script src="modules/core/controllers/ListCtrl.js"></script>
     <script>
       var new_users = <%- JSON.stringify( new_users ) %>;
       var companies = <%- JSON.stringify( companies ) %>;
@@ -65,12 +90,22 @@
         .constant('New_users_const', new_users)
         .constant('Companies_const', companies)
         .constant('HR_chapters_const', hr_chapters);
+    </script>
 
-      angular.module('api.controllers', ['api.constants']).controller('UserCtrl', ['$scope', 'New_users_const', 'Companies_const', 'HR_chapters_const', function( $scope, newUsersConst, companiesConst, hrChapters ) {
-         $scope.new_users = newUsersConst;
-         $scope.companies = companiesConst;
-         $scope.hr_chapters = hrChapters;
-      }]);
+    <script type="text/javascript">
+
+      var map;
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: { lat: -34.397, lng: 150.644 },
+          zoom: 8
+        });
+      }
+
+    </script>
+
+    <script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD00pGN4gphf_ktZnjzId0wAz8s9Ul8HsY&callback=initMap">
     </script>
 
   </body>
