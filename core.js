@@ -82,9 +82,7 @@ var crypto                                = require('crypto'),
           service: 'Gmail',
           auth: {
               user: process.env.HRX_API_NOTI_EMAIL,
-              // user: 'dr.no@poweredbyq.io',
               pass: process.env.HRX_API_NOTI_PASSW
-              // pass: 'M4tinc4lme.'
           }
       });
 
@@ -798,6 +796,8 @@ var crypto                                = require('crypto'),
           if ( rows && rows.insertId ) {
             connection.query('UPDATE access_right SET LI_company = '+rows.insertId+' WHERE token = "'+token+'"; INSERT INTO addition SET category = "company", category_id = '+rows.insertId, function( err, results, fields ) {
               if (err) throw err;
+              sendMail( 'julesmoretti@me.com', 'HRX - new company', '<p>Hi buddy:</p> <p>A new company <i><u>'+ companyData.name +'</u></i> has just been added to <b>HRX</b>.<p></p>This is company <i><u>#'+ companyData.id + '</i></u> to have been recorded.</p> <p>Congratulations!</p><p>Jules</p>');
+
               callback();
             });
           } else {
@@ -1015,12 +1015,13 @@ var crypto                                = require('crypto'),
         // if ( userData.username && userData.token ) {
 
           // check that username exist in the database and that password is a match otherwise return error
-          connection.query('SELECT id, LI_id, user_status FROM access_right WHERE token = "'+userToken+'"', function( err, rows, fields ) {
+          connection.query('SELECT id, full_name, LI_id, user_status FROM access_right WHERE token = "'+userToken+'"', function( err, rows, fields ) {
             if (err) throw err;
 
             if ( rows && rows.length ) {
 
               var user_id = rows[0].id;
+              var full_name = rows[0].full_name;
               var user_status = rows[0].user_status;
 
               if ( rows[0].LI_id ) {
@@ -1077,6 +1078,8 @@ var crypto                                = require('crypto'),
 
                   connection.query('INSERT INTO addition SET category = "new_user", category_id = '+user_id, function( err, rows, fields ) {
                     if (err) throw err;
+
+                    sendMail( 'julesmoretti@me.com', 'HRX - new user', '<p>Hi buddy:</p> <p>A new user <i><u>'+ full_name +'</u></i> has just joined <b>HRX</b>.<p></p>He is member <i><u>#'+ user_id + '</i></u> to have signed in.</p> <p>Congratulations!</p><p>Jules</p>');
 
                     add_LI_company( userToken, LI_data.positions.values[0].company, user_id, function(){
 
