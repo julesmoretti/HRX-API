@@ -25,57 +25,110 @@
 
       <hr>
       <div ng-controller="ListCtrl">
-        <h2>Companies ({{companies.length}}) - <input type="text" placeholder="Search by name, industry and more ..." ng-model="company_search"/></h2>
+        <h2><span>Companies ({{companies.length}})</span><input type="text" placeholder="Search by name, industry and more ..." ng-model="company_search"/></h2>
         <ul>
           <li ng-repeat="company in companies | filter: company_search | orderBy: company.name | limitTo: 20" ng-init="company[ $index ] = true">
-            <span>{{company.name}}</span> - {{company.industry}}
-            <span ng-hide="company.address && company.latitude" class="company_not_edited">[TO DO]</span><span class="ion-edit" ng-click="company[ $index ] = !company[ $index ]"></span>
-            <div ng-show="company[ $index ]" style="background-color: red; width: 100%; height: 100%; position: absolute; top: 0px; left: 0px;">
+
+            <span>{{company.name}}</span><span> - {{company.industry}}</span>
+            <span ng-hide="company.address && company.latitude" class="company_not_edited">[TO DO]</span>
+
+            <span class="ion-edit" ng-click="company[ $index ] = !company[ $index ]"></span>
+
+            <!-- MENU SHOWN ON CLICK -->
+            <div class="editCompany" ng-show="company[ $index ]">
+              <ul>
+                <!-- COMPANY LOGO -->
+                <li class="company_name_logo">
+                  <img ng-hide="company.logo" src="/views/img/comp.jpg"/>
+                  <img ng-show="company.logo" ng-attr-src="{{company.logo}}"/>
+                  <div>
+                    <span>{{company.name}}</span>
+                    <input type="text" ng-model="company.logo" placeholder="Image URL"/>
+                  </div>
+                </li>
+
+                <li class="company_generic">
+                  <span>industry</span>
+                  <span>{{company.industry}}</span>
+                </li>
+
+                <li class="company_generic">
+                  <span>size</span>
+                  <span>{{company.size}}</span>
+                </li>
+
+                <li class="company_generic">
+                  <span>type</span>
+                  <span>{{company.type}}</span>
+                </li>
+
+                <li class="company_input">
+                  <input type="text" ng-model="company.www" placeholder="Website URL"/>
+                </li>
+
+                <li class="company_input">
+                  <form ng-submit="searchCall($index)" name="myForm">
+                    <input ng-model="company.address" type="text" placeholde="full company address"/>
+                  </form>
+                </li>
+
+                <li class="company_generic">
+                  <span>latitude</span>
+                  <span ng-show="company.latitude === company.center.latitude">{{company.latitude}}</span>
+                  <span ng-hide="company.latitude === company.center.latitude">{{company.center.latitude}}</span>
+                </li>
+
+                <li class="company_generic">
+                  <span>longitude</span>
+                  <span ng-show="company.longitude === company.center.longitude">{{company.longitude}}</span>
+                  <span ng-hide="company.longitude === company.center.longitude">{{company.center.longitude}}</span>
+                </li>
+
+                <li class=" company_submit">
+                  <input type="password" placeholder="password"/>
+                  <button ng-click="updateCompany()">SUBMIT</button>
+                </li>
+              </ul>
 
 
-            logo - {{company.logo}}<br>
-            <h3>{{company.name}}</h3>
-            industry - {{company.industry}}<br>
-            size - {{company.size}}<br>
-            type - {{company.type}}<br>
-            www - {{company.www}}<br>
-            address - {{company.address}}<br>
-            latitude - {{company.latitude}}<br>
-            longitude - {{company.longitude}}<br>
+            <br>
+
+
+
+            <!-- <span>{{company.longitude}}</span><br> -->
 
 
             <!-- <div style="height: 400px;" id="map"></div> -->
             <!-- <ui-gmap-google-map center='map.center' zoom='map.zoom'></ui-gmap-google-map> -->
 
-            <form ng-submit="searchCall($index)" name="myForm">
-              <input ng-model="company.input" type="text"/>
-            </form>
 
             <!-- <ui-gmap-google-map ng-if="company.latitude" center='{ latitude: company.latitude, longitude: company.longitude }' zoom='map.zoom'> -->
-            <ui-gmap-google-map ng-if="company.latitude" dragging="true" options="{draggable: false}" ng-init="company.center = {latitude: company.latitude, longitude: company.longitude}" center='company.center' zoom='map.zoom'>
+            <ui-gmap-google-map ng-if="company.latitude" options='mapOptions' ng-init="company.center = {latitude: company.latitude, longitude: company.longitude}" center='company.center' events="recenterMap($index)" zoom='map.zoom'>
               <!-- <ui-gmap-search-box template="searchbox.template" events="searchCall( company.id )"></ui-gmap-search-box> -->
 
               <ui-gmap-marker idKey='company.id' coords="company.center"></ui-gmap-marker>
             </ui-gmap-google-map>
 
-              <span style="position: absolute; bottom: 10px; right: 10px;" class="ion-close" ng-click="company[ $index ] = !company[ $index ]"></span>
+            <span class="ion-close company_close" ng-click="company[ $index ] = !company[ $index ]"></span>
+
             </div>
           </li>
         </ul>
 
         <hr>
 
-        <h2>HR Alumn ({{new_users.length}}) - <input type="text" placeholder="Search by name, cohort and more ..." ng-model="alumni_search"/></h2>
+        <h2><span>HR Alumn ({{new_users.length}})</span><input type="text" placeholder="Search by name, cohort and more ..." ng-model="alumni_search"/></h2>
         <ul>
 
-          <li ng-repeat="user in new_users | filter: alumni_search | orderBy: user.full_name | limitTo: 10"><span title="{{user.username}}">{{user.full_name}}</span> - (HR{{user.cohort}})</li>
+          <li ng-repeat="user in new_users | filter: alumni_search | orderBy: user.full_name | limitTo: 10">
+          <span title="{{user.username}}">{{user.full_name}}</span><span> - (HR{{user.cohort}})</span></li>
         </ul>
         <hr>
 
-        <h2>HR Chapters ({{hr_chapters.length}})</h2>
+        <h2><span>HR Chapters ({{hr_chapters.length}})</span></h2>
         <ul>
 
-          <li ng-repeat="chapter in hr_chapters | orderBy: chapter.name"><span>{{chapter.name}}</span> - {{chapter.location}}</li>
+          <li ng-repeat="chapter in hr_chapters | orderBy: chapter.name"><span>{{chapter.name}}</span><span> - {{chapter.location}}</span></li>
         </ul>
 
       </div>

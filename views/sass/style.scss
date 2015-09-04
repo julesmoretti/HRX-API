@@ -72,43 +72,241 @@ html {
 
     &#main {
       font-family: Ubuntu Mono derivative Powerline;
-      background: $background_grey;
+      background: #222;
       color: white;
 
       div {
 
         &.main_container {
           padding: 20px;
-          width: 100%;
+          width: calc(100% - 40px);
           max-width: 1048px;
           /*background-color: rebeccapurple;*/
           margin: 20px auto !important;
           float: none !important;
+
+          h1  {
+            color: $light_grey;
+          }
+
+          h3  {
+            color: $medium_grey;
+            font-weight: 100;
+            font-style: italic;
+          }
+
+          hr  {
+            border-top: 1px solid grey;
+            border-bottom: 0px solid grey;
+            border-left: 0px solid grey;
+            border-right: 0px solid grey;
+          }
+
+          div {
+
+            h2  {
+              height: 28px;
+              line-height: 28px;
+              /*display: inline;*/
+
+              span {
+                float: left;
+                color: #AAA;
+                text-transform: uppercase;
+                width: inherit;
+                margin-right: 20px;
+                font-weight: 100;
+              }
+
+              input {
+                width: 50%;
+                padding: 0px 15px;
+                border: 0px;
+                height: inherit;
+                background-color: #2D2D2D;
+                border-radius: 18px;
+                display: inherit;
+                color: #CCC;
+                font-style: italic;
+                font-weight: 100;
+                letter-spacing: 2px;
+              }
+
+            }
+
+            ul {
+              list-style: none;
+              padding-left: 0px;
+
+              li {
+                padding: 5px 5px;
+                margin-bottom: 2px;
+                background-color: #252525;
+
+                span {
+                  &:nth-of-type(1) {
+                    color: #999;
+                    text-transform: uppercase;
+                  }
+
+                  &:nth-of-type(2) {
+                    color: #666;
+                    text-transform: lowercase;
+                  }
+
+                  &.company_not_edited {
+
+                  }
+
+                  &.ion-edit {
+                    color: #555;
+                  }
+                }
+
+                div {
+                  &.editCompany {
+                    background-color: #222;
+                    width: 100%;
+                    height: 100%;
+                    position: absolute;
+                    top: 0px;
+                    left: 0px;
+                    overflow-x: hidden;
+
+                    ul {
+                      margin-top: 0px;
+                      list-style: none;
+
+                      li {
+                        margin-bottom: 10px;
+                        background-color: #222;
+                        border-bottom: 2px solid #333;
+
+                        &.company_name_logo {
+
+                          display: inline-flex;
+                          height: 100px;
+                          line-height: 100px;
+                          padding: 20px 20px;
+
+                          img {
+                            width: 100px;
+                            height: 100px;
+                            border-radius: 100px;
+                            display: inline;
+                          }
+
+                          div {
+                            /*background-color: yellow;*/
+                            top: 0px;
+                            margin-left: 20px;
+
+                            span {
+                              display: block;
+                              font-size: 27px;
+                              height: 50px;
+                              line-height: 50px;
+                              top: 10px;
+                              position: relative;
+                            }
+
+                            input {
+                              display: block;
+                              height: 25px;
+                              border: 0px;
+                              padding: 0px;
+                              width: 1400px;
+                              padding-left: 10px;
+                              font-style: italic;
+                              font-weight: 100;
+                              background-color: #333;
+                              color: #777;
+                              letter-spacing: 2px;
+                            }
+                          }
+                        }
+
+                        &.company_generic {
+                          padding: 5px 0px;
+                          margin-left: 140px;
+
+                          span {
+                            &:nth-of-type(1) {
+                              color: #888;
+                              text-transform: uppercase;
+                            }
+
+                            &:nth-of-type(2) {
+                              color: #555;
+                              font-style: italic;
+                              font-weight: 100;
+                            }
+                          }
+                        }
+
+                        &.company_input {
+                          margin-left: 140px;
+                          padding: 5px 0px 0px;
+
+                          input {
+                            background-color: #333;
+                            color: #777;
+                            letter-spacing: 2px;
+                            font-style: italic;
+                            border: 0px;
+                            height: 25px;
+                            padding: 0px 5px 0px 5px;
+                            width: 80%;
+                          }
+                        }
+
+                        &.company_submit {
+                          margin-left: 140px;
+                          padding: 5px 0px 0px;
+
+                          input {
+                            display: inline;
+                            height: 25px;
+                            border: 0px;
+                            padding: 0px;
+                            width: 100px;
+                            padding-left: 10px;
+                            font-style: italic;
+                            background-color: #333;
+                            color: #777;
+                          }
+
+                          button {
+                            height: 25px;
+                            width: 100px;
+                            border: 0px;
+                            padding: 0;
+                            background-color: #666;
+                            color: white;
+                            font-weight: 500;
+                            letter-spacing: 2px;
+                          }
+                        }
+
+                      }
+                    }
+
+                    span {
+
+                      &.company_close {
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        color: gainsboro;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
-    }
-    /*-webkit-user-select: none;*/
-    /*-moz-user-select: none;*/
-    /*-ms-user-select: none;*/
-    /*user-select: none;*/
-
-    h1  {
-      color: $light_grey;
-    }
-
-    h2  {
-      color: $dark_grey;
-    }
-
-    h3  {
-      color: $medium_grey;
-    }
-
-    hr  {
-      border-top: 1px solid grey;
-      border-bottom: 0px solid grey;
-      border-left: 0px solid grey;
-      border-right: 0px solid grey;
     }
 
   }
