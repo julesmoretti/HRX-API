@@ -27,15 +27,15 @@
       <div ng-controller="ListCtrl">
         <h2><span>Companies ({{companies.length}})</span><input type="text" placeholder="Search by name, industry and more ..." ng-model="company_search"/></h2>
         <ul>
-          <li ng-repeat="company in companies | filter: company_search | orderBy: company.name | limitTo: 20" ng-init="company[ $index ] = true">
+          <li ng-repeat="company in companies | filter: company_search | orderBy: company.name | limitTo: 20" ng-init="companies[ $index ].edit = false">
 
             <span>{{company.name}}</span><span> - {{company.industry}}</span>
             <span ng-hide="company.address && company.latitude" class="company_not_edited">[TO DO]</span>
 
-            <span class="ion-edit" ng-click="company[ $index ] = !company[ $index ]"></span>
+            <span class="ion-edit" ng-click="companies[ $index ].edit = !companies[ $index ].edit"></span>
 
             <!-- MENU SHOWN ON CLICK -->
-            <div class="editCompany" ng-show="company[ $index ]">
+            <div class="editCompany" ng-show="companies[ $index ].edit">
               <ul>
                 <!-- COMPANY LOGO -->
                 <li class="company_name_logo">
@@ -84,32 +84,21 @@
                   <span ng-hide="company.longitude === company.center.longitude">{{company.center.longitude}}</span>
                 </li>
 
-                <li class=" company_submit">
-                  <input type="password" placeholder="password"/>
-                  <button ng-click="updateCompany()">SUBMIT</button>
+                <li ng-show="errorMessage" class="company_error">{{errorMessage}}</li>
+
+                <li class="company_submit">
+                  <input type="password" placeholder="password" ng-model="company.password"/>
+                  <button ng-click="updateCompany( $index )">SUBMIT</button>
                 </li>
               </ul>
+              <br>
 
+              <ui-gmap-google-map ng-if="company.latitude" options='mapOptions' ng-init="company.center = {latitude: company.latitude, longitude: company.longitude}" center='company.center' events="recenterMap($index)" zoom='map.zoom'>
 
-            <br>
+                <ui-gmap-marker idKey='company.id' coords="company.center"></ui-gmap-marker>
+              </ui-gmap-google-map>
 
-
-
-            <!-- <span>{{company.longitude}}</span><br> -->
-
-
-            <!-- <div style="height: 400px;" id="map"></div> -->
-            <!-- <ui-gmap-google-map center='map.center' zoom='map.zoom'></ui-gmap-google-map> -->
-
-
-            <!-- <ui-gmap-google-map ng-if="company.latitude" center='{ latitude: company.latitude, longitude: company.longitude }' zoom='map.zoom'> -->
-            <ui-gmap-google-map ng-if="company.latitude" options='mapOptions' ng-init="company.center = {latitude: company.latitude, longitude: company.longitude}" center='company.center' events="recenterMap($index)" zoom='map.zoom'>
-              <!-- <ui-gmap-search-box template="searchbox.template" events="searchCall( company.id )"></ui-gmap-search-box> -->
-
-              <ui-gmap-marker idKey='company.id' coords="company.center"></ui-gmap-marker>
-            </ui-gmap-google-map>
-
-            <span class="ion-close company_close" ng-click="company[ $index ] = !company[ $index ]"></span>
+              <span class="ion-close company_close" ng-click="companies[ $index ].edit = !companies[ $index ].edit"></span>
 
             </div>
           </li>

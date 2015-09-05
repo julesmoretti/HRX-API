@@ -133,3 +133,12 @@ CREATE TABLE `devices` (
   `state` INT DEFAULT 1,
   PRIMARY KEY (`id`)
 ) COMMENT 'Apple iOS device list and notification status';
+
+
+DROP TABLE IF EXISTS `API_passwords`;
+
+CREATE TABLE `API_passwords` (
+  `id` INT(20) AUTO_INCREMENT,
+  `password` VARCHAR(255),
+  PRIMARY KEY (`id`)
+) COMMENT 'Dumb passwords to manage database edits';

@@ -176,6 +176,18 @@ CREATE TABLE `hr_chapters` (
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='List of Hack Reactor chapters around the world';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+DROP TABLE IF EXISTS `API_passwords`;
+
+CREATE TABLE `API_passwords` (
+  `id` INT(20) AUTO_INCREMENT,
+  `password` VARCHAR(255),
+  PRIMARY KEY (`id`)
+) COMMENT 'Dumb passwords to manage database edits';
+
+INSERT INTO API_passwords
+SET
+password = "123456";
+
 --
 -- Dumping data for table `hr_chapters`
 --

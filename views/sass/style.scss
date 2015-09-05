@@ -137,6 +137,8 @@ html {
             ul {
               list-style: none;
               padding-left: 0px;
+              display: table;
+              width: 100%;
 
               li {
                 padding: 5px 5px;
@@ -188,6 +190,7 @@ html {
                           height: 100px;
                           line-height: 100px;
                           padding: 20px 20px;
+                          width: 100%;
 
                           img {
                             width: 100px;
@@ -200,6 +203,7 @@ html {
                             /*background-color: yellow;*/
                             top: 0px;
                             margin-left: 20px;
+                            width: 100%;
 
                             span {
                               display: block;
@@ -215,7 +219,7 @@ html {
                               height: 25px;
                               border: 0px;
                               padding: 0px;
-                              width: 1400px;
+                              width: 100%;
                               padding-left: 10px;
                               font-style: italic;
                               font-weight: 100;
@@ -258,6 +262,11 @@ html {
                             padding: 0px 5px 0px 5px;
                             width: 80%;
                           }
+                        }
+
+                        &.company_error {
+                          margin-left: 140px;
+                          color: red;
                         }
 
                         &.company_submit {

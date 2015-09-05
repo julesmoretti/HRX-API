@@ -1,6 +1,6 @@
 var app = angular.module('api.controllers', ['api.constants']);
 
-    app.controller('ListCtrl', ['$scope', 'New_users_const', 'Companies_const', 'HR_chapters_const', function( $scope, newUsersConst, companiesConst, hrChapters ) {
+    app.controller('ListCtrl', ['$scope', 'New_users_const', 'Companies_const', 'HR_chapters_const', '$http', function( $scope, newUsersConst, companiesConst, hrChapters, $http ) {
       $scope.new_users = newUsersConst;
       $scope.companies = companiesConst;
       $scope.hr_chapters = hrChapters;
@@ -46,8 +46,115 @@ var app = angular.module('api.controllers', ['api.constants']);
         }
       };
 
-      $scope.updateCompany = function() {
-        console.log("updateCompany");
+      $scope.updateCompany = function( index ) {
+        console.log( "updateCompany", index );
+        // console.log( $scope.companies[ index ] );
+        // console.log( JSON.stringify( $scope.companies[ index ] ) );
+
+        if ( typeof index !== "number" ) {
+          console.log("NUMBER ERROR");
+          $scope.errorMessage = "Error with query (missing company index) - report to admin";
+          return;
+        } else if ( !$scope.companies[ index ] ) {
+          console.log("COMPANY INDEX ERROR");
+          $scope.errorMessage = "Error with query (missing company data) - report to admin";
+          return;
+        } else if ( $scope.companies[ index ].password === undefined || $scope.companies[ index ].password.length === 0 ) {
+          console.log("PASSWORD ERROR");
+          $scope.errorMessage = "Please add a password";
+          return;
+        }
+
+        var company = JSON.parse( JSON.stringify( $scope.companies[ index ] ) );
+
+        delete company.$$hashKey;
+        delete company.edit;
+        delete company.center;
+        delete company.password;
+
+        var company_mysql_updates = "";
+        console.log("========");
+        for ( var keys in company ) {
+          console.log( keys, company[ keys ] );
+            // "address":"660 3rd street, 4th floor, San Francisco - CA 94107",
+            // "www":"http://frogdesign.com",
+            // "logo":null,
+            // "latitude":37.77918243408203,
+            // "longitude":-122.39349365234375,
+
+          if ( company[ keys ] === null ) {
+            delete company[ keys ];
+
+          } else if ( keys === "address" ) {
+            if ( company_mysql_updates.length ) company_mysql_updates = company_mysql_updates + ", ";
+
+            company_mysql_updates = company_mysql_updates + "address = '" + company[ keys ] + "'";
+
+          } else if ( keys === "www" ) {
+            if ( company_mysql_updates.length ) company_mysql_updates = company_mysql_updates + ", ";
+
+            company_mysql_updates = company_mysql_updates + "www = '" + company[ keys ] + "'";
+
+          } else if ( keys === "logo" ) {
+            if ( company_mysql_updates.length ) company_mysql_updates = company_mysql_updates + ", ";
+
+            company_mysql_updates = company_mysql_updates + "logo = '" + company[ keys ] + "'";
+
+          } else if ( keys === "latitude" ) {
+            if ( company_mysql_updates.length ) company_mysql_updates = company_mysql_updates + ", ";
+
+            company_mysql_updates = company_mysql_updates + "latitude = " + company[ keys ];
+
+          } else if ( keys === "longitude" ) {
+            if ( company_mysql_updates.length ) company_mysql_updates = company_mysql_updates + ", ";
+
+            company_mysql_updates = company_mysql_updates + "longitude = " + company[ keys ];
+          }
+        }
+
+        console.log( "----------------" );
+        console.log( $scope.companies[ index ].password );
+        console.log( "----------------" );
+        console.log( company_mysql_updates );
+        console.log( "----------------" );
+        console.log( JSON.stringify( company ) );
+        console.log( "----------------" );
+
+        // sends token to API
+        var req = {
+          method: 'GET',
+          url: 'http://api.hrx.club/updatecompany',
+          // url: 'http://localhost:5000/updatecompany',
+          params: { 'password': $scope.companies[ index ].password, 'company_mysql_updates': company_mysql_updates, 'company_updates': JSON.stringify( company ) }
+        };
+
+        $http( req ).
+          success( function( data, status, headers, config ) {
+
+            // data responses
+            // alert( "data: "+ data );
+            // { responseCode: 200, message: 'Thank you all clear here!' }
+
+            // { responseCode: 401, message: 'no username found' }
+            // { responseCode: 400, message: 'no header detected' }
+
+            if ( data.responseCode === 200 ) {
+              $scope.errorMessage = null;
+              $scope.companies[ index ].edit = !$scope.companies[ index ].edit;
+              // alert( "Response code: " + data.responseCode + " - " + data.message + " - User ID: " + typeof data.user_id + "" + data.user_id );
+            } else {
+              alert( "Response code: " + data.responseCode + " - " + data.message );
+              $scope.errorMessage = data.message;
+            }
+          }).
+          error( function( data, status, headers, config ) {
+            // something called here
+            alert( "Error establishing a connection to API: "+ data+" - And status: " + status );
+
+            // need to handle errors like time outs etc...
+          });
+
+
       };
 
       var styles = [

@@ -60,6 +60,9 @@ var core                                  = require('./core.js');
     // handles login request and provides a token in response
     app.get('/updateprofile', core.update_profile);
 
+    // handles company updates from the API
+    app.get('/updatecompany', core.update_company);
+
     // handles login request and provides a token in response
     app.get('/geoposition', core.geo_position);
 

@@ -1142,6 +1142,53 @@ var crypto                                = require('crypto'),
       }
     };
 
+  exports.update_company                  = function ( req, res ) {
+      console.log('++++++++ update_company ++++++++');
+      // console.log( "HEADER: ", req.headers );
+      // console.log( "QUERY: ", req.query );
+      // console.log( "BODY: ", req.body );
+
+      var password = req.query.password;
+      var company_mysql_updates = req.query.company_mysql_updates;
+      var company_data = JSON.parse( req.query.company_updates );
+
+      // console.log("user_id: ", user_id);
+      // console.log("userToken: ", userToken);
+      // console.log("user_mysql_updates: ", user_mysql_updates);
+      // console.log("user_mysql_updates - stringifyed: ", JSON.stringify( user_mysql_updates ) );
+
+
+
+      connection.query('SELECT password FROM API_passwords' , function( err, rows, fields ) {
+        if (err) throw err;
+
+        if ( rows.length ) {
+          var valid = false;
+          for ( var i = 0; i < rows.length; i++ ) {
+            if ( password === rows[i].password ) {
+              valid = true;
+            }
+          }
+
+          if ( valid ) {
+            connection.query('UPDATE companies SET '+company_mysql_updates+' WHERE id = "'+company_data.id+'"; INSERT INTO addition SET category = "company", category_id = '+company_data.id , function( err, rows, fields ) {
+              if (err) throw err;
+
+              res.send( { responseCode: 200, message: 'Updated Company Profile' } );
+
+            });
+          } else {
+            res.send( { responseCode: 401, message: 'Sorry you need a proper password to make edits' } );
+          }
+        } else {
+          // no password found
+          res.send( { responseCode: 400, message: 'Error with the database, please contact admin' } );
+        }
+
+      });
+
+    };
+
   exports.geo_position                    = function ( req, res ) {
       console.log('++++++++ geo_position ++++++++');
       // console.log( "HEADER: ", req.headers );
