@@ -46,6 +46,14 @@ var app = angular.module('api.controllers', ['api.constants']);
         }
       };
 
+      $scope.refreshPage = function( index ) {
+        console.log('refreshPage', index );
+        $scope.companies[ index ].edit = !$scope.companies[ index ].edit;
+        // var elements = document.getElementsByTagName("ui-gmap-google-map");
+        // console.log(elements);
+        // elements[0].id = "yellow";
+      };
+
       $scope.updateCompany = function( index ) {
         console.log( "updateCompany", index );
         // console.log( $scope.companies[ index ] );

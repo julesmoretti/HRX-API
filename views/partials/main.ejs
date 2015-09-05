@@ -1,4 +1,4 @@
-<!DOCTYPE HTML>
+<!-- <!DOCTYPE HTML> -->
 <html lang="en" data-ng-app="api">
 
   <head>
@@ -25,14 +25,21 @@
 
       <hr>
       <div ng-controller="ListCtrl">
-        <h2><span>Companies ({{companies.length}})</span><input type="text" placeholder="Search by name, industry and more ..." ng-model="company_search"/></h2>
+        <h2>
+          <div>
+            <span>Companies ({{companies.length}})</span>
+          </div>
+          <div>
+            <input type="text" placeholder="Search by name, industry and more ..." ng-model="company_search"/>
+          </div>
+        </h2>
         <ul>
           <li ng-repeat="company in companies | filter: company_search | orderBy: company.name | limitTo: 20" ng-init="companies[ $index ].edit = false">
 
             <span>{{company.name}}</span><span> - {{company.industry}}</span>
             <span ng-hide="company.address && company.latitude" class="company_not_edited">[TO DO]</span>
 
-            <span class="ion-edit" ng-click="companies[ $index ].edit = !companies[ $index ].edit"></span>
+            <span class="ion-edit" ng-click="refreshPage( $index )"></span>
 
             <!-- MENU SHOWN ON CLICK -->
             <div class="editCompany" ng-show="companies[ $index ].edit">
@@ -106,7 +113,14 @@
 
         <hr>
 
-        <h2><span>HR Alumn ({{new_users.length}})</span><input type="text" placeholder="Search by name, cohort and more ..." ng-model="alumni_search"/></h2>
+        <h2>
+          <div>
+            <span>HR Alumn ({{new_users.length}})</span>
+          </div>
+          <div>
+            <input type="text" placeholder="Search by name, cohort and more ..." ng-model="alumni_search"/>
+          </div>
+        </h2>
         <ul>
 
           <li ng-repeat="user in new_users | filter: alumni_search | orderBy: user.full_name | limitTo: 10">
@@ -114,7 +128,11 @@
         </ul>
         <hr>
 
-        <h2><span>HR Chapters ({{hr_chapters.length}})</span></h2>
+        <h2>
+          <div>
+            <span>HR Chapters ({{hr_chapters.length}})</span>
+          </div>
+        </h2>
         <ul>
 
           <li ng-repeat="chapter in hr_chapters | orderBy: chapter.name"><span>{{chapter.name}}</span><span> - {{chapter.location}}</span></li>
