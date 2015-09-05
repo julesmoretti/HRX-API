@@ -7,4 +7,4 @@
  */
 // ApplicationConfiguration.registerModule('core');
 
-angular.module('api', ['api.directives', 'api.constants','api.controllers','uiGmapgoogle-maps']);
+angular.module('api', ['api.directives', 'ui.router', 'api.constants','api.controllers','uiGmapgoogle-maps']);

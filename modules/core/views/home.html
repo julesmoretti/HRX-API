@@ -1,0 +1,58 @@
+<h1>HRX API</h1>
+<h3>
+
+Welcome to the HRX api. Right here you will be able to see all the companies and users that HRX currently holds. For more specific accesses please use the iPhone app soon available on the Apple store.
+</h3>
+
+<hr>
+<!-- <div ng-controller="ListCtrl"> -->
+<div>
+  <h2>
+    <div>
+      <span>Companies ({{companies.length}})</span>
+    </div>
+    <div>
+      <input type="text" placeholder="Search by name, industry and more ..." ng-model="company_search"/>
+    </div>
+  </h2>
+  <ul>
+    <li ng-repeat="company in companies | filter: company_search | orderBy: company.name | limitTo: 20" ng-init="companies[ $index ].edit = false">
+
+      <span>{{company.name}}</span><span> - {{company.industry}}</span>
+      <span ng-hide="company.address && company.latitude" class="company_not_edited">[TO DO]</span>
+
+      <!-- <span class="ion-edit" ng-click="refreshPage( $index )"></span> -->
+      <span class="ion-edit" ui-sref="home.company({id: $index})"></span>
+
+      <div ui-view></div>
+    </li>
+  </ul>
+
+  <hr>
+
+  <h2>
+    <div>
+      <span>HR Alumn ({{new_users.length}})</span>
+    </div>
+    <div>
+      <input type="text" placeholder="Search by name, cohort and more ..." ng-model="alumni_search"/>
+    </div>
+  </h2>
+  <ul>
+
+    <li ng-repeat="user in new_users | filter: alumni_search | orderBy: user.full_name | limitTo: 10">
+    <span title="{{user.username}}">{{user.full_name}}</span><span> - (HR{{user.cohort}})</span></li>
+  </ul>
+  <hr>
+
+  <h2>
+    <div>
+      <span>HR Chapters ({{hr_chapters.length}})</span>
+    </div>
+  </h2>
+  <ul>
+
+    <li ng-repeat="chapter in hr_chapters | orderBy: chapter.name"><span>{{chapter.name}}</span><span> - {{chapter.location}}</span></li>
+  </ul>
+
+</div>

@@ -1,0 +1,68 @@
+<!-- <div class="editCompany" ng-show="companies[ $index ].edit"> -->
+<div class="editCompany">
+  <ul>
+    <!-- COMPANY LOGO -->
+    <li class="company_name_logo">
+      <img ng-hide="company.logo" src="/views/img/comp.jpg"/>
+      <img ng-show="company.logo" ng-attr-src="{{company.logo}}"/>
+      <div>
+        <span>{{company.name}}</span>
+        <input type="text" ng-model="company.logo" placeholder="Image URL"/>
+      </div>
+    </li>
+
+    <li class="company_generic">
+      <span>industry</span>
+      <span>{{company.industry}}</span>
+    </li>
+
+    <li class="company_generic">
+      <span>size</span>
+      <span>{{company.size}}</span>
+    </li>
+
+    <li class="company_generic">
+      <span>type</span>
+      <span>{{company.type}}</span>
+    </li>
+
+    <li class="company_input">
+      <input type="text" ng-model="company.www" placeholder="Website URL"/>
+    </li>
+
+    <li class="company_input">
+      <form ng-submit="searchCall($index)" name="myForm">
+        <input ng-model="company.address" type="text" placeholde="full company address"/>
+      </form>
+    </li>
+
+    <li class="company_generic">
+      <span>latitude</span>
+      <span ng-show="company.latitude === company.center.latitude">{{company.latitude}}</span>
+      <span ng-hide="company.latitude === company.center.latitude">{{company.center.latitude}}</span>
+    </li>
+
+    <li class="company_generic">
+      <span>longitude</span>
+      <span ng-show="company.longitude === company.center.longitude">{{company.longitude}}</span>
+      <span ng-hide="company.longitude === company.center.longitude">{{company.center.longitude}}</span>
+    </li>
+
+    <li ng-show="errorMessage" class="company_error">{{errorMessage}}</li>
+
+    <li class="company_submit">
+      <input type="password" placeholder="password" ng-model="company.password"/>
+      <button ng-click="updateCompany( $index )">SUBMIT</button>
+    </li>
+  </ul>
+  <br>
+
+  <ui-gmap-google-map ng-if="company.latitude" options='mapOptions' ng-init="company.center = {latitude: company.latitude, longitude: company.longitude}" center='company.center' events="recenterMap($index)" zoom='map.zoom'>
+
+    <ui-gmap-marker idKey='company.id' coords="company.center"></ui-gmap-marker>
+  </ui-gmap-google-map>
+
+  <span class="ion-close company_close" ui-sref="home"></span>
+  <!-- <span class="ion-close company_close" ng-click="companies[ $index ].edit = !companies[ $index ].edit"></span> -->
+
+</div>

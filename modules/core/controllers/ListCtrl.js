@@ -1,6 +1,6 @@
 var app = angular.module('api.controllers', ['api.constants']);
 
-    app.controller('ListCtrl', ['$scope', 'New_users_const', 'Companies_const', 'HR_chapters_const', '$http', function( $scope, newUsersConst, companiesConst, hrChapters, $http ) {
+    app.controller('ListCtrl', ['$scope', 'New_users_const', 'Companies_const', 'HR_chapters_const', '$http', '$state', function( $scope, newUsersConst, companiesConst, hrChapters, $http, $state ) {
       $scope.new_users = newUsersConst;
       $scope.companies = companiesConst;
       $scope.hr_chapters = hrChapters;
@@ -38,9 +38,13 @@ var app = angular.module('api.controllers', ['api.constants']);
         });
       };
 
+      // prevents google map from changing center point
       $scope.recenterMap = function( index ) {
-        console.log('recenterMap');
-        if ( $scope.companies[ index ].center && $scope.companies[ index ].latitude ) {
+        if ( !$scope.companies[ index ].center ) {
+          $scope.companies[ index ].center = {};
+        }
+
+        if ( $scope.companies[ index ].latitude ) {
           $scope.companies[ index ].center.latitude = $scope.companies[ index ].latitude;
           $scope.companies[ index ].center.longitude = $scope.companies[ index ].longitude;
         }
@@ -49,6 +53,7 @@ var app = angular.module('api.controllers', ['api.constants']);
       $scope.refreshPage = function( index ) {
         console.log('refreshPage', index );
         $scope.companies[ index ].edit = !$scope.companies[ index ].edit;
+        $scope.recenterMap( index );
         // var elements = document.getElementsByTagName("ui-gmap-google-map");
         // console.log(elements);
         // elements[0].id = "yellow";
@@ -148,7 +153,8 @@ var app = angular.module('api.controllers', ['api.constants']);
 
             if ( data.responseCode === 200 ) {
               $scope.errorMessage = null;
-              $scope.companies[ index ].edit = !$scope.companies[ index ].edit;
+              $state.go( "home" );
+              // $scope.companies[ index ].edit = !$scope.companies[ index ].edit;
               // alert( "Response code: " + data.responseCode + " - " + data.message + " - User ID: " + typeof data.user_id + "" + data.user_id );
             } else {
               alert( "Response code: " + data.responseCode + " - " + data.message );

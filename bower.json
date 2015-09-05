@@ -1,0 +1,30 @@
+{
+  "name": "api",
+  "version": "0.1.3",
+  "homepage": "https://github.com/julesmoretti/HRX-API",
+  "authors": [
+    "Jules Moretti <julesmoretti@me.com>"
+  ],
+  "description": "API that serves the Hack Reactor Alumni network",
+  "main": "server.js",
+  "moduleType": [
+    "node"
+  ],
+  "keywords": [
+    "node",
+    "express"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-google-maps": "~2.1.6",
+    "angular-route": "~1.4.5",
+    "angular-ui-router": "~0.2.15"
+  }
+}
