@@ -29,14 +29,36 @@ angular
              * - When the path is `'/'`, route to home
              * */
             $stateProvider
+              // .state('home', {
+              //   url: "/",
+              //   templateUrl: "modules/core/views/home.html",
+              //   controller: "ListCtrl"
+              // })
+
               .state('home', {
-                url: "/",
-                templateUrl: "modules/core/views/home.html",
-                controller: "ListCtrl"
+                url: '/',
+                views: {
+                  'home': {
+                    templateUrl: 'modules/core/views/home.html',
+                    controller: 'ListCtrl'
+                  }
+                }
               })
+
+              // .state('home.company', {
+              //   url: "company/:id",
+              //   templateUrl: "modules/core/views/home.company.html",
+              //   controller: "CompCtrl"
+              // });
+
               .state('home.company', {
-                url: "company/:id",
-                templateUrl: "modules/core/views/home.company.html"
+                url: 'company/:id',
+                views: {
+                  'company': {
+                    templateUrl: 'modules/core/views/home.company.html',
+                    controller: 'CompCtrl'
+                  }
+                }
               });
         }
     ]);
