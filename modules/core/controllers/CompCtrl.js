@@ -46,20 +46,20 @@ angular
       };
 
       $scope.updateCompany = function( index ) {
-        console.log( "updateCompany", index );
+        // console.log( "updateCompany", index );
         // console.log( $scope.companies[ index ] );
         // console.log( JSON.stringify( $scope.companies[ index ] ) );
 
         if ( typeof index !== "number" ) {
-          console.log("NUMBER ERROR");
+          // console.log("NUMBER ERROR");
           $scope.errorMessage = "Error with query (missing company index) - report to admin";
           return;
         } else if ( !$scope.companies[ index ] ) {
-          console.log("COMPANY INDEX ERROR");
+          // console.log("COMPANY INDEX ERROR");
           $scope.errorMessage = "Error with query (missing company data) - report to admin";
           return;
         } else if ( $scope.companies[ index ].password === undefined || $scope.companies[ index ].password.length === 0 ) {
-          console.log("PASSWORD ERROR");
+          // console.log("PASSWORD ERROR" );
           $scope.errorMessage = "Please add a password";
           return;
         }
@@ -131,7 +131,7 @@ angular
               // $scope.companies[ index ].edit = !$scope.companies[ index ].edit;
               // alert( "Response code: " + data.responseCode + " - " + data.message + " - User ID: " + typeof data.user_id + "" + data.user_id );
             } else {
-              alert( "Response code: " + data.responseCode + " - " + data.message );
+              // alert( "Response code: " + data.responseCode + " - " + data.message );
               $scope.companies[ $scope.currentID ].password = "";
               $scope.errorMessage = data.message;
             }
