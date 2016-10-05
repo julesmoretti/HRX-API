@@ -1,64 +1,66 @@
 <!-- <!DOCTYPE HTML> -->
 <html lang="en" data-ng-app="api">
 
-  <head>
-    <title>HRX API</title>
-    <meta charset="utf-8">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="viewport" content="width = 320,
-       initial-scale = 1, user-scalable = no,  minimal-ui">
-    <link rel="stylesheet" type="text/css" href="/views/css/style.css" media="all">
-    <link rel="stylesheet" href="/views/css/ionicons.css">
-    <link rel="stylesheet" href="/views/css/ionicons.min.css">
-  </head>
+	<head>
+		<title>HRX API</title>
+		<meta charset="utf-8">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+		<meta name="viewport" content="width = 320,
+			 initial-scale = 1, user-scalable = no,  minimal-ui">
+		<link rel="stylesheet" type="text/css" href="/views/css/style.css" media="all">
+		<link rel="stylesheet" href="/views/css/ionicons.css">
+		<link rel="stylesheet" href="/views/css/ionicons.min.css">
+	</head>
 
-  <body id="main">
+	<body id="main">
 
-    <div class="main_container">
+		<div class="main_container">
 
-    <div ui-view="home"></div>
-    <!-- We'll also add some navigation: -->
-    <!-- <a ui-sref="state1">State 1</a> -->
-    <!-- <a ui-sref="state2">State 2</a> -->
+		<div ui-view="home"></div>
+		<!-- We'll also add some navigation: -->
+		<!-- <a ui-sref="state1">State 1</a> -->
+		<!-- <a ui-sref="state2">State 2</a> -->
 
-    </div>
+		</div>
 
-    <!-- ANGULAR SETUP -->
-    <!--script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script-->
-    <!-- // <script src="/bower_components/angular/angular.min.js"></script> -->
-    <script src="/bower_components/angular/angular.js"></script>
+		<!-- ANGULAR SETUP -->
+		<!--script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script-->
+		<!-- // <script src="/bower_components/angular/angular.min.js"></script> -->
+		<script src="/bower_components/angular/angular.js"></script>
 
-    <!-- ANGULAR DEPENDENCIES -->
-    <!--script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.min.js"></script-->
-    <!-- // <script src="/bower_components/angular-route/angular-route.min.js"></script> -->
-    <script src="/bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+		<!-- ANGULAR DEPENDENCIES -->
+		<!--script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.min.js"></script-->
+		<!-- // <script src="/bower_components/angular-route/angular-route.min.js"></script> -->
+		<script src="/bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
 
-    <!-- ANGULAR STRUCTURE -->
-    <script src="/modules/core/core.js"></script>
-    <script src="/modules/core/config/routes.js"></script>
-    <script src="/modules/core/directives/hello_dir.js"></script>
-    <script src="/modules/core/controllers/ListCtrl.js"></script>
-    <script src="/modules/core/controllers/CompCtrl.js"></script>
+		<!-- ANGULAR STRUCTURE -->
+		<script src="/modules/core/core.js"></script>
+		<script src="/modules/core/config/routes.js"></script>
+		<script src="/modules/core/directives/hello_dir.js"></script>
+		<script src="/modules/core/controllers/ListCtrl.js"></script>
+		<script src="/modules/core/controllers/CompCtrl.js"></script>
 
-    <!-- ANGULAR GOOGLE MAPS -->
-    <script src='/bower_components/lodash/lodash.min.js'></script>
-    <script src='/bower_components/angular-google-maps/dist/angular-google-maps.min.js'></script>
+		<!-- ANGULAR GOOGLE MAPS -->
+		<script src='/bower_components/lodash/lodash.min.js'></script>
+		<script src='/bower_components/angular-google-maps/dist/angular-google-maps.min.js'></script>
 
 
-    <script>
-      var new_users = <%- JSON.stringify( new_users ) %>;
-      var companies = <%- JSON.stringify( companies ) %>;
-      var hr_chapters = <%- JSON.stringify( hr_chapters ) %>;
+		<script>
+			var new_users = <%- JSON.stringify( new_users ) %>;
+			var companies = <%- JSON.stringify( companies ) %>;
+			var hr_chapters = <%- JSON.stringify( hr_chapters ) %>;
 
-      angular.module('api.constants', [])
-        .constant('New_users_const', new_users)
-        .constant('Companies_const', companies)
-        .constant('HR_chapters_const', hr_chapters);
-    </script>
+			angular.module('api.constants', [])
+				.constant('New_users_const', new_users)
+				.constant('Companies_const', companies)
+				.constant('HR_chapters_const', hr_chapters);
+		</script>
 
-    <script src='//maps.googleapis.com/maps/api/js?sensor=false'></script>
+		<!-- <script src='//maps.googleapis.com/maps/api/js?key=sensor=false'></script> -->
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDfKyIsQyXUKsZpZTqXjkqPDVqQvCNrtDw&callback=initMap"
+		async defer></script>
 
-  </body>
+	</body>
 
 </html>
